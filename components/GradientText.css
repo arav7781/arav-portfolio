@@ -1,0 +1,42 @@
+.animated-gradient-text {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  overflow: hidden;
+  cursor: pointer;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-bottom: 2px;
+
+}
+
+/* This will handle the animated gradient directly on the text */
+.text-content {
+  background-image: linear-gradient(
+    270deg,
+    #ff6ec4,
+    #7873f5,
+    #e820e1,
+    #facc15,
+    #ff6ec4
+  );
+  background-size: 300% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
