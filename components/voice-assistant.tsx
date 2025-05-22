@@ -13,7 +13,7 @@ export default function VoiceAssistant() {
   const [messages, setMessages] = useState<{ role: "user" | "assistant" | "system"; content: string }[]>([
     {
       role: "assistant",
-      content: "Hi there! I'm Arav's AI assistant. Ask me anything about Arav Saxena.",
+      content: "Hi there! I'm Goku, Arav's AI assistant. Ask me anything about Arav Saxena.",
     },
   ])
   const [isProcessing, setIsProcessing] = useState(false)
@@ -361,7 +361,7 @@ export default function VoiceAssistant() {
               }}
             >
               <Volume2 size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Try Arav's Voice Assistant Goku</span>
+              <span className="text-sm font-medium">Try Goku</span>
             </motion.button>
           </motion.div>
         )}
