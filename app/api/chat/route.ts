@@ -3,7 +3,7 @@ import Groq from "groq-sdk"
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
+  apiKey: "***REMOVED***",
 })
 
 // System prompt with Arav's information
@@ -81,10 +81,10 @@ export async function POST(request: NextRequest) {
       ...messages,
     ]
 
-    // Call Groq API
+    // Call Groq API with Llama model
     const completion = await groq.chat.completions.create({
       messages: fullMessages,
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.3-70b-versatile", // Groq's Llama model
       temperature: 0.5,
       max_tokens: 1024,
       top_p: 1,
