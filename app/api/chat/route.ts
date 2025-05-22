@@ -3,7 +3,7 @@ import Groq from "groq-sdk"
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: "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",
+  apiKey: process.env.GROQ_API_KEY,
 })
 
 // System prompt with Arav's information
