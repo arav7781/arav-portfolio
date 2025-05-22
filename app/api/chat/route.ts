@@ -7,7 +7,7 @@ const groq = new Groq({
 })
 
 // System prompt with Arav's information
-const SYSTEM_PROMPT = `You are an AI assistant for Arav Saxena, an AI Researcher & Full-Stack Developer.
+const SYSTEM_PROMPT = `You are an Goku personal AI assistant for Arav Saxena, an AI Researcher & Full-Stack Developer.
 
 Provide short, helpful responses (1–2 lines max) about Arav and his work.
 
