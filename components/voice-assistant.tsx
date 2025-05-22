@@ -361,7 +361,7 @@ export default function VoiceAssistant() {
               }}
             >
               <Volume2 size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Try Arav's Voice Assistant</span>
+              <span className="text-sm font-medium">Try Arav's Voice Assistant Goku</span>
             </motion.button>
           </motion.div>
         )}
@@ -380,11 +380,11 @@ export default function VoiceAssistant() {
             {/* Header */}
             <div className="p-4 border-b border-violet-500/30 bg-gradient-to-r from-violet-900/50 to-fuchsia-900/50 flex items-center">
               <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3 border-2 border-violet-500">
-                <Image src="/placeholder.svg?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
+                <Image src="/aiia.png?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
               </div>
               <div>
                 <h3 className="font-bold text-white">Arav's Voice Assistant</h3>
-                <p className="text-xs text-gray-300">Powered by Groq AI</p>
+                <p className="text-xs text-gray-300">Powered by personalised finetuned LLM</p>
               </div>
               <Button
                 variant="ghost"
@@ -410,7 +410,7 @@ export default function VoiceAssistant() {
                     <div>
                       <h4 className="font-medium text-white mb-1">Voice-Powered Assistant</h4>
                       <p className="text-sm text-gray-200 mb-3">
-                        Click the microphone button and speak. I'll listen, understand, and respond with Arav's voice!
+                        Click the microphone button and speak. I'll listen, understand, and respond with voice!
                       </p>
                       <div className="flex justify-end">
                         <Button
