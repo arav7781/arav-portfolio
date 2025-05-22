@@ -383,7 +383,7 @@ export default function VoiceAssistant() {
                 <Image src="/aiia.png?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
               </div>
               <div>
-                <h3 className="font-bold text-white">Arav's Voice Assistant</h3>
+                <h3 className="font-bold text-white">Goku - Arav's Voice Assistant</h3>
                 <p className="text-xs text-gray-300">Powered by personalised finetuned LLM</p>
               </div>
               <Button
@@ -428,7 +428,7 @@ export default function VoiceAssistant() {
               )}
             </AnimatePresence>
 
-11:30
+
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/80">
               {messages.map((message, index) => (
