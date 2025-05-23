@@ -28,12 +28,11 @@ import Orb from "@/components/orb"
 
 export default function VoiceAssistant() {
   const [messages, setMessages] = useState<
-    { role: "user" | "assistant" | "system"; content: string; hasAudio?: boolean }[]
+    { role: "user" | "assistant" | "system"; content: string; }[]
   >([
     {
       role: "assistant",
-      content: "Hi there! I'm Arav's AI assistant. Ask me anything about Arav Saxena.",
-      hasAudio: false,
+      content: "Hi there! I'm Goku. Ask me anything about Arav Saxena.",
     },
   ])
   const [isOpen, setIsOpen] = useState(false)
@@ -217,7 +216,6 @@ export default function VoiceAssistant() {
         {
           role: "assistant",
           content: assistantResponse,
-          hasAudio: true,
         },
       ])
 
@@ -250,7 +248,6 @@ export default function VoiceAssistant() {
         {
           role: "assistant",
           content: "I'm sorry, I encountered an error processing your voice. Please try again.",
-          hasAudio: false,
         },
       ])
       setProcessingStage("idle")
@@ -293,7 +290,6 @@ export default function VoiceAssistant() {
         {
           role: "assistant",
           content: assistantResponse,
-          hasAudio: false,
         },
       ])
 
@@ -305,7 +301,6 @@ export default function VoiceAssistant() {
         {
           role: "assistant",
           content: "I'm sorry, I encountered an error. Please try again.",
-          hasAudio: false,
         },
       ])
       setProcessingStage("idle")
@@ -561,7 +556,6 @@ export default function VoiceAssistant() {
                             {message.role === "user" ? "You" : "Arav's Assistant"}
                           </span>
                           {message.role === "assistant" &&
-                            message.hasAudio &&
                             index === messages.length - 1 &&
                             audioUrl && (
                               <Button
