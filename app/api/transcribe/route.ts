@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // Initialize Groq client
 const groq = new Groq({
-  apiKey: "***REMOVED***",
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 export async function POST(request: NextRequest) {
