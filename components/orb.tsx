@@ -381,10 +381,7 @@ export default function VoiceAssistant() {
         >
           <div className="absolute inset-0 rounded-full overflow-hidden">
             <Orb
-              hue={orbHue}
-              hoverIntensity={0.3}
-              rotateOnHover={true}
-              forceHoverState={isRecording || processingStage !== "idle"}
+            
             />
           </div>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -527,10 +524,7 @@ export default function VoiceAssistant() {
                   {!textMode && (
                     <div className="absolute inset-0 opacity-20 z-[-10] pointer-events-none scale-125">
                       <Orb
-                        hue={orbHue}
-                        hoverIntensity={0.3}
-                        rotateOnHover={true}
-                        forceHoverState={isRecording || processingStage !== "idle"}
+                    
                       />
                     </div>
                   )}
