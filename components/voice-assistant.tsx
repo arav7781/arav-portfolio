@@ -32,7 +32,7 @@ export default function VoiceAssistant() {
   >([
     {
       role: "assistant",
-      content: "Hi there! I'm Goku. Ask me anything about Arav Saxena.",
+      content: "Hi there! I'm Saitama. Ask me anything about Arav Saxena.",
     },
   ])
   const [isOpen, setIsOpen] = useState(false)
@@ -425,7 +425,7 @@ export default function VoiceAssistant() {
               }}
             >
               <Volume2 size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Try Goku's</span>
+              <span className="text-sm font-medium">Try Saitama</span>
             </motion.button>
           </motion.div>
         )}
@@ -466,7 +466,7 @@ export default function VoiceAssistant() {
                 <div className="absolute inset-0 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 animate-pulse"></div>
               </div>
               <div className="relative">
-                <h3 className="font-bold text-white">Goku</h3>
+                <h3 className="font-bold text-white">Saitama</h3>
                 <p className="text-xs text-gray-300">Powered by personal LLM</p>
               </div>
               <div className="ml-auto flex items-center space-x-2 relative">
@@ -688,7 +688,7 @@ export default function VoiceAssistant() {
             {isMinimized && (
               <div className="p-3 flex items-center">
                 <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                <p className="text-sm text-gray-300">Goku ready</p>
+                <p className="text-sm text-gray-300">Saitama ready</p>
                 <Button
                   variant="ghost"
                   size="sm"
