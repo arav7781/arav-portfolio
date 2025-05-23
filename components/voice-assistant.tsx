@@ -430,7 +430,7 @@ export default function VoiceAssistant() {
               }}
             >
               <Volume2 size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Try Arav's Voice Assistant</span>
+              <span className="text-sm font-medium">Try Goku</span>
             </motion.button>
           </motion.div>
         )}
@@ -460,8 +460,8 @@ export default function VoiceAssistant() {
                 <div className="absolute inset-0 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 animate-pulse"></div>
               </div>
               <div className="relative">
-                <h3 className="font-bold text-white">Arav's Voice Assistant</h3>
-                <p className="text-xs text-gray-300">Powered by Groq AI</p>
+                <h3 className="font-bold text-white">Goku</h3>
+                <p className="text-xs text-gray-300">Powered by personalised LLM</p>
               </div>
               <div className="ml-auto flex items-center space-x-2 relative">
                 <Button
@@ -686,7 +686,7 @@ export default function VoiceAssistant() {
             {isMinimized && (
               <div className="p-3 flex items-center">
                 <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                <p className="text-sm text-gray-300">Arav's Assistant is ready</p>
+                <p className="text-sm text-gray-300">Goku is ready</p>
                 <Button
                   variant="ghost"
                   size="sm"
