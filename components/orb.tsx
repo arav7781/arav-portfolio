@@ -1,699 +1,283 @@
 "use client"
 
-import type React from "react"
-import { User } from "lucide-react"
-import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import {
-  Bot,
-  X,
-  Mic,
-  MicOff,
-  MessageSquare,
-  ChevronRight,
-  Sparkles,
-  Brain,
-  Code,
-  Award,
-  Briefcase,
-  Play,
-  Pause,
-  Loader2,
-  Volume2,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import { cn } from "@/lib/utils"
-import Orb from "@/components/orb"
+import { useEffect, useRef } from "react"
+import { Renderer, Program, Mesh, Triangle, Vec3 } from "ogl"
 
-export default function VoiceAssistant() {
-  const [messages, setMessages] = useState<
-    { role: "user" | "assistant" | "system"; content: string; hasAudio?: boolean }[]
-  >([
-    {
-      role: "assistant",
-      content: "Hi there! I'm Arav's AI assistant. Ask me anything about Arav Saxena.",
-      hasAudio: false,
-    },
-  ])
-  const [isOpen, setIsOpen] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [isRecording, setIsRecording] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [recordingTime, setRecordingTime] = useState(0)
-  const [audioUrl, setAudioUrl] = useState<string | null>(null)
-  const [processingStage, setProcessingStage] = useState<
-    "idle" | "recording" | "transcribing" | "thinking" | "speaking"
-  >("idle")
-  const [showVoicePrompt, setShowVoicePrompt] = useState(false)
-  const [textMode, setTextMode] = useState(false)
-  const [textInput, setTextInput] = useState("")
-  const [isButtonHovered, setIsButtonHovered] = useState(false)
-  const [isMinimized, setIsMinimized] = useState(false)
-  const [orbHue, setOrbHue] = useState(260) // Purple hue
+interface OrbProps {
+  hue?: number
+  hoverIntensity?: number
+  rotateOnHover?: boolean
+  forceHoverState?: boolean
+}
 
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const audioChunksRef = useRef<Blob[]>([])
-  const audioRef = useRef<HTMLAudioElement | null>(null)
-  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null)
+export default function Orb({
+  hue = 0,
+  hoverIntensity = 0.2,
+  rotateOnHover = true,
+  forceHoverState = false,
+}: OrbProps) {
+  const ctnDom = useRef<HTMLDivElement>(null)
 
-  // Suggested questions
-  const suggestedQuestions = [
-    "What are Arav's skills?",
-    "Tell me about Arav's projects",
-    "What awards has Arav won?",
-    "What is Arav's education?",
-    "What is Arav's experience with AI?",
-  ]
-
-  // Scroll to bottom of messages when new messages are added
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+  const vert = /* glsl */ `
+    precision highp float;
+    attribute vec2 position;
+    attribute vec2 uv;
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position, 0.0, 1.0);
     }
-  }, [messages])
+  `
 
-  // Create audio element for playback
-  useEffect(() => {
-    audioRef.current = new Audio()
-    audioRef.current.onended = () => {
-      setIsPlaying(false)
-      setProcessingStage("idle")
+  const frag = /* glsl */ `
+    precision highp float;
+
+    uniform float iTime;
+    uniform vec3 iResolution;
+    uniform float hue;
+    uniform float hover;
+    uniform float rot;
+    uniform float hoverIntensity;
+    varying vec2 vUv;
+
+    vec3 rgb2yiq(vec3 c) {
+      float y = dot(c, vec3(0.299, 0.587, 0.114));
+      float i = dot(c, vec3(0.596, -0.274, -0.322));
+      float q = dot(c, vec3(0.211, -0.523, 0.312));
+      return vec3(y, i, q);
     }
+    
+    vec3 yiq2rgb(vec3 c) {
+      float r = c.x + 0.956 * c.y + 0.621 * c.z;
+      float g = c.x - 0.272 * c.y - 0.647 * c.z;
+      float b = c.x - 1.106 * c.y + 1.703 * c.z;
+      return vec3(r, g, b);
+    }
+    
+    vec3 adjustHue(vec3 color, float hueDeg) {
+      float hueRad = hueDeg * 3.14159265 / 180.0;
+      vec3 yiq = rgb2yiq(color);
+      float cosA = cos(hueRad);
+      float sinA = sin(hueRad);
+      float i = yiq.y * cosA - yiq.z * sinA;
+      float q = yiq.y * sinA + yiq.z * cosA;
+      yiq.y = i;
+      yiq.z = q;
+      return yiq2rgb(yiq);
+    }
+    
+    vec3 hash33(vec3 p3) {
+      p3 = fract(p3 * vec3(0.1031, 0.11369, 0.13787));
+      p3 += dot(p3, p3.yxz + 19.19);
+      return -1.0 + 2.0 * fract(vec3(
+        p3.x + p3.y,
+        p3.x + p3.z,
+        p3.y + p3.z
+      ) * p3.zyx);
+    }
+    
+    float snoise3(vec3 p) {
+      const float K1 = 0.333333333;
+      const float K2 = 0.166666667;
+      vec3 i = floor(p + (p.x + p.y + p.z) * K1);
+      vec3 d0 = p - (i - (i.x + i.y + i.z) * K2);
+      vec3 e = step(vec3(0.0), d0 - d0.yzx);
+      vec3 i1 = e * (1.0 - e.zxy);
+      vec3 i2 = 1.0 - e.zxy * (1.0 - e);
+      vec3 d1 = d0 - (i1 - K2);
+      vec3 d2 = d0 - (i2 - K1);
+      vec3 d3 = d0 - 0.5;
+      vec4 h = max(0.6 - vec4(
+        dot(d0, d0),
+        dot(d1, d1),
+        dot(d2, d2),
+        dot(d3, d3)
+      ), 0.0);
+      vec4 n = h * h * h * h * vec4(
+        dot(d0, hash33(i)),
+        dot(d1, hash33(i + i1)),
+        dot(d2, hash33(i + i2)),
+        dot(d3, hash33(i + 1.0))
+      );
+      return dot(vec4(31.316), n);
+    }
+    
+    vec4 extractAlpha(vec3 colorIn) {
+      float a = max(max(colorIn.r, colorIn.g), colorIn.b);
+      return vec4(colorIn.rgb / (a + 1e-5), a);
+    }
+    
+    const vec3 baseColor1 = vec3(0.611765, 0.262745, 0.996078);
+    const vec3 baseColor2 = vec3(0.298039, 0.760784, 0.913725);
+    const vec3 baseColor3 = vec3(0.062745, 0.078431, 0.600000);
+    const float innerRadius = 0.6;
+    const float noiseScale = 0.65;
+    
+    float light1(float intensity, float attenuation, float dist) {
+      return intensity / (1.0 + dist * attenuation);
+    }
+    
+    float light2(float intensity, float attenuation, float dist) {
+      return intensity / (1.0 + dist * dist * attenuation);
+    }
+    
+    vec4 draw(vec2 uv) {
+      vec3 color1 = adjustHue(baseColor1, hue);
+      vec3 color2 = adjustHue(baseColor2, hue);
+      vec3 color3 = adjustHue(baseColor3, hue);
+      
+      float ang = atan(uv.y, uv.x);
+      float len = length(uv);
+      float invLen = len > 0.0 ? 1.0 / len : 0.0;
+      
+      float n0 = snoise3(vec3(uv * noiseScale, iTime * 0.5)) * 0.5 + 0.5;
+      float r0 = mix(mix(innerRadius, 1.0, 0.4), mix(innerRadius, 1.0, 0.6), n0);
+      float d0 = distance(uv, (r0 * invLen) * uv);
+      float v0 = light1(1.0, 10.0, d0);
+      v0 *= smoothstep(r0 * 1.05, r0, len);
+      float cl = cos(ang + iTime * 2.0) * 0.5 + 0.5;
+      
+      float a = iTime * -1.0;
+      vec2 pos = vec2(cos(a), sin(a)) * r0;
+      float d = distance(uv, pos);
+      float v1 = light2(1.5, 5.0, d);
+      v1 *= light1(1.0, 50.0, d0);
+      
+      float v2 = smoothstep(1.0, mix(innerRadius, 1.0, n0 * 0.5), len);
+      float v3 = smoothstep(innerRadius, mix(innerRadius, 1.0, 0.5), len);
+      
+      vec3 col = mix(color1, color2, cl);
+      col = mix(color3, col, v0);
+      col = (col + v1) * v2 * v3;
+      col = clamp(col, 0.0, 1.0);
+      
+      return extractAlpha(col);
+    }
+    
+    vec4 mainImage(vec2 fragCoord) {
+      vec2 center = iResolution.xy * 0.5;
+      float size = min(iResolution.x, iResolution.y);
+      vec2 uv = (fragCoord - center) / size * 2.0;
+      
+      float angle = rot;
+      float s = sin(angle);
+      float c = cos(angle);
+      uv = vec2(c * uv.x - s * uv.y, s * uv.x + c * uv.y);
+      
+      uv.x += hover * hoverIntensity * 0.1 * sin(uv.y * 10.0 + iTime);
+      uv.y += hover * hoverIntensity * 0.1 * sin(uv.x * 10.0 + iTime);
+      
+      return draw(uv);
+    }
+    
+    void main() {
+      vec2 fragCoord = vUv * iResolution.xy;
+      vec4 col = mainImage(fragCoord);
+      gl_FragColor = vec4(col.rgb * col.a, col.a);
+    }
+  `
+
+  useEffect(() => {
+    const container = ctnDom.current
+    if (!container) return
+
+    const renderer = new Renderer({ alpha: true, premultipliedAlpha: false })
+    const gl = renderer.gl
+    gl.clearColor(0, 0, 0, 0)
+    container.appendChild(gl.canvas)
+
+    const geometry = new Triangle(gl)
+    const program = new Program(gl, {
+      vertex: vert,
+      fragment: frag,
+      uniforms: {
+        iTime: { value: 0 },
+        iResolution: {
+          value: new Vec3(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height),
+        },
+        hue: { value: hue },
+        hover: { value: 0 },
+        rot: { value: 0 },
+        hoverIntensity: { value: hoverIntensity },
+      },
+    })
+
+    const mesh = new Mesh(gl, { geometry, program })
+
+    function resize() {
+      if (!container) return
+      const dpr = window.devicePixelRatio || 1
+      const width = container.clientWidth
+      const height = container.clientHeight
+      renderer.setSize(width * dpr, height * dpr)
+      gl.canvas.style.width = width + "px"
+      gl.canvas.style.height = height + "px"
+      program.uniforms.iResolution.value.set(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height)
+    }
+    window.addEventListener("resize", resize)
+    resize()
+
+    let targetHover = 0
+    let lastTime = 0
+    let currentRot = 0
+    const rotationSpeed = 0.3 // radians per second
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      const width = rect.width
+      const height = rect.height
+      const size = Math.min(width, height)
+      const centerX = width / 2
+      const centerY = height / 2
+      const uvX = ((x - centerX) / size) * 2.0
+      const uvY = ((y - centerY) / size) * 2.0
+
+      if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
+        targetHover = 1
+      } else {
+        targetHover = 0
+      }
+    }
+
+    const handleMouseLeave = () => {
+      targetHover = 0
+    }
+
+    container.addEventListener("mousemove", handleMouseMove)
+    container.addEventListener("mouseleave", handleMouseLeave)
+
+    let rafId: number
+    const update = (t: number) => {
+      rafId = requestAnimationFrame(update)
+      const dt = (t - lastTime) * 0.001
+      lastTime = t
+      program.uniforms.iTime.value = t * 0.001
+      program.uniforms.hue.value = hue
+      program.uniforms.hoverIntensity.value = hoverIntensity
+
+      const effectiveHover = forceHoverState ? 1 : targetHover
+      program.uniforms.hover.value += (effectiveHover - program.uniforms.hover.value) * 0.1
+
+      if (rotateOnHover && effectiveHover > 0.5) {
+        currentRot += dt * rotationSpeed
+      }
+      program.uniforms.rot.value = currentRot
+
+      renderer.render({ scene: mesh })
+    }
+    rafId = requestAnimationFrame(update)
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current = null
-      }
+      cancelAnimationFrame(rafId)
+      window.removeEventListener("resize", resize)
+      container.removeEventListener("mousemove", handleMouseMove)
+      container.removeEventListener("mouseleave", handleMouseLeave)
+      container.removeChild(gl.canvas)
+      gl.getExtension("WEBGL_lose_context")?.loseContext()
     }
-  }, [])
+  }, [hue, hoverIntensity, rotateOnHover, forceHoverState])
 
-  // Handle recording timer
-  useEffect(() => {
-    if (isRecording) {
-      recordingTimerRef.current = setInterval(() => {
-        setRecordingTime((prev) => prev + 1)
-      }, 1000)
-    } else {
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current)
-      }
-      setRecordingTime(0)
-    }
-
-    return () => {
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current)
-      }
-    }
-  }, [isRecording])
-
-  // Change orb hue based on state
-  useEffect(() => {
-    if (isRecording) {
-      setOrbHue(0) // Red hue for recording
-    } else if (processingStage === "thinking") {
-      setOrbHue(200) // Blue hue for thinking
-    } else if (processingStage === "speaking") {
-      setOrbHue(120) // Green hue for speaking
-    } else {
-      setOrbHue(260) // Purple hue for default
-    }
-  }, [isRecording, processingStage])
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
-  }
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const mediaRecorder = new MediaRecorder(stream)
-      mediaRecorderRef.current = mediaRecorder
-      audioChunksRef.current = []
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data)
-        }
-      }
-
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" })
-        await processVoiceInput(audioBlob)
-        stream.getTracks().forEach((track) => track.stop())
-      }
-
-      mediaRecorder.start()
-      setIsRecording(true)
-      setProcessingStage("recording")
-    } catch (error) {
-      console.error("Error accessing microphone:", error)
-      alert("Could not access your microphone. Please check your permissions.")
-      setProcessingStage("idle")
-    }
-  }
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop()
-      setIsRecording(false)
-    }
-  }
-
-  const processVoiceInput = async (audioBlob: Blob) => {
-    setIsProcessing(true)
-    setProcessingStage("transcribing")
-
-    try {
-      const formData = new FormData()
-      formData.append("file", audioBlob, "recording.wav")
-
-      const transcriptionResponse = await fetch("/api/transcribe", {
-        method: "POST",
-        body: formData,
-      })
-
-      if (!transcriptionResponse.ok) {
-        throw new Error("Failed to transcribe audio")
-      }
-
-      const transcriptionData = await transcriptionResponse.json()
-      const transcribedText = transcriptionData.text
-
-      if (!transcribedText.trim()) {
-        setProcessingStage("idle")
-        setIsProcessing(false)
-        return
-      }
-
-      const userMessage = { role: "user" as const, content: transcribedText }
-      setMessages((prev) => [...prev, userMessage])
-
-      setProcessingStage("thinking")
-      const chatResponse = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [...messages.filter((msg) => msg.role !== "system"), userMessage],
-        }),
-      })
-
-      if (!chatResponse.ok) {
-        throw new Error("Failed to get response from Llama model")
-      }
-
-      const chatData = await chatResponse.json()
-      const assistantResponse = chatData.response
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: assistantResponse,
-          hasAudio: true,
-        },
-      ])
-
-      setProcessingStage("speaking")
-      const speechResponse = await fetch("/api/speech", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: assistantResponse }),
-      })
-
-      if (!speechResponse.ok) {
-        throw new Error("Failed to generate speech")
-      }
-
-      const speechBlob = await speechResponse.blob()
-      const url = URL.createObjectURL(speechBlob)
-      setAudioUrl(url)
-
-      if (audioRef.current) {
-        audioRef.current.src = url
-        audioRef.current.play()
-        setIsPlaying(true)
-      }
-    } catch (error) {
-      console.error("Error in voice processing pipeline:", error)
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "I'm sorry, I encountered an error processing your voice. Please try again.",
-          hasAudio: false,
-        },
-      ])
-      setProcessingStage("idle")
-    } finally {
-      setIsProcessing(false)
-    }
-  }
-
-  const handleTextSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!textInput.trim()) return
-
-    const userMessage = { role: "user" as const, content: textInput }
-    setMessages((prev) => [...prev, userMessage])
-    setTextInput("")
-    setIsProcessing(true)
-    setProcessingStage("thinking")
-
-    try {
-      const chatResponse = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [...messages.filter((msg) => msg.role !== "system"), userMessage],
-        }),
-      })
-
-      if (!chatResponse.ok) {
-        throw new Error("Failed to get response from Llama model")
-      }
-
-      const chatData = await chatResponse.json()
-      const assistantResponse = chatData.response
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: assistantResponse,
-          hasAudio: false,
-        },
-      ])
-
-      setProcessingStage("idle")
-    } catch (error) {
-      console.error("Error processing text input:", error)
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "I'm sorry, I encountered an error. Please try again.",
-          hasAudio: false,
-        },
-      ])
-      setProcessingStage("idle")
-    } finally {
-      setIsProcessing(false)
-    }
-  }
-
-  const handleSuggestedQuestion = (question: string) => {
-    setTextInput(question)
-    setTextMode(true)
-    setTimeout(() => {
-      const event = { preventDefault: () => {} } as React.FormEvent
-      handleTextSubmit(event)
-    }, 300)
-  }
-
-  const togglePlayback = () => {
-    if (!audioRef.current || !audioUrl) return
-
-    if (isPlaying) {
-      audioRef.current.pause()
-      setIsPlaying(false)
-      setProcessingStage("idle")
-    } else {
-      audioRef.current.play()
-      setIsPlaying(true)
-      setProcessingStage("speaking")
-    }
-  }
-
-  const getStatusMessage = () => {
-    switch (processingStage) {
-      case "recording":
-        return `Recording... ${formatTime(recordingTime)}`
-      case "transcribing":
-        return "Transcribing your voice..."
-      case "thinking":
-        return "Processing your question..."
-      case "speaking":
-        return "Speaking..."
-      default:
-        return ""
-    }
-  }
-
-  const getIconForQuestion = (question: string) => {
-    if (question.toLowerCase().includes("skill")) return <Code className="h-4 w-4" />
-    if (question.toLowerCase().includes("project")) return <Briefcase className="h-4 w-4" />
-    if (question.toLowerCase().includes("award")) return <Award className="h-4 w-4" />
-    if (question.toLowerCase().includes("education")) return <Brain className="h-4 w-4" />
-    if (question.toLowerCase().includes("ai")) return <Sparkles className="h-4 w-4" />
-    return <ChevronRight className="h-4 w-4" />
-  }
-
-  return (
-    <>
-      {/* Floating Orb Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <motion.div
-          className="relative w-16 h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            setIsOpen(!isOpen)
-            setIsMinimized(false)
-          }}
-          onMouseEnter={() => setIsButtonHovered(true)}
-          onMouseLeave={() => setIsButtonHovered(false)}
-          style={{
-            boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)",
-          }}
-        >
-          <div className="absolute inset-0 rounded-full overflow-hidden">
-            <Orb
-            
-            />
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            {isOpen ? (
-              <X size={20} className="text-white drop-shadow-md" />
-            ) : (
-              <Volume2 size={20} className="text-white drop-shadow-md" />
-            )}
-          </div>
-          {!isOpen && (
-            <motion.div
-              className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-green-500"
-              initial={{ scale: 0 }}
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "reverse",
-              }}
-            />
-          )}
-        </motion.div>
-      </div>
-
-      {/* Try Voice Assistant Button */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            className="fixed bottom-24 right-6 z-50"
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          >
-            <motion.button
-              className="bg-black/80 backdrop-blur-sm border border-violet-500/30 rounded-full px-4 py-2 text-white flex items-center shadow-lg hover:shadow-xl transition-all duration-300"
-              whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(139, 92, 246, 0.5)" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                setIsOpen(true)
-                setShowVoicePrompt(true)
-                setIsMinimized(false)
-              }}
-            >
-              <Volume2 size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Try Arav's Voice Assistant</span>
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Voice Assistant Window */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className={cn(
-              "fixed right-6 z-50 bg-black/90 backdrop-blur-md border border-violet-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col",
-              isMinimized ? "bottom-24 w-64 h-auto" : "bottom-24 w-80 md:w-96 h-[500px]",
-            )}
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            style={{
-              boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3), 0 8px 10px -6px rgba(139, 92, 246, 0.2)",
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 to-fuchsia-500/5 pointer-events-none" />
-            <div className="p-4 border-b border-violet-500/30 bg-gradient-to-r from-violet-900/50 to-fuchsia-900/50 flex items-center relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10" />
-              <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3 border-2 border-violet-500">
-                <Image src="/placeholder.svg?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 animate-pulse"></div>
-              </div>
-              <div className="relative">
-                <h3 className="font-bold text-white">Arav's Voice Assistant</h3>
-                <p className="text-xs text-gray-300">Powered by Groq AI</p>
-              </div>
-              <div className="ml-auto flex items-center space-x-2 relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-400 hover:text-white"
-                  onClick={() => setIsMinimized(!isMinimized)}
-                >
-                  {isMinimized ? (
-                    <ChevronRight className="h-4 w-4 rotate-90" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 -rotate-90" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-gray-400 hover:text-white"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <X size={18} />
-                </Button>
-              </div>
-            </div>
-
-            {!isMinimized && (
-              <>
-                <AnimatePresence>
-                  {showVoicePrompt && (
-                    <motion.div
-                      className="absolute top-20 left-0 right-0 mx-auto w-[90%] bg-gradient-to-r from-violet-900/80 to-fuchsia-900/80 backdrop-blur-md rounded-xl p-4 shadow-xl z-10"
-                      initial={{ opacity: 0, y: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    >
-                      <div className="flex items-start">
-                        <Volume2 size={20} className="text-violet-300 mt-1 mr-2 flex-shrink-0" />
-                        <div>
-                          <h4 className="font-medium text-white mb-1">Voice-Powered Assistant</h4>
-                          <p className="text-sm text-gray-200 mb-3">
-                            Click the microphone button and speak. I'll listen, understand, and respond with Arav's
-                            voice!
-                          </p>
-                          <div className="flex justify-end">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="border-violet-400/50 text-violet-300 hover:bg-violet-500/10"
-                              onClick={() => setShowVoicePrompt(false)}
-                            >
-                              Got it
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/80 bg-grid-pattern relative">
-                  {/* Orb Background in Message Area for Voice Mode */}
-                  {!textMode && (
-                    <div className="absolute inset-0 opacity-20 z-[-10] pointer-events-none scale-125">
-                      <Orb
-                    
-                      />
-                    </div>
-                  )}
-                  {messages.map((message, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                    >
-                      <div
-                        className={`max-w-[80%] rounded-2xl p-3 ${
-                          message.role === "user"
-                            ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
-                            : "bg-gray-800/90 backdrop-blur-sm text-gray-200 border border-gray-700/50"
-                        }`}
-                      >
-                        <div className="flex items-center mb-1">
-                          <div
-                            className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${
-                              message.role === "user" ? "bg-violet-500" : "bg-fuchsia-500"
-                            }`}
-                          >
-                            {message.role === "user" ? <User size={14} /> : <Bot size={14} />}
-                          </div>
-                          <span className="text-xs font-medium">
-                            {message.role === "user" ? "You" : "Arav's Assistant"}
-                          </span>
-                          {message.role === "assistant" &&
-                            message.hasAudio &&
-                            index === messages.length - 1 &&
-                            audioUrl && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 ml-1 text-gray-400 hover:text-white"
-                                onClick={togglePlayback}
-                              >
-                                {isPlaying ? <Pause size={12} /> : <Play size={12} />}
-                              </Button>
-                            )}
-                        </div>
-                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </div>
-
-                {/* Suggested Questions in Text Mode Only */}
-                {textMode && messages.length < 3 && (
-                  <div className="px-4 py-3 border-t border-violet-500/20 bg-black/90">
-                    <p className="text-xs text-gray-400 mb-2">Try asking:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestedQuestions.map((question, index) => (
-                        <motion.button
-                          key={index}
-                          className="text-xs bg-violet-900/30 hover:bg-violet-900/50 text-violet-300 px-3 py-1.5 rounded-full border border-violet-500/30 flex items-center"
-                          onClick={() => handleSuggestedQuestion(question)}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                        >
-                          {getIconForQuestion(question)}
-                          <span className="ml-1">{question}</span>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {processingStage !== "idle" && (
-                  <div className="px-4 py-2 bg-gradient-to-r from-violet-900/30 to-fuchsia-900/30 border-t border-violet-500/20">
-                    <div className="flex items-center justify-center">
-                      {processingStage === "recording" ? (
-                        <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse mr-2"></div>
-                      ) : (
-                        <Loader2 size={16} className="animate-spin mr-2" />
-                      )}
-                      <span className="text-sm text-gray-300">{getStatusMessage()}</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-4 border-t border-violet-500/30 bg-black">
-                  {textMode ? (
-                    <form onSubmit={handleTextSubmit} className="flex items-center">
-                      <input
-                        type="text"
-                        value={textInput}
-                        onChange={(e) => setTextInput(e.target.value)}
-                        placeholder="Type your question..."
-                        className="flex-1 bg-gray-900 border border-violet-500/30 focus:border-violet-500 rounded-l-xl px-4 py-2 text-white"
-                        disabled={isProcessing}
-                      />
-                      <Button
-                        type="submit"
-                        disabled={isProcessing || !textInput.trim()}
-                        className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white rounded-r-xl rounded-l-none"
-                      >
-                        <ChevronRight size={18} />
-                      </Button>
-                    </form>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={cn(
-                          "relative h-16 w-16 rounded-full flex items-center justify-center mb-2",
-                          isRecording ? "border-2 border-red-500 animate-pulse" : "border-2 border-violet-500/50",
-                        )}
-                      >
-                        <Button
-                          onClick={isRecording ? stopRecording : startRecording}
-                          disabled={isProcessing && !isRecording}
-                          className="absolute inset-0 rounded-full bg-gray-900/50 hover:bg-gray-800/50 flex items-center justify-center"
-                        >
-                          {isRecording ? (
-                            <MicOff size={24} className="text-white drop-shadow-md" />
-                          ) : (
-                            <Mic size={24} className="text-white drop-shadow-md" />
-                          )}
-                        </Button>
-                      </div>
-                      <p className="text-xs text-gray-400">
-                        {isRecording ? "Tap to stop recording" : "Tap to start speaking"}
-                      </p>
-                    </div>
-                  )}
-                  <div className="mt-3 flex justify-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setTextMode(!textMode)}
-                      className="text-violet-400 hover:text-violet-300 text-xs"
-                    >
-                      {textMode ? (
-                        <>
-                          <Mic size={12} className="mr-1" /> Switch to voice mode
-                        </>
-                      ) : (
-                        <>
-                          <MessageSquare size={12} className="mr-1" /> Switch to text mode
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </>
-            )}
-            {isMinimized && (
-              <div className="p-3 flex items-center">
-                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                <p className="text-sm text-gray-300">Arav's Assistant is ready</p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="ml-auto text-violet-400 hover:text-violet-300 text-xs"
-                  onClick={() => setIsMinimized(false)}
-                >
-                  Expand
-                </Button>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  )
+  return <div ref={ctnDom} className="w-full h-full" />
 }

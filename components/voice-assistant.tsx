@@ -430,7 +430,7 @@ export default function VoiceAssistant() {
               }}
             >
               <Volume2 size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Try Goku</span>
+              <span className="text-sm font-medium">Try Goku's</span>
             </motion.button>
           </motion.div>
         )}
@@ -452,16 +452,27 @@ export default function VoiceAssistant() {
               boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3), 0 8px 10px -6px rgba(139, 92, 246, 0.2)",
             }}
           >
+            {/* Orb Background in Voice Mode */}
+            {!textMode && !isMinimized && (
+              <div className="absolute inset-0 opacity-20 z-[-10] pointer-events-none scale-125">
+                <Orb
+                  hue={orbHue}
+                  hoverIntensity={0.3}
+                  rotateOnHover={true}
+                  forceHoverState={isRecording || processingStage !== "idle"}
+                />
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 to-fuchsia-500/5 pointer-events-none" />
             <div className="p-4 border-b border-violet-500/30 bg-gradient-to-r from-violet-900/50 to-fuchsia-900/50 flex items-center relative">
               <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10" />
               <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3 border-2 border-violet-500">
-                <Image src="/placeholder.svg?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
+                <Image src="/aiia.png?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 animate-pulse"></div>
               </div>
               <div className="relative">
                 <h3 className="font-bold text-white">Goku</h3>
-                <p className="text-xs text-gray-300">Powered by personalised LLM</p>
+                <p className="text-xs text-gray-300">Powered by personal LLM</p>
               </div>
               <div className="ml-auto flex items-center space-x-2 relative">
                 <Button
@@ -522,18 +533,7 @@ export default function VoiceAssistant() {
                   )}
                 </AnimatePresence>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/80 bg-grid-pattern relative">
-                  {/* Orb Background in Message Area for Voice Mode */}
-                  {!textMode && (
-                    <div className="absolute inset-0 opacity-20 z-[-10] pointer-events-none scale-125">
-                      <Orb
-                        hue={orbHue}
-                        hoverIntensity={0.3}
-                        rotateOnHover={true}
-                        forceHoverState={isRecording || processingStage !== "idle"}
-                      />
-                    </div>
-                  )}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/80 bg-grid-pattern">
                   {messages.map((message, index) => (
                     <motion.div
                       key={index}
@@ -645,10 +645,18 @@ export default function VoiceAssistant() {
                           isRecording ? "border-2 border-red-500 animate-pulse" : "border-2 border-violet-500/50",
                         )}
                       >
+                        <div className="absolute inset-0 rounded-full overflow-hidden">
+                          <Orb
+                            hue={isRecording ? 0 : 260}
+                            hoverIntensity={0.3}
+                            rotateOnHover={true}
+                            forceHoverState={isRecording}
+                          />
+                        </div>
                         <Button
                           onClick={isRecording ? stopRecording : startRecording}
                           disabled={isProcessing && !isRecording}
-                          className="absolute inset-0 rounded-full bg-gray-900/50 hover:bg-gray-800/50 flex items-center justify-center"
+                          className="absolute inset-0 rounded-full bg-transparent hover:bg-transparent flex items-center justify-center"
                         >
                           {isRecording ? (
                             <MicOff size={24} className="text-white drop-shadow-md" />
@@ -686,7 +694,7 @@ export default function VoiceAssistant() {
             {isMinimized && (
               <div className="p-3 flex items-center">
                 <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                <p className="text-sm text-gray-300">Goku is ready</p>
+                <p className="text-sm text-gray-300">Goku ready</p>
                 <Button
                   variant="ghost"
                   size="sm"
