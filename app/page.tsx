@@ -13,6 +13,7 @@ import Statistics from "@/components/statistics"
 import CurrentWork from "@/components/current-work"
 import BlogPreview from "@/components/blog-preview"
 import CTA from "@/components/cta"
+import HeroWebGL from "@/components/hero"
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
       <div className="fixed inset-0 bg-grid-pattern opacity-10 -z-10"></div>
 
       <Navbar />
-      <Hero />
+      <HeroWebGL />
       <Projects />
     
    
