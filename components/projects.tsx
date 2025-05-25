@@ -22,7 +22,7 @@ export default function Projects() {
       category: "ai",
       featured: true,
       github: "https://github.com/arav7781/ArogyaMitra",
-      demo: "https://www.youtube.com/watch?v=iBfenIQa92I",
+      demo: "https://www.youtube.com/watch?v=lIDs8FYwRVc",
     },
     {
       title: "BlueBoxAI: An Automated SQL Query Generator to make a futuristic sales dashboard and Business Intelligence Tool",
@@ -32,7 +32,7 @@ export default function Projects() {
       category: "data",
       featured: true,
       github: "https://github.com/arav7781",
-      demo: "https://www.youtube.com/watch?v=r8OIVnjbDOg",
+      demo: "https://www.youtube.com/watch?v=lhF5r3meSQ8",
     },
     {
       title: "ClarvisIntelliTutor: AI-Powered Study Assistant",
