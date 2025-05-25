@@ -136,15 +136,15 @@ export default function Timeline() {
       category: "Experience",
     },
     {
-      year: "2024",
+      year: "2025",
       title: "Published First Research Paper",
       description:
-        "Published a research paper on 'AgenticCV: An AI-Powered Computer Vision Application for text to Computer Vision Conversion with no code capability for the user.' with the arXiv.",
+        "Published a research paper on 'AgenticCV: An AI-Powered Computer Vision Application for text to Computer Vision Conversion with no code capability for the user.' with the articleX.",
       icon: <Briefcase className="h-5 w-5" />,
       category: "Research",
     },
     {
-      year: "2024",
+      year: "2025",
       title: "First Patent Filed",
       description:
         "Filed a patent for 'ArogyaNext - AI-Powered Health guidance System' with the USPTO.",
@@ -152,7 +152,7 @@ export default function Timeline() {
       category: "Research",
     },
     {
-      year: "2024",
+      year: "2024-present",
       title: "Open Source Contribution",
       description:
         "Became an active contributor to several open-source AI and ML libraries.",
@@ -160,10 +160,10 @@ export default function Timeline() {
       category: "Development",
     },
     {
-      year: "2024",
-      title: "Multiple Hackathons Finalist",
+      year: "2025",
+      title: "Hack your Path 6.0",
       description:
-        "Secured finalist positions in multiple hackathons with innovative AI and ML solutions.",
+        "Secured 3rd position in National Level hackathon with innovative AI and ML solution.",
       icon: <Briefcase className="h-5 w-5" />,
       category: "Experience",
     },
