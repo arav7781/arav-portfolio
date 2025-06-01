@@ -15,7 +15,7 @@ export default function Projects() {
 
   const projects = [
     {
-      title: "GurukulX: platfrom to make Educaotrs life easy.",
+      title: "GurukulX: platfrom to make Educators life easy.",
       description: "A web application that uses advanced AI features for providing educators their coding agent, data visualtions agent and many more.",
       image: "/logooo.png?height=400&width=600",
       tags: ["ReactJS","AgenticAI", "NextJS", "NodeJS", "Coversational AI", "NLP","Reasoning LLMs","Vision Language Model","Finetuned Language Model", "MongoDB", "LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask"],
