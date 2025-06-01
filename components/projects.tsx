@@ -15,6 +15,15 @@ export default function Projects() {
 
   const projects = [
     {
+      title: "GurukulX: platfrom to make Educaotrs life easy.",
+      description: "A web application that uses advanced AI features for providing educators their coding agent, data visualtions agent and many more.",
+      image: "/logooo.png?height=400&width=600",
+      tags: ["ReactJS","AgenticAI", "NextJS", "NodeJS", "Coversational AI", "NLP","Reasoning LLMs","Vision Language Model","Finetuned Language Model", "MongoDB", "LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask"],
+      category: "ai",
+      featured: true,
+      demo: "https://gurukul-x.vercel.app/",
+    },
+    {
       title: "ArogyaMitra: AI-Powered Health Assistant",
       description: "A web application that uses AI to provide health-related information via Indian Multilingual voice interaction.",
       image: "/ss.png?height=400&width=600",
@@ -40,7 +49,7 @@ export default function Projects() {
       image: "/9ca31297-939c-4f51-bccd-dc1356898fec.jpeg?height=400&width=600",
       tags: ["Python","Coversational AI","NLP", "MongoDB","LangChain","Langgraph","Streamlit","Tensorflow","WebSockets"],
       category: "web",
-      featured: true,
+      featured: false,
       github: "https://github.com/aryanma11ick/DataWizard",
       demo: "https://www.youtube.com/channel/UCrhHjJ-5o4xj5lApF9SU0wg",
     },
