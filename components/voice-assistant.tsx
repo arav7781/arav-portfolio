@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import Orb from "@/components/orb"
+import RippleGrid from "@/components/RippleGrid"
 
 export default function VoiceAssistant() {
   const [messages, setMessages] = useState<
@@ -436,7 +437,7 @@ export default function VoiceAssistant() {
         {isOpen && (
           <motion.div
             className={cn(
-              "fixed right-6 z-50 bg-black/90 backdrop-blur-md border border-violet-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col",
+              "fixed right-6 z-50 bg-background/95 backdrop-blur-md border border-slate-200 dark:border-violet-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col",
               isMinimized ? "bottom-24 w-64 h-auto" : "bottom-24 w-80 md:w-96 h-[500px]",
             )}
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
@@ -447,33 +448,39 @@ export default function VoiceAssistant() {
               boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3), 0 8px 10px -6px rgba(139, 92, 246, 0.2)",
             }}
           >
-            {/* Orb Background in Voice Mode */}
+            {/* RippleGrid Background Animation - Voice Mode Only */}
             {!textMode && !isMinimized && (
-              <div className="absolute inset-0 opacity-20 z-[-10] pointer-events-none scale-125">
-                <Orb
-                  hue={orbHue}
-                  hoverIntensity={0.3}
-                  rotateOnHover={true}
-                  forceHoverState={isRecording || processingStage !== "idle"}
-                />
-              </div>
+              <RippleGrid
+                enableRainbow={false}
+                gridColor="#8b5cf6"
+                rippleIntensity={0.05}
+                gridSize={10}
+                gridThickness={15}
+                mouseInteraction={true}
+                mouseInteractionRadius={0.8}
+                opacity={0.5}
+                fadeDistance={1.5}
+                vignetteStrength={2}
+                glowIntensity={0.15}
+                gridRotation={0}
+              />
             )}
-            <div className="absolute inset-0 bg-gradient-to-b from-violet-500/5 to-fuchsia-500/5 pointer-events-none" />
-            <div className="p-4 border-b border-violet-500/30 bg-gradient-to-r from-violet-900/50 to-fuchsia-900/50 flex items-center relative">
+
+            <div className="p-4 border-b border-slate-200 dark:border-violet-500/30 bg-slate-100/80 dark:bg-zinc-900/80 flex items-center relative">
               <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10" />
               <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3 border-2 border-violet-500">
                 <Image src="/aiia.png?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/30 to-fuchsia-500/30 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 animate-pulse"></div>
               </div>
               <div className="relative">
-                <h3 className="font-bold text-white">Saitama</h3>
-                <p className="text-xs text-gray-300">Powered by personal LLM</p>
+                <h3 className="font-bold text-slate-950 dark:text-white">Saitama</h3>
+                <p className="text-xs text-slate-500 dark:text-gray-300">Powered by personal LLM</p>
               </div>
               <div className="ml-auto flex items-center space-x-2 relative">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-gray-400 hover:text-white"
+                  className="text-slate-500 dark:text-gray-400 hover:text-slate-950 dark:hover:text-white"
                   onClick={() => setIsMinimized(!isMinimized)}
                 >
                   {isMinimized ? (
@@ -485,7 +492,7 @@ export default function VoiceAssistant() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-gray-400 hover:text-white"
+                  className="text-slate-500 dark:text-gray-400 hover:text-slate-950 dark:hover:text-white"
                   onClick={() => setIsOpen(false)}
                 >
                   <X size={18} />
@@ -494,11 +501,11 @@ export default function VoiceAssistant() {
             </div>
 
             {!isMinimized && (
-              <>
-                <AnimatePresence>
+              <div className="flex-1 flex flex-col overflow-hidden relative z-10">
+                <AnimatePresence mode="wait">
                   {showVoicePrompt && (
                     <motion.div
-                      className="absolute top-20 left-0 right-0 mx-auto w-[90%] bg-gradient-to-r from-violet-900/80 to-fuchsia-900/80 backdrop-blur-md rounded-xl p-4 shadow-xl z-10"
+                      className="absolute top-4 left-0 right-0 mx-auto w-[90%] bg-gradient-to-r from-violet-900/90 to-fuchsia-900/90 backdrop-blur-md rounded-xl p-4 shadow-xl z-20"
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
@@ -528,171 +535,211 @@ export default function VoiceAssistant() {
                   )}
                 </AnimatePresence>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-black/80 bg-grid-pattern">
-                  {messages.map((message, index) => (
+                <AnimatePresence mode="wait">
+                  {textMode ? (
                     <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      key="text-view"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.25 }}
+                      className="flex-1 flex flex-col overflow-hidden"
                     >
-                      <div
-                        className={`max-w-[80%] rounded-2xl p-3 ${
-                          message.role === "user"
-                            ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
-                            : "bg-gray-800/90 backdrop-blur-sm text-gray-200 border border-gray-700/50"
-                        }`}
-                      >
-                        <div className="flex items-center mb-1">
-                          <div
-                            className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${
-                              message.role === "user" ? "bg-violet-500" : "bg-fuchsia-500"
-                            }`}
-                          >
-                            {message.role === "user" ? <User size={14} /> : <Bot size={14} />}
-                          </div>
-                          <span className="text-xs font-medium">
-                            {message.role === "user" ? "You" : "Arav's Assistant"}
-                          </span>
-                          {message.role === "assistant" &&
-                            index === messages.length - 1 &&
-                            audioUrl && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 ml-1 text-gray-400 hover:text-white"
-                                onClick={togglePlayback}
+                      {/* Suggested Questions */}
+                      {messages.length < 3 && (
+                        <div className="px-4 py-3 border-b border-slate-200 dark:border-violet-500/20 bg-slate-100/50 dark:bg-zinc-950/20">
+                          <p className="text-xs text-slate-500 dark:text-gray-400 mb-2">Try asking:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {suggestedQuestions.map((question, qIdx) => (
+                              <motion.button
+                                key={qIdx}
+                                className="text-xs bg-violet-500/10 dark:bg-violet-900/30 hover:bg-violet-500/20 dark:hover:bg-violet-900/50 text-violet-700 dark:text-violet-300 px-3 py-1.5 rounded-full border border-violet-500/20 dark:border-violet-500/30 flex items-center"
+                                onClick={() => handleSuggestedQuestion(question)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                               >
-                                {isPlaying ? <Pause size={12} /> : <Play size={12} />}
-                              </Button>
-                            )}
+                                {getIconForQuestion(question)}
+                                <span className="ml-1">{question}</span>
+                              </motion.button>
+                            ))}
+                          </div>
                         </div>
-                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      )}
+
+                      {/* Chat messages */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-zinc-950/10">
+                        {messages.map((message, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                          >
+                            <div
+                              className={`max-w-[80%] rounded-2xl p-3 ${
+                                message.role === "user"
+                                  ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
+                                  : "bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-gray-200 border border-slate-200 dark:border-zinc-700/50"
+                              }`}
+                            >
+                              <div className="flex items-center mb-1">
+                                <div
+                                  className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${
+                                    message.role === "user" ? "bg-violet-500" : "bg-fuchsia-500"
+                                  }`}
+                                >
+                                  {message.role === "user" ? <User size={14} className="text-white" /> : <Bot size={14} className="text-white" />}
+                                </div>
+                                <span className="text-xs font-semibold">
+                                  {message.role === "user" ? "You" : "Saitama"}
+                                </span>
+                                {message.role === "assistant" &&
+                                  index === messages.length - 1 &&
+                                  audioUrl && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 ml-1 text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                                      onClick={togglePlayback}
+                                    >
+                                      {isPlaying ? <Pause size={12} /> : <Play size={12} />}
+                                    </Button>
+                                  )}
+                              </div>
+                              <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                            </div>
+                          </motion.div>
+                        ))}
+                        <div ref={messagesEndRef} />
+                      </div>
+
+                      {/* Loader / Thinking Status */}
+                      {processingStage !== "idle" && (
+                        <div className="px-4 py-2 bg-gradient-to-r from-violet-900/30 to-fuchsia-900/30 border-t border-slate-200 dark:border-violet-500/20">
+                          <div className="flex items-center justify-center">
+                            <Loader2 size={16} className="animate-spin mr-2 text-violet-500" />
+                            <span className="text-sm text-slate-700 dark:text-gray-300">{getStatusMessage()}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Text Input Footer */}
+                      <div className="p-4 border-t border-slate-200 dark:border-violet-500/30 bg-slate-100/50 dark:bg-zinc-900/50 flex flex-col">
+                        <form onSubmit={handleTextSubmit} className="flex items-center">
+                          <input
+                            type="text"
+                            value={textInput}
+                            onChange={(e) => setTextInput(e.target.value)}
+                            placeholder="Type your question..."
+                            className="flex-1 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-violet-500/30 focus:border-violet-500 dark:focus:border-violet-500 rounded-l-xl px-4 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+                            disabled={isProcessing}
+                          />
+                          <Button
+                            type="submit"
+                            disabled={isProcessing || !textInput.trim()}
+                            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white rounded-r-xl rounded-l-none h-[38px]"
+                          >
+                            <ChevronRight size={18} />
+                          </Button>
+                        </form>
+                        <div className="mt-3 flex justify-center">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setTextMode(false)}
+                            className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-xs"
+                          >
+                            <Mic size={12} className="mr-1" /> Switch to voice mode
+                          </Button>
+                        </div>
                       </div>
                     </motion.div>
-                  ))}
-                  <div ref={messagesEndRef} />
-                </div>
-
-                {/* Suggested Questions in Text Mode Only */}
-                {textMode && messages.length < 3 && (
-                  <div className="px-4 py-3 border-t border-violet-500/20 bg-black/90">
-                    <p className="text-xs text-gray-400 mb-2">Try asking:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestedQuestions.map((question, index) => (
-                        <motion.button
-                          key={index}
-                          className="text-xs bg-violet-900/30 hover:bg-violet-900/50 text-violet-300 px-3 py-1.5 rounded-full border border-violet-500/30 flex items-center"
-                          onClick={() => handleSuggestedQuestion(question)}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                        >
-                          {getIconForQuestion(question)}
-                          <span className="ml-1">{question}</span>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {processingStage !== "idle" && (
-                  <div className="px-4 py-2 bg-gradient-to-r from-violet-900/30 to-fuchsia-900/30 border-t border-violet-500/20">
-                    <div className="flex items-center justify-center">
-                      {processingStage === "recording" ? (
-                        <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse mr-2"></div>
-                      ) : (
-                        <Loader2 size={16} className="animate-spin mr-2" />
-                      )}
-                      <span className="text-sm text-gray-300">{getStatusMessage()}</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-4 border-t border-violet-500/30 bg-black">
-                  {textMode ? (
-                    <form onSubmit={handleTextSubmit} className="flex items-center">
-                      <input
-                        type="text"
-                        value={textInput}
-                        onChange={(e) => setTextInput(e.target.value)}
-                        placeholder="Type your question..."
-                        className="flex-1 bg-gray-900 border border-violet-500/30 focus:border-violet-500 rounded-l-xl px-4 py-2 text-white"
-                        disabled={isProcessing}
-                      />
-                      <Button
-                        type="submit"
-                        disabled={isProcessing || !textInput.trim()}
-                        className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white rounded-r-xl rounded-l-none"
-                      >
-                        <ChevronRight size={18} />
-                      </Button>
-                    </form>
                   ) : (
-                    <div className="flex flex-col items-center">
-                      <div
-                        className={cn(
-                          "relative h-16 w-16 rounded-full flex items-center justify-center mb-2",
-                          isRecording ? "border-2 border-red-500 animate-pulse" : "border-2 border-violet-500/50",
-                        )}
-                      >
-                        <div className="absolute inset-0 rounded-full overflow-hidden">
-                          <Orb
-                            hue={isRecording ? 0 : 260}
-                            hoverIntensity={0.3}
-                            rotateOnHover={true}
-                            forceHoverState={isRecording}
-                          />
-                        </div>
-                        <Button
-                          onClick={isRecording ? stopRecording : startRecording}
-                          disabled={isProcessing && !isRecording}
-                          className="absolute inset-0 rounded-full bg-transparent hover:bg-transparent flex items-center justify-center"
-                        >
-                          {isRecording ? (
-                            <MicOff size={24} className="text-white drop-shadow-md" />
-                          ) : (
-                            <Mic size={24} className="text-white drop-shadow-md" />
+                    <motion.div
+                      key="voice-view"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.25 }}
+                      className="flex-1 flex flex-col justify-between p-6"
+                    >
+                      {/* Orb Speaking/Listening Assistant in the center */}
+                      <div className="flex-1 flex flex-col items-center justify-center relative">
+                        <div className="relative h-36 w-36 rounded-full flex items-center justify-center mb-6">
+                          {/* Pulsing glow background rings */}
+                          <div className="absolute inset-0 rounded-full bg-violet-500/10 dark:bg-violet-500/5 border border-violet-500/20 scale-110" />
+                          {isRecording && (
+                            <>
+                              <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping" />
+                              <div className="absolute inset-0 rounded-full bg-red-500/10 border border-red-500/30 scale-125" />
+                            </>
                           )}
+                          <Button
+                            onClick={isRecording ? stopRecording : startRecording}
+                            disabled={isProcessing && !isRecording}
+                            className={cn(
+                              "relative z-10 w-28 h-28 rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 border shadow-lg bg-background",
+                              isRecording
+                                ? "border-red-500 shadow-red-500/20"
+                                : "border-violet-500/30 shadow-violet-500/20 hover:scale-105"
+                            )}
+                          >
+                            <div className="absolute inset-0 w-full h-full scale-105">
+                              <Orb
+                                hue={isRecording ? 0 : orbHue}
+                                hoverIntensity={0.5}
+                                rotateOnHover={true}
+                                forceHoverState={isRecording || processingStage !== "idle"}
+                              />
+                            </div>
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/10 hover:bg-transparent transition-colors z-20">
+                              {isRecording ? (
+                                <MicOff size={24} className="text-white drop-shadow-md" />
+                              ) : (
+                                <Mic size={24} className="text-white drop-shadow-md" />
+                              )}
+                            </div>
+                          </Button>
+                        </div>
+
+                        <div className="text-center">
+                          <p className="text-sm font-semibold text-slate-800 dark:text-white mb-1 uppercase tracking-wider font-mono">
+                            {isRecording ? "Listening" : processingStage === "thinking" ? "Thinking" : processingStage === "speaking" ? "Speaking" : "Saitama"}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-gray-400 min-h-[16px]">
+                            {isRecording ? `Recording... ${formatTime(recordingTime)}` : getStatusMessage()}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Microphone instruction and Switch Mode button at the bottom */}
+                      <div className="flex flex-col items-center border-t border-slate-200 dark:border-violet-500/20 pt-4 bg-transparent">
+                        <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">
+                          {isRecording ? "Tap the mic to stop recording" : "Tap the mic to start speaking"}
+                        </p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setTextMode(true)}
+                          className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-xs"
+                        >
+                          <MessageSquare size={12} className="mr-1" /> Switch to text mode
                         </Button>
                       </div>
-                      <p className="text-xs text-gray-400">
-                        {isRecording ? "Tap to stop recording" : "Tap to start speaking"}
-                      </p>
-                    </div>
+                    </motion.div>
                   )}
-                  <div className="mt-3 flex justify-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setTextMode(!textMode)}
-                      className="text-violet-400 hover:text-violet-300 text-xs"
-                    >
-                      {textMode ? (
-                        <>
-                          <Mic size={12} className="mr-1" /> Switch to voice mode
-                        </>
-                      ) : (
-                        <>
-                          <MessageSquare size={12} className="mr-1" /> Switch to text mode
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </>
+                </AnimatePresence>
+              </div>
             )}
             {isMinimized && (
-              <div className="p-3 flex items-center">
+              <div className="p-3 flex items-center relative z-10 bg-slate-100/90 dark:bg-zinc-900/90 border-t border-slate-200 dark:border-violet-500/20">
                 <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                <p className="text-sm text-gray-300">Saitama ready</p>
+                <p className="text-sm text-slate-700 dark:text-gray-300">Saitama ready</p>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-auto text-violet-400 hover:text-violet-300 text-xs"
+                  className="ml-auto text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-xs"
                   onClick={() => setIsMinimized(false)}
                 >
                   Expand
