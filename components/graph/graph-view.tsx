@@ -98,7 +98,7 @@ export default function GraphView() {
 
   const fit = useCallback(() => {
     if (!size.w || !size.h) return;
-    let R = 380;
+    let R = 440;
     for (const n of layout.nodes) {
       if (n.type === "skill") continue;
       R = Math.max(R, Math.hypot(n.x, n.y) + n.r + 24);
@@ -246,11 +246,11 @@ export default function GraphView() {
 
   const showLabel = useCallback(
     (n: LaidOutNode, op: number) => {
-      if (n.type === "person" || n.type === "domain") return true;
+      if (n.type === "person" || n.type === "domain" || n.type === "project") return true;
       if (op < 0.9) return false;
-      if (!litSet && !hoveredId) return false;
+      if (n.type === "experience" || n.type === "achievement") return true;
       if (n.type === "skill") return n.id === anchor;
-      return true;
+      return !litSet && !hoveredId ? false : true;
     },
     [litSet, hoveredId, anchor],
   );
@@ -513,12 +513,12 @@ export default function GraphView() {
                         textAnchor="middle"
                         className="font-mono select-none pointer-events-none"
                         style={{
-                          fontSize: n.type === "domain" ? 11 : n.type === "person" ? 13 : 9,
+                          fontSize: n.type === "person" ? 14 : n.type === "domain" ? 12 : n.type === "project" ? 10.5 : 9.5,
                           fill: "var(--ink)",
                           stroke: "var(--bg)",
-                          strokeWidth: 3,
+                          strokeWidth: 3.5,
                           paintOrder: "stroke",
-                          fontWeight: n.type === "domain" || n.type === "person" ? 600 : 400,
+                          fontWeight: n.type === "domain" || n.type === "person" ? 600 : n.type === "project" ? 500 : 400,
                         }}
                       >
                         {n.label}

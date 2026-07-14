@@ -160,10 +160,10 @@ export default function Hero() {
             className="lg:col-span-5 w-full flex justify-center items-center pointer-events-auto"
           >
             <TiltedCard
-              containerHeight="440px"
+              containerHeight="520px"
               containerWidth="100%"
-              imageHeight="440px"
-              imageWidth="360px"
+              imageHeight="520px"
+              imageWidth="420px"
               rotateAmplitude={12}
               scaleOnHover={1.03}
               showMobileWarning={false}

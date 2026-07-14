@@ -4,8 +4,10 @@ export function domainVar(domain: DomainId): string {
   switch (domain) {
     case "ai":
       return "var(--c-ai)";
-    case "web":
-      return "var(--c-web)";
+    case "backend":
+      return "var(--c-backend)";
+    case "frontend":
+      return "var(--c-frontend)";
     case "nlp":
       return "var(--c-nlp)";
     case "cloud":

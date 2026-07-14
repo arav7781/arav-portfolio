@@ -37,7 +37,8 @@
   --accent-line: #c084fc;
   
   --c-ai: #ef4444;
-  --c-web: #3b82f6;
+  --c-backend: #3b82f6;
+  --c-frontend: #06b6d4;
   --c-nlp: #10b981;
   --c-cv: #f59e0b;
   --c-data: #ec4899;
@@ -391,7 +392,8 @@ body {
 /* Graph custom themes mapping */
 :root {
   --c-ai: #ef4444;
-  --c-web: #3b82f6;
+  --c-backend: #3b82f6;
+  --c-frontend: #06b6d4;
   --c-nlp: #10b981;
   --c-cv: #f59e0b;
   --c-data: #ec4899;
