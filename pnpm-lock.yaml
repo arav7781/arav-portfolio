@@ -158,6 +158,9 @@ importers:
       ogl:
         specifier: ^1.0.11
         version: 1.0.11
+      postprocessing:
+        specifier: ^6.39.2
+        version: 6.39.2(three@0.185.1)
       prop-types:
         specifier: latest
         version: 15.8.1
@@ -3562,6 +3565,11 @@ packages:
   postcss@8.5.19:
     resolution: {integrity: sha512-Mz8SaolMd8nB+G13WkORcxQKHZ/NE4xXevtkJHVuG+guo9/wYKlIMTKAqGdEmYOXR2ijPjTYNHssizdaVSUNdQ==}
     engines: {node: ^10 || ^12 || >=14}
+
+  postprocessing@6.39.2:
+    resolution: {integrity: sha512-AxPY+xFyVOsz+8bbHSyQBoOK4AUqSQspTXXIsNcKhmGJRm/afHRAwZ8bKC02AeSPII0PW6lbCN84SgAoWFsKKA==}
+    peerDependencies:
+      three: '>= 0.168.0 < 0.186.0'
 
   potpack@1.0.2:
     resolution: {integrity: sha512-choctRBIV9EMT9WGAZHn3V7t0Z2pMQyl0EZE6pFc/6ml3ssw7Dlf/oAOvFwjm1HVsqfQN8GfeFyJ+d8tRzqueQ==}
@@ -7978,6 +7986,10 @@ snapshots:
       nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  postprocessing@6.39.2(three@0.185.1):
+    dependencies:
+      three: 0.185.1
 
   potpack@1.0.2: {}
 

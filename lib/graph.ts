@@ -57,7 +57,6 @@ export function buildAdjacency(edges: GraphEdge[]): Map<string, string[]> {
   const adj = new Map<string, string[]>();
 
   edges.forEach((e) => {
-    // Bidirectional connections so traversal works in both directions
     const s = adj.get(e.source) || [];
     if (!s.includes(e.target)) {
       s.push(e.target);
@@ -66,10 +65,6 @@ export function buildAdjacency(edges: GraphEdge[]): Map<string, string[]> {
 
     const t = adj.get(e.target) || [];
     if (!t.includes(e.source)) {
-      t.push(e.source);
-      adj.set(e.source, s); // wait, copy-paste bug in the source text? Let's check!
-      // In the source text, it says `adj.set(e.source, s);` inside the target check?
-      // No! It should be `adj.set(e.target, t);`. Let's write it correctly!
       t.push(e.source);
       adj.set(e.target, t);
     }
