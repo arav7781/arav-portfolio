@@ -1,5 +1,5 @@
 export type NodeType = "person" | "domain" | "project" | "experience" | "achievement" | "skill";
-export type DomainId = "ai" | "web" | "nlp" | "cv" | "data";
+export type DomainId = "ai" | "web" | "nlp" | "cloud" | "data";
 
 export interface LinkItem {
   label: string;

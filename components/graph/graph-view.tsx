@@ -85,10 +85,10 @@ export default function GraphView() {
         maxX = Math.max(maxX, n.x + n.r);
         maxY = Math.max(maxY, n.y + n.r);
       }
-      const pad = 100;
+      const pad = 80;
       const cw = Math.max(1, maxX - minX);
       const ch = Math.max(1, maxY - minY);
-      const k = clamp(Math.min((size.w - pad * 2) / cw, (size.h - pad * 2) / ch), 0.45, 1.5);
+      const k = clamp(Math.min((size.w - pad * 2) / cw, (size.h - pad * 2) / ch), 0.35, 2.0);
       const cx = (minX + maxX) / 2;
       const cy = (minY + maxY) / 2;
       setCam({ tx: size.w / 2 + offsetX - cx * k, ty: size.h / 2 - cy * k, k, smooth: smooth && !reduceMotion });
@@ -98,16 +98,16 @@ export default function GraphView() {
 
   const fit = useCallback(() => {
     if (!size.w || !size.h) return;
-    let R = 300;
+    let R = 380;
     for (const n of layout.nodes) {
       if (n.type === "skill") continue;
       R = Math.max(R, Math.hypot(n.x, n.y) + n.r + 24);
     }
-    const pad = 60;
+    const pad = 40;
     const k = clamp(
       Math.min((size.w - pad * 2) / (R * 2), (size.h - pad * 2) / (R * 2)),
-      0.45,
-      1.5,
+      0.35,
+      2.0,
     );
     setCam({ tx: size.w / 2, ty: size.h / 2, k, smooth: false });
   }, [size, layout]);
@@ -116,7 +116,7 @@ export default function GraphView() {
     (id: string) => {
       if (!size.w) return;
       const p = posOf(id);
-      const k = clamp(Math.max(cam.k, 1.0), 0.6, 1.8);
+      const k = clamp(Math.max(cam.k, 1.0), 0.5, 2.2);
       const cx = (size.w - panelW) / 2;
       setCam({ tx: cx - p.x * k, ty: size.h / 2 - p.y * k, k, smooth: !reduceMotion });
     },
@@ -264,7 +264,7 @@ export default function GraphView() {
       const my = e.clientY - rect.top;
       const factor = Math.exp(-e.deltaY * 0.0015);
       setCam((c) => {
-        const k2 = clamp(c.k * factor, 0.4, 2.6);
+        const k2 = clamp(c.k * factor, 0.25, 3.0);
         userMoved.current = true;
         return {
           k: k2,

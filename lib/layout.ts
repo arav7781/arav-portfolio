@@ -12,7 +12,6 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
   const laidOut: LaidOutNode[] = [];
   const byId = new Map<string, LaidOutNode>();
 
-  // Helper to find domain order
   const getDomainOrder = (dId: DomainId): number => {
     const d = DOMAINS.find((dom) => dom.id === dId);
     return d ? d.order : 0;
@@ -28,20 +27,19 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
   laidOut.push(centerNode);
   byId.set(centerNode.id, centerNode);
 
-  // 2. Domain nodes (placed on a ring at R = 110)
+  // 2. Domain nodes (placed on a ring at R = 150)
   DOMAINS.forEach((d) => {
     const angle = hubAngle(d.order);
     const domainNode: LaidOutNode = {
       ...NODES.find((n) => n.id === `domain-${d.id}`)!,
-      x: 110 * Math.cos(angle),
-      y: 110 * Math.sin(angle),
+      x: 150 * Math.cos(angle),
+      y: 150 * Math.sin(angle),
       r: 12,
     };
     laidOut.push(domainNode);
     byId.set(domainNode.id, domainNode);
   });
 
-  // Collect other nodes by their primary domain, grouping achievements, projects, and skills
   const groups: Record<string, GraphNode[]> = {};
   NODES.forEach((n) => {
     if (n.id === "arav" || n.type === "domain") return;
@@ -51,7 +49,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     groups[key].push(n);
   });
 
-  // Render projects (R = 190), achievements/experiences (R = 150), and skills (R = 250)
+  // Radii: inner (R = 210), projects (R = 285), skills (R = 365)
   DOMAINS.forEach((d) => {
     const baseAngle = hubAngle(d.order);
 
@@ -61,14 +59,13 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     const innerNodes = [...achs, ...exps];
     innerNodes.forEach((n, idx) => {
       const count = innerNodes.length;
-      const spread = 0.25; // spread in radians
+      const spread = 0.28;
       const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
       const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 135 : 155;
+      const R = isBridge ? 190 : 210;
       
       let finalAngle = angle;
       if (isBridge && n.domains) {
-        // Average the angles of its domains
         const angles = n.domains.map(dId => hubAngle(getDomainOrder(dId)));
         let sumX = 0, sumY = 0;
         angles.forEach(a => { sumX += Math.cos(a); sumY += Math.sin(a); });
@@ -92,7 +89,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
       const spread = 0.35;
       const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
       const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 190 : 205;
+      const R = isBridge ? 260 : 285;
 
       let finalAngle = angle;
       if (isBridge && n.domains) {
@@ -116,10 +113,10 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     const sks = groups[`skill-${d.id}`] || [];
     sks.forEach((n, idx) => {
       const count = sks.length;
-      const spread = 0.4;
+      const spread = 0.38;
       const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
       const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 245 : 260;
+      const R = isBridge ? 340 : 365;
 
       let finalAngle = angle;
       if (isBridge && n.domains) {
