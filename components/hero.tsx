@@ -8,6 +8,8 @@ import Link from "next/link"
 import { HeroGraph } from "./graph/hero-graph"
 import { DomainNav } from "./graph/domain-nav"
 import SpecularButton from "./SpecularButton"
+import PixelBlast from "./PixelBlast"
+import TiltedCard from "./TiltedCard"
 
 export default function Hero() {
   const targetRef = useRef<HTMLDivElement>(null)
@@ -26,6 +28,29 @@ export default function Hero() {
       ref={targetRef}
       className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden bg-background text-foreground"
     >
+      {/* Pixel Blast Background Animation */}
+      <div className="absolute inset-0 z-0 opacity-[0.45] pointer-events-none">
+        <PixelBlast
+          variant="square"
+          pixelSize={4}
+          color="#8b5cf6"
+          patternScale={2.5}
+          patternDensity={1.3}
+          pixelSizeJitter={0.1}
+          enableRipples
+          rippleSpeed={0.4}
+          rippleThickness={0.12}
+          rippleIntensityScale={1.5}
+          liquid={false}
+          liquidStrength={0.12}
+          liquidRadius={1.2}
+          liquidWobbleSpeed={5}
+          speed={0.5}
+          edgeFade={0.25}
+          transparent
+        />
+      </div>
+
       {/* Grid background */}
       <div className="absolute inset-0 z-0 opacity-20 dark:opacity-10 pointer-events-none">
         <div className="absolute inset-0 bg-grid-small-pattern"></div>
@@ -37,16 +62,7 @@ export default function Hero() {
           
           {/* Left Column: Bio and navigation */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-6"
-            >
-              <span className="inline-block px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 text-violet-700 dark:text-violet-300 border border-violet-500/20">
-                AI & ML • Symbiosis Institute of Technology
-              </span>
-            </motion.div>
+
 
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
@@ -136,16 +152,26 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right Column: HeroGraph */}
+          {/* Right Column: HeroGraph with 3D Tilt Card effect */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-5 w-full flex justify-center items-center pointer-events-auto"
           >
-            <div className="w-full max-w-[360px] sm:max-w-[400px]">
+            <TiltedCard
+              containerHeight="440px"
+              containerWidth="100%"
+              imageHeight="440px"
+              imageWidth="360px"
+              rotateAmplitude={12}
+              scaleOnHover={1.03}
+              showMobileWarning={false}
+              showTooltip={true}
+              captionText="Arav's Knowledge Graph"
+            >
               <HeroGraph />
-            </div>
+            </TiltedCard>
           </motion.div>
         </div>
       </motion.div>

@@ -36,58 +36,55 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Skills", href: "#skills" },
-    { name: "Timeline", href: "#timeline" },
-    { name: "Projects", href: "#projects" },
-    { name: "Research", href: "#research" },
-    { name: "Achievements", href: "#achievements" },
-    { name: "Blog", href: "#blog" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/#home" },
+    { name: "Skills", href: "/#skills" },
+    { name: "Knowledge Graph", href: "/graph" },
   ]
 
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-black/80 backdrop-blur-md border-b border-violet-500/20 py-2" : "bg-transparent py-4"
+        scrolled ? "bg-background/85 backdrop-blur-md border-b border-violet-500/10 py-2 shadow-sm" : "bg-transparent py-4"
       }`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link
           href="/"
-          className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500"
+          className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-500"
         >
           <GradientText>Arav.dev</GradientText>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`relative px-4 py-2 text-sm font-medium transition-colors ${
-                activeSection === link.href.substring(1) ? "text-white" : "text-gray-400 hover:text-white"
-              }`}
-            >
-              {link.name}
-              {activeSection === link.href.substring(1) && (
-                <motion.span
-                  layoutId="activeSection"
-                  className="absolute inset-0 rounded-md bg-violet-500/10 -z-10"
-                  transition={{ type: "spring", duration: 0.6 }}
-                />
-              )}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.split("#")[1];
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+                  isActive ? "text-violet-600 dark:text-white font-semibold" : "text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white"
+                }`}
+              >
+                {link.name}
+                {isActive && (
+                  <motion.span
+                    layoutId="activeSection"
+                    className="absolute inset-0 rounded-md bg-violet-500/10 -z-10"
+                    transition={{ type: "spring", duration: 0.6 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
 
           <Button
             size="sm"
             className="ml-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white border-0"
           >
             <a
-              href="/resume.pdf" // Adjust the filename if necessary
+              href="/resume.pdf"
               download
               className="flex items-center"
             >
@@ -95,18 +92,17 @@ export default function Navbar() {
               Resume
             </a>
           </Button>
-
         </nav>
 
         {/* Mobile Navigation Toggle */}
         <div className="md:hidden flex items-center">
-          <Button variant="outline" size="sm" className="mr-4 border-violet-500 text-violet-300 hover:bg-violet-500/10">
+          <Button variant="outline" size="sm" className="mr-4 border-violet-500/50 text-violet-600 dark:text-violet-300 hover:bg-violet-500/10 bg-transparent">
             <Download className="mr-2 h-4 w-4" />
             Resume
           </Button>
 
           <button
-            className="text-gray-300 hover:text-white"
+            className="text-slate-600 dark:text-gray-300 hover:text-slate-950 dark:hover:text-white"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -123,24 +119,27 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-black/95 backdrop-blur-lg border-b border-violet-500/20"
+            className="md:hidden bg-background/95 backdrop-blur-lg border-b border-violet-500/10"
           >
             <div className="container mx-auto px-4 py-4">
               <nav className="flex flex-col space-y-2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    className={`py-2 px-4 rounded-md transition-colors ${
-                      activeSection === link.href.substring(1)
-                        ? "bg-violet-500/10 text-white"
-                        : "text-gray-400 hover:text-white hover:bg-violet-500/5"
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = activeSection === link.href.split("#")[1];
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`py-2 px-4 rounded-md transition-colors ${
+                        isActive
+                          ? "bg-violet-500/10 text-violet-600 dark:text-white font-semibold"
+                          : "text-slate-600 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white hover:bg-violet-500/5"
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
           </motion.div>

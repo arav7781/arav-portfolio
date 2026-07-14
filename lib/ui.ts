@@ -8,7 +8,7 @@ export function domainVar(domain: DomainId): string {
       return "var(--c-web)";
     case "nlp":
       return "var(--c-nlp)";
-    case "cv":
+    case "cloud":
       return "var(--c-cv)";
     case "data":
       return "var(--c-data)";
