@@ -1,2 +1,5 @@
 allowBuilds:
-  sharp: set this to true or false
+  sharp: true
+
+overrides:
+  postcss: "^8.5.10"
