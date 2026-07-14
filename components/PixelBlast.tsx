@@ -383,6 +383,9 @@ const PixelBlast = ({
     if (!container) return;
     speedRef.current = speed;
 
+    let onPointerDown: ((e: PointerEvent) => void) | undefined;
+    let onPointerMove: ((e: PointerEvent) => void) | undefined;
+
     const needsReinitKeys = ["antialias", "liquid", "noiseAmount"];
     const cfg = { antialias, liquid, noiseAmount };
     let mustReinit = false;
@@ -550,7 +553,7 @@ const PixelBlast = ({
         };
       };
 
-      const onPointerDown = (e: PointerEvent) => {
+      onPointerDown = (e: PointerEvent) => {
         const { fx, fy } = mapToPixels(e);
         const ix = threeRef.current?.clickIx ?? 0;
         uniforms.uClickPos.value[ix].set(fx, fy);
@@ -560,7 +563,7 @@ const PixelBlast = ({
         }
       };
 
-      const onPointerMove = (e: PointerEvent) => {
+      onPointerMove = (e: PointerEvent) => {
         if (!touch) return;
         const { fx, fy, w, h } = mapToPixels(e);
         touch.addTouch({ x: fx / w, y: fy / h });
@@ -647,8 +650,8 @@ const PixelBlast = ({
     prevConfigRef.current = cfg;
 
     return () => {
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointermove", onPointerMove);
+      if (onPointerDown) window.removeEventListener("pointerdown", onPointerDown);
+      if (onPointerMove) window.removeEventListener("pointermove", onPointerMove);
       if (threeRef.current && mustReinit) return;
       if (!threeRef.current) return;
       const t = threeRef.current;
