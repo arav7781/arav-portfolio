@@ -437,7 +437,7 @@ export default function VoiceAssistant() {
         {isOpen && (
           <motion.div
             className={cn(
-              "fixed right-6 z-50 bg-background/95 backdrop-blur-md border border-slate-200 dark:border-violet-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col",
+              "fixed right-6 z-50 bg-card border border-slate-200 dark:border-zinc-800 rounded-xl shadow-2xl overflow-hidden flex flex-col font-mono text-card-foreground",
               isMinimized ? "bottom-24 w-64 h-auto" : "bottom-24 w-80 md:w-96 h-[500px]",
             )}
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
@@ -445,7 +445,7 @@ export default function VoiceAssistant() {
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             style={{
-              boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.3), 0 8px 10px -6px rgba(139, 92, 246, 0.2)",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08), 0 0 20px rgba(139, 92, 246, 0.03)",
             }}
           >
             {/* RippleGrid Background Animation - Voice Mode Only */}
@@ -453,50 +453,45 @@ export default function VoiceAssistant() {
               <RippleGrid
                 enableRainbow={false}
                 gridColor="#8b5cf6"
-                rippleIntensity={0.05}
-                gridSize={10}
-                gridThickness={15}
+                rippleIntensity={0.04}
+                gridSize={12}
+                gridThickness={12}
                 mouseInteraction={true}
-                mouseInteractionRadius={0.8}
-                opacity={0.5}
-                fadeDistance={1.5}
-                vignetteStrength={2}
-                glowIntensity={0.15}
+                mouseInteractionRadius={0.7}
+                opacity={0.45}
+                fadeDistance={1.4}
+                vignetteStrength={2.5}
+                glowIntensity={0.1}
                 gridRotation={0}
               />
             )}
 
-            <div className="p-4 border-b border-slate-200 dark:border-violet-500/30 bg-slate-100/80 dark:bg-zinc-900/80 flex items-center relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10" />
-              <div className="relative w-10 h-10 rounded-full overflow-hidden mr-3 border-2 border-violet-500">
-                <Image src="/aiia.png?height=100&width=100" alt="Arav Saxena" fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 animate-pulse"></div>
-              </div>
-              <div className="relative">
-                <h3 className="font-bold text-slate-950 dark:text-white">Saitama</h3>
-                <p className="text-xs text-slate-500 dark:text-gray-300">Powered by personal LLM</p>
-              </div>
-              <div className="ml-auto flex items-center space-x-2 relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-slate-500 dark:text-gray-400 hover:text-slate-950 dark:hover:text-white"
-                  onClick={() => setIsMinimized(!isMinimized)}
-                >
-                  {isMinimized ? (
-                    <ChevronRight className="h-4 w-4 rotate-90" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4 -rotate-90" />
-                  )}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-slate-500 dark:text-gray-400 hover:text-slate-950 dark:hover:text-white"
+            {/* Terminal Window Header (Toolbar Controls) */}
+            <div className="p-3 border-b border-slate-200 dark:border-zinc-800/80 bg-slate-100 dark:bg-zinc-900/90 flex items-center justify-between select-none relative z-20">
+              {/* Window Dots */}
+              <div className="flex items-center space-x-2">
+                <button
                   onClick={() => setIsOpen(false)}
-                >
-                  <X size={18} />
-                </Button>
+                  className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center cursor-pointer"
+                  title="Close"
+                  aria-label="Close Saitama"
+                />
+                <button
+                  onClick={() => setIsMinimized(!isMinimized)}
+                  className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-600 transition-colors flex items-center justify-center cursor-pointer"
+                  title="Minimize"
+                  aria-label="Toggle Minimize"
+                />
+                <div className="w-3 h-3 rounded-full bg-slate-300 dark:bg-zinc-700 opacity-60" />
+              </div>
+
+              {/* Console Title */}
+              <span className="text-[11px] text-slate-600 dark:text-zinc-400 font-mono tracking-tight">saitama@arav-dev: ~</span>
+
+              {/* Status Indicator */}
+              <div className="flex items-center space-x-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[9px] text-slate-400 dark:text-zinc-500 uppercase tracking-wider font-bold">online</span>
               </div>
             </div>
 
@@ -505,28 +500,27 @@ export default function VoiceAssistant() {
                 <AnimatePresence mode="wait">
                   {showVoicePrompt && (
                     <motion.div
-                      className="absolute top-4 left-0 right-0 mx-auto w-[90%] bg-gradient-to-r from-violet-900/90 to-fuchsia-900/90 backdrop-blur-md rounded-xl p-4 shadow-xl z-20"
+                      className="absolute top-3 left-0 right-0 mx-auto w-[92%] bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg p-3.5 shadow-xl z-20 font-mono"
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ type: "spring", damping: 25, stiffness: 300 }}
                     >
                       <div className="flex items-start">
-                        <Volume2 size={20} className="text-violet-300 mt-1 mr-2 flex-shrink-0" />
+                        <Volume2 size={16} className="text-violet-500 dark:text-violet-400 mt-0.5 mr-2.5 flex-shrink-0" />
                         <div>
-                          <h4 className="font-medium text-white mb-1">Voice-Powered Assistant</h4>
-                          <p className="text-sm text-gray-200 mb-3">
-                            Click the microphone button and speak. I'll listen, understand, and respond with Arav's
-                            voice!
+                          <h4 className="font-semibold text-xs text-slate-900 dark:text-white mb-1">saitama-assistant --init</h4>
+                          <p className="text-[11px] text-slate-600 dark:text-zinc-400 leading-relaxed mb-2.5">
+                            interactive console model active. use the microphone interface to transmit live query signals.
                           </p>
                           <div className="flex justify-end">
                             <Button
                               size="sm"
                               variant="outline"
-                              className="border-violet-400/50 text-violet-300 hover:bg-violet-500/10"
+                              className="h-6 text-[10px] border-slate-300 dark:border-zinc-700 hover:border-violet-500 text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white bg-transparent"
                               onClick={() => setShowVoicePrompt(false)}
                             >
-                              Got it
+                              acknowledge
                             </Button>
                           </div>
                         </div>
@@ -545,29 +539,8 @@ export default function VoiceAssistant() {
                       transition={{ duration: 0.25 }}
                       className="flex-1 flex flex-col overflow-hidden"
                     >
-                      {/* Suggested Questions */}
-                      {messages.length < 3 && (
-                        <div className="px-4 py-3 border-b border-slate-200 dark:border-violet-500/20 bg-slate-100/50 dark:bg-zinc-950/20">
-                          <p className="text-xs text-slate-500 dark:text-gray-400 mb-2">Try asking:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {suggestedQuestions.map((question, qIdx) => (
-                              <motion.button
-                                key={qIdx}
-                                className="text-xs bg-violet-500/10 dark:bg-violet-900/30 hover:bg-violet-500/20 dark:hover:bg-violet-900/50 text-violet-700 dark:text-violet-300 px-3 py-1.5 rounded-full border border-violet-500/20 dark:border-violet-500/30 flex items-center"
-                                onClick={() => handleSuggestedQuestion(question)}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                              >
-                                {getIconForQuestion(question)}
-                                <span className="ml-1">{question}</span>
-                              </motion.button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Chat messages */}
-                      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-zinc-950/10">
+                      {/* Chat messages scroll area */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/50 dark:bg-zinc-950/80 scrollbar-thin">
                         {messages.map((message, index) => (
                           <motion.div
                             key={index}
@@ -576,81 +549,94 @@ export default function VoiceAssistant() {
                             transition={{ duration: 0.3 }}
                             className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                           >
-                            <div
-                              className={`max-w-[80%] rounded-2xl p-3 ${
-                                message.role === "user"
-                                  ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
-                                  : "bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-gray-200 border border-slate-200 dark:border-zinc-700/50"
-                              }`}
-                            >
-                              <div className="flex items-center mb-1">
-                                <div
-                                  className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${
-                                    message.role === "user" ? "bg-violet-500" : "bg-fuchsia-500"
-                                  }`}
-                                >
-                                  {message.role === "user" ? <User size={14} className="text-white" /> : <Bot size={14} className="text-white" />}
-                                </div>
-                                <span className="text-xs font-semibold">
-                                  {message.role === "user" ? "You" : "Saitama"}
-                                </span>
-                                {message.role === "assistant" &&
-                                  index === messages.length - 1 &&
-                                  audioUrl && (
+                            {message.role === "user" ? (
+                              <div className="max-w-[85%] bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800/80 text-violet-600 dark:text-violet-400 rounded-lg p-3 text-xs leading-relaxed shadow-sm font-mono flex items-start">
+                                <span className="text-slate-400 dark:text-zinc-500 mr-2 select-none">$</span>
+                                <span className="flex-1">{message.content}</span>
+                              </div>
+                            ) : (
+                              <div className="max-w-[85%] bg-slate-100/50 dark:bg-zinc-900/30 border border-slate-200/50 dark:border-zinc-800/50 text-slate-800 dark:text-zinc-300 rounded-lg p-3 text-xs leading-relaxed font-mono flex flex-col">
+                                <div className="flex items-center text-[10px] text-slate-400 dark:text-zinc-500 mb-1.5 select-none font-bold">
+                                  <span className="text-green-500 mr-1.5">●</span>
+                                  <span>saitama-stdout</span>
+                                  {index === messages.length - 1 && audioUrl && (
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="h-6 w-6 ml-1 text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                                      className="h-4 w-4 ml-2 text-slate-400 dark:text-zinc-500 hover:text-slate-900 dark:hover:text-white"
                                       onClick={togglePlayback}
                                     >
-                                      {isPlaying ? <Pause size={12} /> : <Play size={12} />}
+                                      {isPlaying ? <Pause size={10} /> : <Play size={10} />}
                                     </Button>
                                   )}
+                                </div>
+                                <p className="whitespace-pre-wrap">{message.content}</p>
                               </div>
-                              <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                            </div>
+                            )}
                           </motion.div>
                         ))}
+
+                        {/* Suggested questions list inside the scroll container */}
+                        {messages.length < 3 && (
+                          <div className="space-y-2.5 mt-4">
+                            <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-bold select-none font-mono">// query options:</p>
+                            <div className="flex flex-col gap-2 items-start">
+                              {suggestedQuestions.map((question, qIdx) => (
+                                <motion.button
+                                  key={qIdx}
+                                  className="text-[11px] text-left font-mono bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900/60 dark:hover:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 px-3.5 py-1.5 rounded-lg border border-slate-200 dark:border-zinc-800/60 hover:border-violet-500/40 transition-colors flex items-center w-auto cursor-pointer"
+                                  onClick={() => handleSuggestedQuestion(question)}
+                                  whileHover={{ scale: 1.02, x: 2 }}
+                                  whileTap={{ scale: 0.98 }}
+                                >
+                                  <span className="text-violet-600 dark:text-violet-500 mr-2.5 select-none">&gt;</span>
+                                  <span>{question}</span>
+                                </motion.button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         <div ref={messagesEndRef} />
                       </div>
 
                       {/* Loader / Thinking Status */}
                       {processingStage !== "idle" && (
-                        <div className="px-4 py-2 bg-gradient-to-r from-violet-900/30 to-fuchsia-900/30 border-t border-slate-200 dark:border-violet-500/20">
-                          <div className="flex items-center justify-center">
-                            <Loader2 size={16} className="animate-spin mr-2 text-violet-500" />
-                            <span className="text-sm text-slate-700 dark:text-gray-300">{getStatusMessage()}</span>
+                        <div className="px-4 py-2 border-t border-slate-200 dark:border-zinc-900 bg-slate-50 dark:bg-zinc-950 select-none">
+                          <div className="flex items-center text-xs text-slate-500 dark:text-zinc-400">
+                            <Loader2 size={12} className="animate-spin mr-2 text-violet-500" />
+                            <span>{getStatusMessage().toLowerCase()}</span>
                           </div>
                         </div>
                       )}
 
-                      {/* Text Input Footer */}
-                      <div className="p-4 border-t border-slate-200 dark:border-violet-500/30 bg-slate-100/50 dark:bg-zinc-900/50 flex flex-col">
-                        <form onSubmit={handleTextSubmit} className="flex items-center">
+                      {/* Terminal Command Input Footer */}
+                      <div className="p-3 border-t border-slate-200 dark:border-zinc-900 bg-slate-50 dark:bg-zinc-950 flex flex-col">
+                        <form onSubmit={handleTextSubmit} className="flex items-center bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 focus-within:border-violet-500 dark:focus-within:border-violet-500/40 rounded-lg px-3 py-1.5 transition-colors">
+                          <span className="font-mono text-xs text-violet-600 dark:text-violet-500 mr-2 select-none">arav-dev:~$</span>
                           <input
                             type="text"
                             value={textInput}
                             onChange={(e) => setTextInput(e.target.value)}
-                            placeholder="Type your question..."
-                            className="flex-1 bg-white dark:bg-zinc-950 border border-slate-200 dark:border-violet-500/30 focus:border-violet-500 dark:focus:border-violet-500 rounded-l-xl px-4 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+                            placeholder="ask --question '...'"
+                            className="flex-1 bg-transparent text-slate-900 dark:text-white text-xs font-mono focus:outline-none placeholder-slate-400 dark:placeholder-zinc-700"
                             disabled={isProcessing}
                           />
                           <Button
                             type="submit"
                             disabled={isProcessing || !textInput.trim()}
-                            className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white rounded-r-xl rounded-l-none h-[38px]"
+                            className="bg-transparent hover:bg-slate-100 dark:hover:bg-zinc-800 text-violet-600 dark:text-violet-400 p-1 h-auto rounded cursor-pointer"
                           >
-                            <ChevronRight size={18} />
+                            <ChevronRight size={14} />
                           </Button>
                         </form>
-                        <div className="mt-3 flex justify-center">
+                        <div className="mt-3 flex justify-center select-none">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setTextMode(false)}
-                            className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-xs"
+                            className="text-slate-500 hover:text-slate-800 dark:text-zinc-500 dark:hover:text-zinc-300 text-[10px] font-mono cursor-pointer"
                           >
-                            <Mic size={12} className="mr-1" /> Switch to voice mode
+                            <Mic size={10} className="mr-1.5" /> switch_mode --voice
                           </Button>
                         </div>
                       </div>
@@ -667,23 +653,10 @@ export default function VoiceAssistant() {
                       {/* Orb Speaking/Listening Assistant in the center */}
                       <div className="flex-1 flex flex-col items-center justify-center relative">
                         <div className="relative h-36 w-36 rounded-full flex items-center justify-center mb-6">
-                          {/* Pulsing glow background rings */}
-                          <div className="absolute inset-0 rounded-full bg-violet-500/10 dark:bg-violet-500/5 border border-violet-500/20 scale-110" />
-                          {isRecording && (
-                            <>
-                              <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping" />
-                              <div className="absolute inset-0 rounded-full bg-red-500/10 border border-red-500/30 scale-125" />
-                            </>
-                          )}
                           <Button
                             onClick={isRecording ? stopRecording : startRecording}
                             disabled={isProcessing && !isRecording}
-                            className={cn(
-                              "relative z-10 w-28 h-28 rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 border shadow-lg bg-background",
-                              isRecording
-                                ? "border-red-500 shadow-red-500/20"
-                                : "border-violet-500/30 shadow-violet-500/20 hover:scale-105"
-                            )}
+                            className="relative z-10 w-28 h-28 rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 bg-background border-none shadow-none hover:scale-105 cursor-pointer"
                           >
                             <div className="absolute inset-0 w-full h-full scale-105">
                               <Orb
@@ -703,28 +676,28 @@ export default function VoiceAssistant() {
                           </Button>
                         </div>
 
-                        <div className="text-center">
-                          <p className="text-sm font-semibold text-slate-800 dark:text-white mb-1 uppercase tracking-wider font-mono">
-                            {isRecording ? "Listening" : processingStage === "thinking" ? "Thinking" : processingStage === "speaking" ? "Speaking" : "Saitama"}
+                        <div className="text-center select-none">
+                          <p className="text-xs font-semibold text-slate-600 dark:text-zinc-400 mb-1 uppercase tracking-wider font-mono">
+                            {isRecording ? "status: listening" : `status: ${processingStage === "thinking" ? "thinking" : processingStage === "speaking" ? "speaking" : "idle"}`}
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-gray-400 min-h-[16px]">
-                            {isRecording ? `Recording... ${formatTime(recordingTime)}` : getStatusMessage()}
+                          <p className="text-[11px] text-slate-500 dark:text-zinc-500 font-mono min-h-[16px] lowercase">
+                            {isRecording ? `transmitting... ${formatTime(recordingTime)}` : getStatusMessage()}
                           </p>
                         </div>
                       </div>
 
                       {/* Microphone instruction and Switch Mode button at the bottom */}
-                      <div className="flex flex-col items-center border-t border-slate-200 dark:border-violet-500/20 pt-4 bg-transparent">
-                        <p className="text-xs text-slate-500 dark:text-gray-400 mb-4">
-                          {isRecording ? "Tap the mic to stop recording" : "Tap the mic to start speaking"}
+                      <div className="flex flex-col items-center border-t border-slate-200 dark:border-zinc-900 pt-4 bg-transparent select-none">
+                        <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono mb-4">
+                          {isRecording ? "tap the orb to stop transmission" : "tap the orb to start transmission"}
                         </p>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => setTextMode(true)}
-                          className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-xs"
+                          className="text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-[10px] font-mono cursor-pointer"
                         >
-                          <MessageSquare size={12} className="mr-1" /> Switch to text mode
+                          <MessageSquare size={10} className="mr-1.5" /> switch_mode --text
                         </Button>
                       </div>
                     </motion.div>
@@ -733,16 +706,18 @@ export default function VoiceAssistant() {
               </div>
             )}
             {isMinimized && (
-              <div className="p-3 flex items-center relative z-10 bg-slate-100/90 dark:bg-zinc-900/90 border-t border-slate-200 dark:border-violet-500/20">
-                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                <p className="text-sm text-slate-700 dark:text-gray-300">Saitama ready</p>
+              <div className="p-3.5 flex items-center justify-between relative z-10 bg-slate-100 dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800">
+                <div className="flex items-center space-x-2 select-none">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                  <p className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">saitama-stdout: idle</p>
+                </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-auto text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-xs"
+                  className="h-auto p-1 text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 text-[10px] font-mono cursor-pointer"
                   onClick={() => setIsMinimized(false)}
                 >
-                  Expand
+                  restore_shell
                 </Button>
               </div>
             )}
