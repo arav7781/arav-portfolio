@@ -22,19 +22,19 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     ...NODES.find((n) => n.id === "arav")!,
     x: 0,
     y: 0,
-    r: 18,
+    r: 28,
   };
   laidOut.push(centerNode);
   byId.set(centerNode.id, centerNode);
 
-  // 2. Domain nodes (placed on a ring at R = 150)
+  // 2. Domain nodes (placed on a ring at R = 190)
   DOMAINS.forEach((d) => {
     const angle = hubAngle(d.order);
     const domainNode: LaidOutNode = {
       ...NODES.find((n) => n.id === `domain-${d.id}`)!,
-      x: 150 * Math.cos(angle),
-      y: 150 * Math.sin(angle),
-      r: 12,
+      x: 190 * Math.cos(angle),
+      y: 190 * Math.sin(angle),
+      r: 18,
     };
     laidOut.push(domainNode);
     byId.set(domainNode.id, domainNode);
@@ -49,7 +49,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     groups[key].push(n);
   });
 
-  // Radii: inner (R = 210), projects (R = 285), skills (R = 365)
+  // Radii: inner (R = 260), projects (R = 340), skills (R = 420)
   DOMAINS.forEach((d) => {
     const baseAngle = hubAngle(d.order);
 
@@ -62,7 +62,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
       const spread = 0.28;
       const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
       const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 190 : 210;
+      const R = isBridge ? 230 : 260;
       
       let finalAngle = angle;
       if (isBridge && n.domains) {
@@ -76,7 +76,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
         ...n,
         x: R * Math.cos(finalAngle),
         y: R * Math.sin(finalAngle),
-        r: n.type === "achievement" ? 7 : 8,
+        r: n.type === "achievement" ? 11 : 12.5,
       };
       laidOut.push(laid);
       byId.set(n.id, laid);
@@ -89,7 +89,34 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
       const spread = 0.35;
       const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
       const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 260 : 285;
+      const R = isBridge ? 300 : 340;
+
+      let finalAngle = angle;
+      if (isBridge && n.domains) {
+        const angles = n.domains.map(dId => hubAngle(getDomainOrder(dId)));
+        let sumX = 0, sumY = 0;
+        angles.forEach(a => { sumX += Math.cos(a); sumY += Math.sin(a); });
+        finalAngle = Math.atan2(sumY, sumX);
+      }
+
+      const laid: LaidOutNode = {
+        ...n,
+        x: R * Math.cos(finalAngle),
+        y: R * Math.sin(finalAngle),
+        r: 13,
+      };
+      laidOut.push(laid);
+      byId.set(n.id, laid);
+    });
+
+    // Skills group around domain
+    const sks = groups[`skill-${d.id}`] || [];
+    sks.forEach((n, idx) => {
+      const count = sks.length;
+      const spread = 0.38;
+      const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
+      const isBridge = (n.domains?.length ?? 0) >= 2;
+      const R = isBridge ? 390 : 420;
 
       let finalAngle = angle;
       if (isBridge && n.domains) {
@@ -104,33 +131,6 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
         x: R * Math.cos(finalAngle),
         y: R * Math.sin(finalAngle),
         r: 8.5,
-      };
-      laidOut.push(laid);
-      byId.set(n.id, laid);
-    });
-
-    // Skills group around domain
-    const sks = groups[`skill-${d.id}`] || [];
-    sks.forEach((n, idx) => {
-      const count = sks.length;
-      const spread = 0.38;
-      const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
-      const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 340 : 365;
-
-      let finalAngle = angle;
-      if (isBridge && n.domains) {
-        const angles = n.domains.map(dId => hubAngle(getDomainOrder(dId)));
-        let sumX = 0, sumY = 0;
-        angles.forEach(a => { sumX += Math.cos(a); sumY += Math.sin(a); });
-        finalAngle = Math.atan2(sumY, sumX);
-      }
-
-      const laid: LaidOutNode = {
-        ...n,
-        x: R * Math.cos(finalAngle),
-        y: R * Math.sin(finalAngle),
-        r: 5,
       };
       laidOut.push(laid);
       byId.set(n.id, laid);

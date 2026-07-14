@@ -20,7 +20,7 @@ const ROWS: { swatch: React.ReactNode; label: string; desc: string }[] = [
   {
     swatch: <circle cx="8" cy="8" r="6.5" fill="var(--c-ai)" />,
     label: "domain",
-    desc: "a field I work in (5 total)",
+    desc: "a field I work in (6 total)",
   },
   {
     swatch: <circle cx="8" cy="8" r="5" fill="var(--c-web)" />,

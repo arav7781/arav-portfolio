@@ -1,11 +1,12 @@
 import { GraphNode, DomainId } from "./types";
 
 export const DOMAINS = [
-  { id: "ai", key: "AI/ML", label: "AI & Machine Learning", order: 0, desc: "Deep Learning, PyTorch, quantization" },
-  { id: "web", key: "Web Dev", label: "Full-Stack Web Dev", order: 1, desc: "Next.js, SpringBoot, NestJS, APIs" },
-  { id: "nlp", key: "NLP/LLMs", label: "NLP & Agentic AI", order: 2, desc: "LangChain, LangGraph, RAG, agents" },
-  { id: "cloud", key: "Cloud/DevOps", label: "Cloud & DevOps", order: 3, desc: "AWS, Azure, Docker, Kubernetes, CI/CD" },
-  { id: "data", key: "Data/BI", label: "Data & Analytics", order: 4, desc: "SQL, PostgreSQL, PySpark, BI Dashboards" },
+  { id: "ai", key: "AI/ML", label: "AI & Machine Learning", order: 0, desc: "Deep Learning, PyTorch, computer vision, optimization" },
+  { id: "backend", key: "Backend", label: "Backend Engineering", order: 1, desc: "Distributed systems, microservices, Saga orchestration, Kafka, Spring Boot" },
+  { id: "frontend", key: "Frontend", label: "Frontend Engineering", order: 2, desc: "React, Next.js, WebGL canvas, specular layouts, interactive state graphs" },
+  { id: "nlp", key: "NLP/LLMs", label: "NLP & Agentic AI", order: 3, desc: "LangChain, LangGraph, custom fine-tuned VLMs, multi-agent frameworks" },
+  { id: "cloud", key: "Cloud/DevOps", label: "Cloud & DevOps", order: 4, desc: "AWS (EKS, EC2, S3), Azure, Docker, Terraform, ArgoCD, GitOps" },
+  { id: "data", key: "Data/BI", label: "Data & Analytics", order: 5, desc: "SQL, PostgreSQL, Neo4j, PySpark, EventStoreDB, BI Dashboards" },
 ] as const;
 
 export const NODES: GraphNode[] = [
@@ -14,12 +15,12 @@ export const NODES: GraphNode[] = [
     id: "arav",
     type: "person",
     label: "Arav Saxena",
-    desc: "Software engineer and full-stack developer focused on scalable systems, intelligent applications, cloud-native engineering, and agentic AI. 2+ years building data pipelines and dashboards.",
-    summary: "AI Researcher & Software Engineer.",
-    domains: ["ai", "web", "nlp", "cloud", "data"],
+    desc: "Backend and AI/ML engineer focused on high-throughput distributed systems, event-driven architectures, cloud-native deployments, and agentic AI models.",
+    summary: "Distributed Systems & AI/ML Engineer.",
+    domains: ["ai", "backend", "frontend", "nlp", "cloud", "data"],
     meta: {
       location: "Pune, India",
-      role: "AI Researcher & Full-Stack Developer",
+      role: "Backend & AI/ML Engineer",
       org: "SIT Pune",
     },
     links: [
@@ -31,19 +32,20 @@ export const NODES: GraphNode[] = [
 
   // Domains
   { id: "domain-ai", type: "domain", label: "AI & Machine Learning", domainId: "ai", desc: "Core Deep Learning, Quantization, and Reinforcement Learning." },
-  { id: "domain-web", type: "domain", label: "Full-Stack Web Dev", domainId: "web", desc: "Responsive client interfaces, microservices, and distributed backends." },
-  { id: "domain-nlp", type: "domain", label: "NLP & Agentic AI", domainId: "nlp", desc: "Conversational voice agents, hybrid RAG, and multi-agent workflows." },
-  { id: "domain-cloud", type: "domain", label: "Cloud & DevOps", domainId: "cloud", desc: "Containerized deployments, event streaming, and cloud resource schedulers." },
-  { id: "domain-data", type: "domain", label: "Data & Analytics", domainId: "data", desc: "Relational/NoSQL databases, visual business dashboards, and ETL pipelines." },
+  { id: "domain-backend", type: "domain", label: "Backend Engineering", domainId: "backend", desc: "High-throughput microservices, event-driven architectures, and distributed systems." },
+  { id: "domain-frontend", type: "domain", label: "Frontend Engineering", domainId: "frontend", desc: "Interactive web experiences, theme-adaptive styling, and smooth component loops." },
+  { id: "domain-nlp", type: "domain", label: "NLP & Agentic AI", domainId: "nlp", desc: "Conversational audio agents, hybrid GraphRAG, and multi-agent systems." },
+  { id: "domain-cloud", type: "domain", label: "Cloud & DevOps", domainId: "cloud", desc: "Container orchestration, declarative IaC, and continuous GitOps reconciliation." },
+  { id: "domain-data", type: "domain", label: "Data & Analytics", domainId: "data", desc: "Structured SQL, graph stores, stream logs, and business analytics." },
 
   // Projects
   {
     id: "marketplace",
     type: "project",
     label: "Asset Marketplace",
-    desc: "Built a highly scalable NFT marketplace utilizing Domain-Driven Design (DDD), Command Query Responsibility Segregation (CQRS), and Event Sourcing architecture. Integrated Stripe, Coinbase, and BitPay for transactions alongside custom ERC721 smart contracts.",
+    desc: "Built a highly scalable NFT marketplace utilizing Domain-Driven Design (DDD), Command Query Responsibility Segregation (CQRS), and Event Sourcing architecture. Integrated payment integrations inside an NX Monorepo.",
     summary: "Decentralized NFT marketplace & payment workflow.",
-    domains: ["web", "data", "cloud"],
+    domains: ["backend", "data", "cloud"],
     meta: {
       period: "2021 - Present",
       impact: "Secure payment workflows & digital asset trading inside an NX Monorepo.",
@@ -54,16 +56,16 @@ export const NODES: GraphNode[] = [
   {
     id: "freight",
     type: "project",
-    label: "Freight Platform",
-    desc: "Engineered an event-driven logistics bidding platform using microservices, Kafka messaging, and MongoDB projections. Built tracking services with Redis caching layers and GraphQL APIs, solving auditability challenges.",
-    summary: "Event-driven logistics bidding microservices.",
-    domains: ["web", "cloud", "data"],
+    label: "Freight Bidding Platform",
+    desc: "Engineered an event-driven logistics bidding platform using microservices, Kafka, Axon Framework, and Redis ZSET delayed event queues. Implemented CQRS and Event Sourcing to store workflow state, automatically recovering from failures with Saga compensations.",
+    summary: "Event-driven logistics bidding microservices & delayed queue.",
+    domains: ["backend", "cloud", "data"],
     meta: {
       period: "2024 - 2025",
       impact: "Asynchronous distributed logistics bidding with solid auditability.",
-      stack: ["Java", "SpringBoot", "Kafka", "MongoDB", "Redis", "GraphQL", "Docker", "AWS"],
+      stack: ["Java", "SpringBoot", "Kafka", "Axon Framework", "Redis ZSET", "MongoDB", "Kubernetes", "AWS"],
     },
-    links: [{ label: "Case File", href: "https://github.com/arav7781" }]
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/bharatHireSecure" }]
   },
   {
     id: "sql-assistant",
@@ -99,7 +101,7 @@ export const NODES: GraphNode[] = [
     label: "LegalRAG",
     desc: "Architected a GraphRAG system using Neo4j and vector hybrid search. Enables natural language queries over 10k+ court PDF documents and judgements for the Indian judiciary, reducing research time by 30%. Patent filed for this architecture.",
     summary: "GraphRAG legal research platform for Indian judiciary.",
-    domains: ["nlp", "data", "ai", "web"],
+    domains: ["nlp", "data", "ai", "frontend"],
     meta: {
       period: "2025",
       impact: "Used by 200+ legal professionals to search complex multi-hop cases.",
@@ -113,7 +115,7 @@ export const NODES: GraphNode[] = [
     label: "GurukulX",
     desc: "Developed an AI educational platform integrated with Llama-based voice agents. Features automated lesson planning, interactive query answering, and productivity workflows, improving teacher efficiency by 25%.",
     summary: "Voice-enabled lesson planning for educators.",
-    domains: ["nlp", "web", "ai"],
+    domains: ["nlp", "frontend", "ai"],
     meta: {
       period: "2024",
       impact: "Adopted across 50+ schools to assist over 100+ educators.",
@@ -127,7 +129,7 @@ export const NODES: GraphNode[] = [
     label: "ArogyaMitra",
     desc: "Built a healthcare voice agent platform for rural providers. Integrated Whisper Speech-to-Text and Google Text-to-Speech to deliver multilingual audio-based diagnostic routing.",
     summary: "Multilingual voice agent for patient triage.",
-    domains: ["nlp", "ai", "web"],
+    domains: ["nlp", "ai", "frontend"],
     meta: {
       period: "2024 - 2025",
       impact: "Enhanced patient triage efficiency by 40% for rural health clinics.",
@@ -163,6 +165,76 @@ export const NODES: GraphNode[] = [
     },
     links: [{ label: "GitHub", href: "https://github.com/arav7781" }]
   },
+  {
+    id: "dashing-vision",
+    type: "project",
+    label: "Dashing Vision",
+    desc: "Developed an OS-level anti-cheat proctoring system that detects and terminates Electron overlays and mirrors, paired with a LiveKit-powered voice agent running VAD audio analysis.",
+    summary: "OS-level interview anti-cheat & Voice AI proctoring tool.",
+    domains: ["ai", "backend", "frontend"],
+    meta: {
+      period: "2025",
+      impact: "Prevents screen overlays, background cheats, and AI voice assistance feeds.",
+      stack: ["Python", "LiveKit", "NodeJS", "Process Killing", "Electron Detection", "Voice AI"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781" }]
+  },
+  {
+    id: "posturesync",
+    type: "project",
+    label: "PostureSync",
+    desc: "Co-developed an exercise posture correction system using MediaPipe pose keypoints, OpenCV processing, and Gemini VLMs to deliver speech-synthesized real-time trainer feedback.",
+    summary: "Real-time AI posture feedback coach.",
+    domains: ["ai", "frontend", "backend"],
+    meta: {
+      period: "2025",
+      impact: "Allows high-precision posture evaluation via simple webcam feeds.",
+      stack: ["Python", "MediaPipe", "OpenCV", "Gemini API", "NextJS", "AWS Lambda", "TTS"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781" }]
+  },
+  {
+    id: "warehouse-twin",
+    type: "project",
+    label: "Warehouse Digital Twin",
+    desc: "Developed an LLM-orchestrated WGAN-GP + Diffusion framework for synthesizing cost-efficient warehouse digital twins, bypassing resource-heavy 3D scene generators.",
+    summary: "Generates semantic warehouse twins using WGAN-GP and Diffusion.",
+    domains: ["ai", "nlp"],
+    meta: {
+      period: "2025",
+      impact: "Cuts high computational rendering costs for industrial robot simulation pipelines.",
+      stack: ["Python", "WGAN-GP", "Diffusion Models", "LLM Orchestration", "Reinforcement Learning"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781" }]
+  },
+  {
+    id: "clinical-ai",
+    type: "project",
+    label: "Clinical AI Agent",
+    desc: "Built an offline-first clinical AI assistant at AI BOOMI Startup Weekend, serving local patient report analysis through edge clinical agents.",
+    summary: "Explainable local medical documentation assistant.",
+    domains: ["ai", "nlp"],
+    meta: {
+      period: "2025",
+      impact: "Provides offline medical file analysis without cloud overhead.",
+      stack: ["Python", "LoRA", "Edge Inference", "NextJS", "Explainable AI"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781" }]
+  },
+  {
+    id: "cron-scheduler",
+    type: "project",
+    label: "Cloud Cost Optimizer",
+    desc: "Engineered a Kubernetes CronJob infrastructure orchestrator on AWS/Azure, shutting down idle EC2/EKS configurations, compressing logs, and warning Redis caches.",
+    summary: "EKS worker nodes auto-scheduler.",
+    domains: ["cloud", "backend"],
+    meta: {
+      period: "2025",
+      impact: "Reduced monthly non-prod cloud resources bills by 45%.",
+      stack: ["Kubernetes", "AWS EKS", "Azure", "Terraform", "ArgoCD", "GitOps", "Shell Scripting"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781" }]
+  },
 
   // Experience
   {
@@ -186,7 +258,7 @@ export const NODES: GraphNode[] = [
     id: "paper-agcv",
     type: "achievement",
     label: " Elsevier Publication",
-    desc: "Co-authored and published research paper titled 'Agentic Computer Vision (AgCV)...' in the prestigious MethodX Journal (Elsevier).",
+    desc: "Co-authored and published research paper titled 'AgCV: An Agentic Framework for Automating Computer Vision Applications' in the prestigious MethodX Journal (Elsevier).",
     summary: "Published paper in MethodX Journal.",
     domains: ["ai"],
     meta: {
@@ -216,6 +288,18 @@ export const NODES: GraphNode[] = [
     meta: {
       period: "2025",
       org: "Patent Office",
+    }
+  },
+  {
+    id: "patent-query",
+    type: "achievement",
+    label: "Patent Published: Multimodal AI",
+    desc: "Published patent in Intellectual Property India Journal for 'System and Method for Multimodal AI-Driven Data Processing with Automated Query Execution'.",
+    summary: "Published query automation patent.",
+    domains: ["ai", "data"],
+    meta: {
+      period: "2025",
+      org: "Intellectual Property India",
     }
   },
   {
@@ -256,64 +340,6 @@ export const NODES: GraphNode[] = [
     }
   },
   {
-    id: "repo-aura3",
-    type: "project",
-    label: "AURA3",
-    desc: "Built a Python-based intelligent framework for advanced agent workflows and context routing.",
-    summary: "Intelligent agent & routing framework.",
-    domains: ["ai", "nlp"],
-    meta: {
-      period: "2025",
-      impact: "Provides dynamic task distribution pipelines.",
-      stack: ["Python", "AI Agents", "Context Routing"],
-    },
-    links: [{ label: "GitHub", href: "https://github.com/arav7781/AURA3" }]
-  },
-  {
-    id: "repo-mcp",
-    type: "project",
-    label: "Basic MCP Servers",
-    desc: "Developed secure Model Context Protocol (MCP) server endpoints enabling LLM agents to execute local filesystem and database operations.",
-    summary: "Model Context Protocol servers.",
-    domains: ["ai", "nlp", "cloud"],
-    meta: {
-      period: "2025",
-      impact: "Integrates third-party client agents with local databases.",
-      stack: ["Python", "MCP Server", "JSON-RPC"],
-    },
-    links: [{ label: "GitHub", href: "https://github.com/arav7781/BasicMCPServers" }]
-  },
-  {
-    id: "repo-whatsapp-bot",
-    type: "project",
-    label: "Contextual WhatsApp Bot",
-    desc: "Engineered a context-aware chatbot using Python and WhatsApp Cloud API, leveraging vector retrieval indexes to output fast, context-aware responses.",
-    summary: "Python WhatsApp chatbot agent.",
-    domains: ["nlp", "ai", "web"],
-    meta: {
-      period: "2025",
-      impact: "Seamless automated query processing on mobile channels.",
-      stack: ["Python", "FastAPI", "WhatsApp Cloud API", "LangChain"],
-    },
-    links: [{ label: "GitHub", href: "https://github.com/arav7781/Contextual-WhatsappBOT" }]
-  },
-  {
-    id: "repo-websocket-chat",
-    type: "project",
-    label: "WebSocket Chat App",
-    desc: "Engineered a real-time full-duplex chat application utilizing raw HTML/JS WebSockets.",
-    summary: "Full-duplex WebSocket real-time chat application.",
-    domains: ["web"],
-    meta: {
-      period: "2025",
-      impact: "Sub-millisecond direct socket messaging between client nodes.",
-      stack: ["HTML5", "JavaScript", "NodeJS", "WebSockets"],
-    },
-    links: [{ label: "GitHub", href: "https://github.com/arav7781/WebsocketsChatApp" }]
-  },
-
-  // Education
-  {
     id: "edu-sit",
     type: "achievement",
     label: "B.Tech in AI & ML",
@@ -328,18 +354,18 @@ export const NODES: GraphNode[] = [
 
   // Skills
   { id: "skill-python", type: "skill", label: "Python", domains: ["ai", "nlp", "data"] },
-  { id: "skill-java", type: "skill", label: "Java", domains: ["web"] },
+  { id: "skill-java", type: "skill", label: "Java", domains: ["backend"] },
   { id: "skill-sql", type: "skill", label: "SQL", domains: ["data"] },
-  { id: "skill-javascript", type: "skill", label: "JavaScript", domains: ["web"] },
-  { id: "skill-typescript", type: "skill", label: "TypeScript", domains: ["web"] },
-  { id: "skill-springboot", type: "skill", label: "SpringBoot", domains: ["web"] },
-  { id: "skill-fastapi", type: "skill", label: "FastAPI", domains: ["web"] },
-  { id: "skill-nestjs", type: "skill", label: "NestJS", domains: ["web"] },
+  { id: "skill-javascript", type: "skill", label: "JavaScript", domains: ["frontend", "backend"] },
+  { id: "skill-typescript", type: "skill", label: "TypeScript", domains: ["frontend", "backend"] },
+  { id: "skill-springboot", type: "skill", label: "SpringBoot", domains: ["backend"] },
+  { id: "skill-fastapi", type: "skill", label: "FastAPI", domains: ["backend"] },
+  { id: "skill-nestjs", type: "skill", label: "NestJS", domains: ["backend"] },
   { id: "skill-mongodb", type: "skill", label: "MongoDB", domains: ["data"] },
   { id: "skill-postgres", type: "skill", label: "PostgreSQL", domains: ["data"] },
   { id: "skill-redis", type: "skill", label: "Redis", domains: ["data"] },
   { id: "skill-eventstore", type: "skill", label: "EventStoreDB", domains: ["data"] },
-  { id: "skill-kafka", type: "skill", label: "Kafka", domains: ["cloud", "data"] },
+  { id: "skill-kafka", type: "skill", label: "Kafka", domains: ["cloud", "data", "backend"] },
   { id: "skill-docker", type: "skill", label: "Docker", domains: ["cloud"] },
   { id: "skill-k8s", type: "skill", label: "Kubernetes", domains: ["cloud"] },
   { id: "skill-aws", type: "skill", label: "AWS", domains: ["cloud"] },
@@ -347,6 +373,10 @@ export const NODES: GraphNode[] = [
   { id: "skill-git", type: "skill", label: "Git", domains: ["cloud"] },
   { id: "skill-langchain", type: "skill", label: "LangChain", domains: ["nlp", "ai"] },
   { id: "skill-langgraph", type: "skill", label: "LangGraph", domains: ["nlp", "ai"] },
+  { id: "skill-saga", type: "skill", label: "Saga Orchestration", domains: ["backend"] },
+  { id: "skill-cqrs-sync", type: "skill", label: "CQRS Projection Sync", domains: ["backend", "data"] },
+  { id: "skill-terraform", type: "skill", label: "Terraform", domains: ["cloud"] },
+  { id: "skill-argocd", type: "skill", label: "ArgoCD", domains: ["cloud"] },
 ];
 
 export const NODE_BY_ID: Record<string, GraphNode> = NODES.reduce((acc, n) => {
