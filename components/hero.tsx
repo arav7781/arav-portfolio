@@ -1,13 +1,13 @@
 "use client"
 import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
-import { Button } from "@/components/ui/button"
 import { ArrowRight, Download, ChevronDown } from "lucide-react"
 import { TypeAnimation } from "react-type-animation"
 import GradientText from "./GradientText"
 import Link from "next/link"
 import { HeroGraph } from "./graph/hero-graph"
 import { DomainNav } from "./graph/domain-nav"
+import SpecularButton from "./SpecularButton"
 
 export default function Hero() {
   const targetRef = useRef<HTMLDivElement>(null)
@@ -89,23 +89,39 @@ export default function Hero() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8"
             >
-              <Button
+              <SpecularButton
+                onClick={() => {
+                  window.open("mailto:aravsaxena884@gmail.com", "_self");
+                }}
                 size="lg"
-                className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white border-0 group shadow-md"
+                tint="#7c3aed"
+                tintOpacity={0.9}
+                lineColor="#ffffff"
+                baseColor="#6d28d9"
+                textColor="#ffffff"
+                className="group"
               >
-                <Link href="#contact">Let&apos;s Collaborate</Link>
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <a
-                href="/resume.pdf"
-                download
-                className="flex items-center"
+                Let&apos;s Collaborate
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 inline-block" />
+              </SpecularButton>
+
+              <SpecularButton
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.href = "/resume.pdf";
+                  link.download = "resume.pdf";
+                  link.click();
+                }}
+                size="lg"
+                tint="var(--background)"
+                tintOpacity={0.05}
+                lineColor="#7c3aed"
+                baseColor="rgba(124, 58, 237, 0.3)"
+                textColor="var(--ink)"
               >
-                <Button variant="outline" size="lg" className="border-violet-500/50 text-violet-600 dark:text-violet-300 hover:bg-violet-500/10">
-                  <Download className="mr-2 h-4 w-4" />
-                  Download Resume
-                </Button>
-              </a>
+                <Download className="mr-2 h-4 w-4 inline-block" />
+                Download Resume
+              </SpecularButton>
             </motion.div>
 
             {/* Domain navigation helper lens */}
