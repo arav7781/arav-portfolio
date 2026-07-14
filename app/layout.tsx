@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import VoiceAssistant from "@/components/voice-assistant"
+import { AppProvider } from "@/components/providers"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,11 +20,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+    <html lang="en" className="light" style={{ colorScheme: "light" }}>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          {children}
-          <VoiceAssistant />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <AppProvider>
+            {children}
+            <VoiceAssistant />
+          </AppProvider>
         </ThemeProvider>
       </body>
     </html>

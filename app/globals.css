@@ -3,15 +3,63 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --card: 0 0% 3%;
-  --card-foreground: 0 0% 100%;
-  --popover: 0 0% 3%;
-  --popover-foreground: 0 0% 100%;
-  --primary: 267 100% 70%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 240 10% 3.9%;
+  --background: 240 10% 97.5%; /* Soft off-white shade */
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 262 83.3% 58%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 262 83.3% 58%;
+  --radius: 0.5rem;
+
+  /* Custom graph variables (Light Mode) */
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --ink: #18181b;
+  --muted-custom: #f4f4f5;
+  --muted-foreground-custom: #71717a;
+  --hair: #e4e4e7;
+  --line: #d4d4d8;
+  --accent-custom: #7c3aed;
+  --accent-soft: #f5f3ff;
+  --accent-line: #c084fc;
+  
+  --c-ai: #ef4444;
+  --c-web: #3b82f6;
+  --c-nlp: #10b981;
+  --c-cv: #f59e0b;
+  --c-data: #ec4899;
+  --c-ach: #8b5cf6;
+
+  --dur-fast: 0.2s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.5s;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 5.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 263.4 70% 50.4%;
+  --primary-foreground: 210 20% 98%;
+  --secondary: 240 3.7% 15.9%;
   --secondary-foreground: 0 0% 98%;
   --muted: 240 3.7% 15.9%;
   --muted-foreground: 240 5% 64.9%;
@@ -21,8 +69,24 @@
   --destructive-foreground: 0 0% 98%;
   --border: 240 3.7% 15.9%;
   --input: 240 3.7% 15.9%;
-  --ring: 267 100% 70%;
-  --radius: 0.5rem;
+  --ring: 263.4 70% 50.4%;
+
+  /* Custom graph variables (Dark Mode Override) */
+  --bg: #09090b;
+  --surface: #18181b;
+  --ink: #f4f4f5;
+  --muted-custom: #27272a;
+  --muted-foreground-custom: #a1a1aa;
+  --hair: #3f3f46;
+  --line: #52525b;
+  --accent-custom: #a78bfa;
+  --accent-soft: #2e1065;
+  --accent-line: #c084fc;
+}
+
+/* Fallback mappings for graph variable names without suffix conflicts */
+:root, .dark {
+  --ink-color: var(--ink);
 }
 
 html {
@@ -30,8 +94,8 @@ html {
 }
 
 body {
-  background-color: black;
-  color: white;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
 /* Custom scrollbar */
@@ -250,4 +314,111 @@ body {
   transform: translateY(-10px) scale(1.05);
   border-color: rgba(139, 92, 246, 0.5);
   box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+}
+
+/* Custom theme overrides for light bg */
+.light body {
+  background-color: #fafafa;
+  color: #18181b;
+}
+
+/* HeroGraph preview animations */
+@keyframes hg-edge-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hg-node-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes hg-pulse-anim {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.hg-edge {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: hg-edge-draw 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hg-node {
+  transform: scale(0);
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: hg-node-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.hg-pulse {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: hg-pulse-anim 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* General Layout helpers */
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.bg-muted {
+  background-color: var(--muted-custom);
+}
+
+.text-ink {
+  color: var(--ink);
+}
+
+.text-muted-custom {
+  color: var(--muted-foreground-custom);
+}
+
+/* Graph custom themes mapping */
+:root {
+  --c-ai: #ef4444;
+  --c-web: #3b82f6;
+  --c-nlp: #10b981;
+  --c-cv: #f59e0b;
+  --c-data: #ec4899;
+  --c-ach: #8b5cf6;
+  
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --ink: #18181b;
+  --hair: #e4e4e7;
+  --line: #d4d4d8;
+  --accent: #7c3aed;
+  --accent-soft: #f5f3ff;
+  --accent-line: #c084fc;
+  --radius-lg: 0.75rem;
+  --radius-pill: 9999px;
+}
+
+.dark {
+  --bg: #09090b;
+  --surface: #18181b;
+  --ink: #f4f4f5;
+  --hair: #3f3f46;
+  --line: #52525b;
+  --accent: #a78bfa;
+  --accent-soft: #2e1065;
+  --accent-line: #c084fc;
 }
