@@ -49,7 +49,7 @@ export const NODES: GraphNode[] = [
       impact: "Secure payment workflows & digital asset trading inside an NX Monorepo.",
       stack: ["TypeScript", "NodeJS", "NestJS", "MongoDB", "EventStoreDB", "GraphQL", "Solidity", "AWS"],
     },
-    links: [{ label: "Case File", href: "https://github.com/arav7781" }]
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/backend" }]
   },
   {
     id: "freight",
@@ -77,7 +77,7 @@ export const NODES: GraphNode[] = [
       impact: "Improves query execution efficiency by 35% on join-heavy tables.",
       stack: ["Python", "FastAPI", "PostgreSQL", "Vector Databases", "Docker", "AWS", "LangChain", "LangGraph", "unsloth"],
     },
-    links: [{ label: "Case File", href: "https://github.com/arav7781" }]
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/DataAnalystAgent" }]
   },
   {
     id: "healthquery",
@@ -91,7 +91,7 @@ export const NODES: GraphNode[] = [
       impact: "Achieved 90% accuracy in medical query responses for 500+ users.",
       stack: ["bitsandbytes", "unsloth", "wandb", "Hugging Face"],
     },
-    links: [{ label: "Hugging Face Models", href: "https://huggingface.co/devank2000" }]
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/SLM-MentalAssistance" }]
   },
   {
     id: "legalrag",
@@ -105,7 +105,7 @@ export const NODES: GraphNode[] = [
       impact: "Used by 200+ legal professionals to search complex multi-hop cases.",
       stack: ["Python", "Neo4j", "LangChain", "LangGraph", "Docker", "PostgreSQL", "MLflow", "LangSmith"],
     },
-    links: [{ label: "Live Site", href: "https://legal-search-case-files.vercel.app/" }]
+    links: [{ label: "Live Site", href: "https://legal-search-case-files.vercel.app/" }, { label: "GitHub", href: "https://github.com/arav7781/legalRAG" }]
   },
   {
     id: "gurukulx",
@@ -119,7 +119,7 @@ export const NODES: GraphNode[] = [
       impact: "Adopted across 50+ schools to assist over 100+ educators.",
       stack: ["ReactJS", "NextJS", "Llama 3.3", "MongoDB", "LangChain", "LangGraph", "LangSmith", "Vercel"],
     },
-    links: [{ label: "Live Demo", href: "https://gurukul-x.vercel.app/" }]
+    links: [{ label: "Live Demo", href: "https://gurukul-x.vercel.app/" }, { label: "GitHub", href: "https://github.com/arav7781/GurukulX" }]
   },
   {
     id: "arogyamitra",
@@ -133,7 +133,7 @@ export const NODES: GraphNode[] = [
       impact: "Enhanced patient triage efficiency by 40% for rural health clinics.",
       stack: ["ReactJS", "TailwindCSS", "FastAPI", "NodeJS", "Convex DB", "PyTorch", "Whisper STT", "Google TTS", "Docker"],
     },
-    links: [{ label: "Source Code", href: "https://github.com/AGTechathon/DataWizard" }]
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/DataWizard" }]
   },
   {
     id: "dashboard",
@@ -147,7 +147,7 @@ export const NODES: GraphNode[] = [
       impact: "Improved recall for imbalanced Late Delivery classes by 22%.",
       stack: ["Power BI", "SQL", "PySpark", "AWS S3", "Python", "Tableau"],
     },
-    links: [{ label: "Source Code", href: "https://github.com/arav7781" }]
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/AG" }]
   },
   {
     id: "bluebox",
@@ -245,14 +245,71 @@ export const NODES: GraphNode[] = [
   {
     id: "leetcode-solutions",
     type: "achievement",
-    label: "250+ LeetCode Solutions",
-    desc: "Solved 250+ data structures and algorithms problems on LeetCode, optimizing runtime and space efficiency.",
-    summary: "Algorithm problem solver.",
-    domains: ["ai"],
+    label: "332 LeetCode Solutions",
+    desc: "Solved 332 problems on LeetCode with 78.22% Acceptance (147 Easy, 170 Medium, 15 Hard). Beats up to 94.86% of submissions. Proficient in Java (277), MySQL (43), and C (29). Advanced skills include Dynamic Programming (x28), Divide & Conquer (x15), and Union-Find (x7).",
+    summary: "Algorithm problem solver (332 Solved).",
+    domains: ["ai", "data"],
     meta: {
       period: "Ongoing",
       org: "LeetCode",
+      impact: "Solved 332 problems (Java, MySQL, C). Earned 3 badges (100 Days 2025).",
     }
+  },
+  {
+    id: "repo-aura3",
+    type: "project",
+    label: "AURA3",
+    desc: "Built a Python-based intelligent framework for advanced agent workflows and context routing.",
+    summary: "Intelligent agent & routing framework.",
+    domains: ["ai", "nlp"],
+    meta: {
+      period: "2025",
+      impact: "Provides dynamic task distribution pipelines.",
+      stack: ["Python", "AI Agents", "Context Routing"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/AURA3" }]
+  },
+  {
+    id: "repo-mcp",
+    type: "project",
+    label: "Basic MCP Servers",
+    desc: "Developed secure Model Context Protocol (MCP) server endpoints enabling LLM agents to execute local filesystem and database operations.",
+    summary: "Model Context Protocol servers.",
+    domains: ["ai", "nlp", "cloud"],
+    meta: {
+      period: "2025",
+      impact: "Integrates third-party client agents with local databases.",
+      stack: ["Python", "MCP Server", "JSON-RPC"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/BasicMCPServers" }]
+  },
+  {
+    id: "repo-whatsapp-bot",
+    type: "project",
+    label: "Contextual WhatsApp Bot",
+    desc: "Engineered a context-aware chatbot using Python and WhatsApp Cloud API, leveraging vector retrieval indexes to output fast, context-aware responses.",
+    summary: "Python WhatsApp chatbot agent.",
+    domains: ["nlp", "ai", "web"],
+    meta: {
+      period: "2025",
+      impact: "Seamless automated query processing on mobile channels.",
+      stack: ["Python", "FastAPI", "WhatsApp Cloud API", "LangChain"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/Contextual-WhatsappBOT" }]
+  },
+  {
+    id: "repo-websocket-chat",
+    type: "project",
+    label: "WebSocket Chat App",
+    desc: "Engineered a real-time full-duplex chat application utilizing raw HTML/JS WebSockets.",
+    summary: "Full-duplex WebSocket real-time chat application.",
+    domains: ["web"],
+    meta: {
+      period: "2025",
+      impact: "Sub-millisecond direct socket messaging between client nodes.",
+      stack: ["HTML5", "JavaScript", "NodeJS", "WebSockets"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/WebsocketsChatApp" }]
   },
 
   // Education
