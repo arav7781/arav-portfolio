@@ -55,7 +55,7 @@
     "groq-sdk": "^0.22.0",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "15.2.4",
+    "next": "^15.5.20",
     "next-themes": "^0.4.4",
     "ogl": "^1.0.11",
     "prop-types": "latest",
@@ -80,8 +80,11 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8",
+    "postcss": "^8.5.10",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   }
 }

@@ -2,13 +2,13 @@
 
 Pune, India
 
-aravsaxena884@gmail.com | +91-9653413126
+aravsaxena884@gmail.com | +919653413126
 
 [LinkedIn](https://linkedin.com/in/arav-saxena-a081a428a) | [GitHub](https://github.com/arav7781) | [LeetCode](https://leetcode.com/u/arav_7782/)
 
 ## Profile Summary
 
-AI-first software engineer and full-stack developer focused on scalable systems, intelligent applications, cloud-native engineering, and agentic AI. My work combines backend architecture, modern frontend experience, and applied LLM workflows across enterprise and research-driven projects.
+software engineer and full-stack developer focused on scalable systems, intelligent applications, cloud-native engineering, and agentic AI. My work combines backend architecture, modern frontend experience, and applied LLM workflows across enterprise and research-driven projects.
 
 ## Technical Skills
 
