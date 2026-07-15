@@ -72,29 +72,19 @@ export default function Skills() {
       direction: -1,
     },
     {
-      title: "DevOps",
+      title: "DevOps & Tools",
       icon: <Server className="h-6 w-6" />,
       skills: [
-        { name: "Git", level: 90, logo: "/git.png?height=60&width=60" },
         { name: "Docker", level: 80, logo: "/docker.png?height=60&width=60" },
-        
         { name: "Vercel", level: 85, logo: "/vercel.png?height=60&width=60" },
+        { name: "Git", level: 90, logo: "/git.png?height=60&width=60" },
         { name: "GitHub Actions", level: 80, logo: "/git.png?height=60&width=60" },
-      ],
-      color: "from-orange-500 to-amber-500",
-      direction: 1,
-    },
-    {
-      title: "Tools",
-      icon: <Cpu className="h-6 w-6" />,
-      skills: [
         { name: "VS Code", level: 95, logo: "/vs.png?height=60&width=60" },
         { name: "Jupyter", level: 90, logo: "/jupyter.png?height=60&width=60" },
         { name: "Postman", level: 85, logo: "/postman.png?height=60&width=60" },
-        { name: "Git", level: 90, logo: "/git.png?height=60&width=60" },
       ],
-      color: "from-amber-500 to-yellow-500",
-      direction: -1,
+      color: "from-orange-500 to-yellow-500",
+      direction: 1,
     },
   ]
 
