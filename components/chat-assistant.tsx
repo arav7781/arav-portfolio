@@ -25,7 +25,7 @@ export default function ChatAssistant() {
   >([
     {
       role: "assistant",
-      content: "Hi there! I'm Saitama. Ask me anything about Arav Saxena.",
+      content: "Hi there! I'm SAITAMA, Arav's AI Agent. Ask me anything about Arav Saxena.",
     },
   ])
   const [isOpen, setIsOpen] = useState(false)
@@ -196,7 +196,7 @@ export default function ChatAssistant() {
               }}
             >
               <MessageSquare size={16} className="mr-2 text-violet-400" />
-              <span className="text-sm font-medium">Chat with Saitama</span>
+              <span className="text-sm font-medium">Try SAITAMA</span>
             </motion.button>
           </motion.div>
         )}
@@ -226,7 +226,7 @@ export default function ChatAssistant() {
                   onClick={() => setIsOpen(false)}
                   className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors flex items-center justify-center cursor-pointer"
                   title="Close"
-                  aria-label="Close Saitama"
+                  aria-label="Close SAITAMA"
                 />
                 <button
                   onClick={() => setIsMinimized(!isMinimized)}
@@ -238,7 +238,7 @@ export default function ChatAssistant() {
               </div>
 
               {/* Console Title */}
-              <span className="text-[11px] text-slate-600 dark:text-zinc-400 font-mono tracking-tight">saitama@arav-dev: ~</span>
+              <span className="text-[11px] text-slate-600 dark:text-zinc-400 font-mono tracking-tight">SAITAMA-AGENT@arav-dev: ~</span>
 
               {/* Status Indicator */}
               <div className="flex items-center space-x-1.5">
@@ -269,7 +269,7 @@ export default function ChatAssistant() {
                           <div className="max-w-[85%] bg-slate-100/50 dark:bg-zinc-900/30 border border-slate-200/50 dark:border-zinc-800/50 text-slate-800 dark:text-zinc-300 rounded-lg p-3 text-xs leading-relaxed font-mono flex flex-col">
                             <div className="flex items-center text-[10px] text-slate-400 dark:text-zinc-500 mb-1.5 select-none font-bold">
                               <span className="text-green-500 mr-1.5">●</span>
-                              <span>saitama-stdout</span>
+                              <span>SAITAMA-STDOUT</span>
                             </div>
                             <p className="whitespace-pre-wrap">{message.content}</p>
                           </div>
@@ -340,7 +340,7 @@ export default function ChatAssistant() {
               <div className="p-3.5 flex items-center justify-between relative z-10 bg-slate-100 dark:bg-zinc-900 border-t border-slate-200 dark:border-zinc-800">
                 <div className="flex items-center space-x-2 select-none">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                  <p className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">saitama-stdout: idle</p>
+                  <p className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">SAITAMA-STDOUT: idle</p>
                 </div>
                 <Button
                   variant="ghost"
