@@ -12,12 +12,16 @@ const CX = W / 2;
 const CY = H / 2;
 const R = 95;
 
+function round(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
 function curve(ax: number, ay: number, bx: number, by: number, bow = 0.16) {
   const mx = (ax + bx) / 2;
   const my = (ay + by) / 2;
   const dx = bx - ax;
   const dy = by - ay;
-  return `M${ax},${ay} Q${mx - dy * bow},${my + dx * bow} ${bx},${by}`;
+  return `M${round(ax)},${round(ay)} Q${round(mx - dy * bow)},${round(my + dx * bow)} ${round(bx)},${round(by)}`;
 }
 
 interface Sat {
@@ -32,25 +36,31 @@ interface Sat {
 export function HeroGraph() {
   const hubs = DOMAINS.map((d) => {
     const a = hubAngle(d.order);
-    return { id: d.id, a, x: CX + R * Math.cos(a), y: CY + R * Math.sin(a), color: domainVar(d.id) };
+    return { 
+      id: d.id, 
+      a, 
+      x: round(CX + R * Math.cos(a)), 
+      y: round(CY + R * Math.sin(a)), 
+      color: domainVar(d.id) 
+    };
   });
 
   const sats: Sat[] = hubs.flatMap((h, i) => [
     {
-      x: CX + (R + 42) * Math.cos(h.a - 0.28),
-      y: CY + (R + 42) * Math.sin(h.a - 0.28),
+      x: round(CX + (R + 42) * Math.cos(h.a - 0.28)),
+      y: round(CY + (R + 42) * Math.sin(h.a - 0.28)),
       color: h.color,
       bridge: false,
       hub: h,
-      delay: 0.52 + i * 0.05,
+      delay: round(0.52 + i * 0.05),
     },
     {
-      x: CX + (R + 32) * Math.cos(h.a + 0.32),
-      y: CY + (R + 32) * Math.sin(h.a + 0.32),
+      x: round(CX + (R + 32) * Math.cos(h.a + 0.32)),
+      y: round(CY + (R + 32) * Math.sin(h.a + 0.32)),
       color: h.color,
       bridge: true,
       hub: h,
-      delay: 0.58 + i * 0.05,
+      delay: round(0.58 + i * 0.05),
     },
   ]);
 

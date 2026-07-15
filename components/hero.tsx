@@ -29,24 +29,24 @@ export default function Hero() {
       className="relative min-h-[90vh] lg:min-h-screen flex items-center justify-center pt-24 pb-12 overflow-hidden bg-background text-foreground"
     >
       {/* Pixel Blast Background Animation */}
-      <div className="absolute inset-0 z-0 opacity-[0.45] pointer-events-none">
+      <div className="absolute inset-0 z-0 opacity-[0.15] pointer-events-none">
         <PixelBlast
           variant="square"
           pixelSize={4}
           color="#8b5cf6"
           patternScale={2.5}
-          patternDensity={1.3}
-          pixelSizeJitter={0.1}
+          patternDensity={0.5}
+          pixelSizeJitter={0.02}
           enableRipples
-          rippleSpeed={0.4}
-          rippleThickness={0.12}
-          rippleIntensityScale={1.5}
+          rippleSpeed={0.2}
+          rippleThickness={0.1}
+          rippleIntensityScale={0.4}
           liquid={false}
-          liquidStrength={0.12}
-          liquidRadius={1.2}
-          liquidWobbleSpeed={5}
-          speed={0.5}
-          edgeFade={0.25}
+          liquidStrength={0.08}
+          liquidRadius={1.0}
+          liquidWobbleSpeed={3.0}
+          speed={0.15}
+          edgeFade={0.55}
           transparent
         />
       </div>
