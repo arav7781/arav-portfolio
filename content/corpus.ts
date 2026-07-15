@@ -40,6 +40,20 @@ export const NODES: GraphNode[] = [
 
   // Projects
   {
+    id: "dao",
+    type: "project",
+    label: "DAO Platform",
+    desc: "Architected DAO, an AI-powered Startup Evaluation & FinScope Advisory Platform. Integrates a multi-agent LangGraph workflow for investor pitch deck due-diligence, MCA compliance validation, Docling-based Qdrant vector RAG, and automated PDF reporting with dynamic Matplotlib scorecards.",
+    summary: "AI Startup due-diligence & FinScope multi-subagent router.",
+    domains: ["nlp", "ai", "backend", "data", "cloud"],
+    meta: {
+      period: "2026",
+      impact: "Automated investor Due-Diligence analysis and structured multi-subagent financial advisory.",
+      stack: ["Python", "FastAPI", "LangGraph", "Qdrant", "Docling", "Matplotlib", "Socket.IO", "Docker"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/DAO" }]
+  },
+  {
     id: "marketplace",
     type: "project",
     label: "Asset Marketplace",
@@ -351,6 +365,114 @@ export const NODES: GraphNode[] = [
       org: "SIT Pune",
     }
   },
+  {
+    id: "cert-mcp",
+    type: "achievement",
+    label: "Advanced MCP Topics Cert",
+    desc: "Certification for Model Context Protocol (MCP) Advanced Topics issued by Anthropic, covering custom server patterns, protocol integrations, and semantic APIs.",
+    summary: "Anthropic Advanced MCP Certification.",
+    domains: ["nlp", "ai"],
+    meta: {
+      period: "2026",
+      org: "Anthropic",
+    }
+  },
+  {
+    id: "cert-nutanix",
+    type: "achievement",
+    label: "Nutanix Certified Associate 6",
+    desc: "Nutanix Certified Associate (NCA 6) covering Hyper-Converged Infrastructure, Nutanix Acropolis (AOS), AHV virtualized storage, and Prism UI console.",
+    summary: "Nutanix Certified Associate (NCA 6).",
+    domains: ["cloud"],
+    meta: {
+      period: "2026",
+      org: "Nutanix",
+    }
+  },
+  {
+    id: "cert-stanford-algo1",
+    type: "achievement",
+    label: "Divide & Conquer Algorithms",
+    desc: "Stanford Online certification for Divide and Conquer, Searching and Sorting Algorithms, covering computational complexity, Master Theorem, and sorting proofs.",
+    summary: "Stanford Online Algorithms Cert.",
+    domains: ["ai"],
+    meta: {
+      period: "2026",
+      org: "Stanford Online",
+    }
+  },
+  {
+    id: "cert-stanford-algo2",
+    type: "achievement",
+    label: "Graph Search & Data Structures",
+    desc: "Stanford Online certification for Graph Search, Shortest Paths, and Data Structures, covering BFS/DFS, Dijkstra, heap trees, and hash maps.",
+    summary: "Stanford Online Graphs Cert.",
+    domains: ["ai", "data"],
+    meta: {
+      period: "2026",
+      org: "Stanford Online",
+    }
+  },
+  {
+    id: "cert-genai-microsoft",
+    type: "achievement",
+    label: "Career Essentials in GenAI",
+    desc: "Career essentials in generative AI certified by Microsoft and LinkedIn, covering Copilot integrations, LLM safety prompts, and enterprise AI usage.",
+    summary: "Microsoft & LinkedIn GenAI Cert.",
+    domains: ["nlp", "ai"],
+    meta: {
+      period: "2025",
+      org: "Microsoft & LinkedIn",
+    }
+  },
+  {
+    id: "cert-rag-activeloop",
+    type: "achievement",
+    label: "RAG Production Certification",
+    desc: "Production-grade Retrieval-Augmented Generation (RAG) certification by Activeloop, covering LangChain, LlamaIndex, RAG evaluation metrics, and vector database indexing.",
+    summary: "Activeloop Production RAG Cert.",
+    domains: ["nlp", "ai", "data"],
+    meta: {
+      period: "2025",
+      org: "Activeloop",
+    }
+  },
+  {
+    id: "cert-tensorflow",
+    type: "achievement",
+    label: "Tensorflow for Deep Learning",
+    desc: "Udemy certification for TensorFlow for Deep Learning, covering natural language processing, neural network building, transfer learning, and embeddings.",
+    summary: "Udemy TensorFlow Deep Learning Cert.",
+    domains: ["ai"],
+    meta: {
+      period: "2025",
+      org: "Udemy",
+    }
+  },
+  {
+    id: "cert-opencv",
+    type: "achievement",
+    label: "Computer Vision & OpenCV",
+    desc: "Udemy certification for Python for Computer Vision with OpenCV, covering CNNs, image preprocessing pipelines, MTCNN, and dlib face landmarks.",
+    summary: "Udemy Computer Vision Cert.",
+    domains: ["ai"],
+    meta: {
+      period: "2025",
+      org: "Udemy",
+    }
+  },
+  {
+    id: "cert-data-analysis",
+    type: "achievement",
+    label: "Data Analysis Essentials",
+    desc: "Career Essentials in Data Analysis certified by Microsoft and LinkedIn, covering business data cleaning, SQL query modeling, and dashboard visualization.",
+    summary: "Microsoft & LinkedIn Data Analysis Cert.",
+    domains: ["data"],
+    meta: {
+      period: "2024",
+      org: "Microsoft & LinkedIn",
+    }
+  },
 
   // Skills
   { id: "skill-python", type: "skill", label: "Python", domains: ["ai", "nlp", "data"] },
@@ -377,6 +499,15 @@ export const NODES: GraphNode[] = [
   { id: "skill-cqrs-sync", type: "skill", label: "CQRS Projection Sync", domains: ["backend", "data"] },
   { id: "skill-terraform", type: "skill", label: "Terraform", domains: ["cloud"] },
   { id: "skill-argocd", type: "skill", label: "ArgoCD", domains: ["cloud"] },
+  { id: "skill-mcp", type: "skill", label: "Model Context Protocol (MCP)", domains: ["nlp", "ai"] },
+  { id: "skill-hci", type: "skill", label: "Hyper-Converged Infrastructure", domains: ["cloud"] },
+  { id: "skill-nutanix", type: "skill", label: "Nutanix Acropolis (AOS/AHV)", domains: ["cloud"] },
+  { id: "skill-algorithms", type: "skill", label: "Algorithms & Data Structures", domains: ["ai"] },
+  { id: "skill-rag-agents", type: "skill", label: "Production RAG Agents", domains: ["nlp", "ai", "data"] },
+  { id: "skill-tensorflow", type: "skill", label: "TensorFlow", domains: ["ai"] },
+  { id: "skill-opencv", type: "skill", label: "OpenCV & Computer Vision", domains: ["ai"] },
+  { id: "skill-data-analysis", type: "skill", label: "Data Analysis & Visualization", domains: ["data"] },
+  { id: "skill-c", type: "skill", label: "C (Programming Language)", domains: ["backend"] },
 ];
 
 export const NODE_BY_ID: Record<string, GraphNode> = NODES.reduce((acc, n) => {
