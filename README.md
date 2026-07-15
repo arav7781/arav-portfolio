@@ -136,8 +136,8 @@ flowchart LR
 This repository is a personal portfolio website with an AI assistant experience. It includes:
 
 - A portfolio landing page showcasing projects, skills, timeline, research, and achievements
-- A Groq-powered chat and speech assistant for profile-based Q&A
-- API routes for chat, speech synthesis, and transcription
+- A Groq-powered chat assistant for profile-based Q&A
+- API routes for chat
 
 ## Quick Start
 
