@@ -1,82 +1,83 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Groq from "groq-sdk"
+import { DOMAINS, NODES } from "@/content/corpus"
 
 // Initialize Groq client
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 })
 
-// System prompt with Arav's information
-const SYSTEM_PROMPT = `You are an Goku personal AI assistant for Arav Saxena, an AI Researcher & Full-Stack Developer.
+// Generate structured context from Arav's knowledge graph (content/corpus.ts)
+function getKnowledgeGraphContext(): string {
+  let ctx = "KNOWLEDGE GRAPH CONTEXT (Arav's Portfolio):\n\n";
 
-Provide short, helpful responses (1–2 lines max) about Arav and his work.
+  ctx += "DOMAINS:\n";
+  DOMAINS.forEach((d) => {
+    ctx += `- ${d.label} (ID: ${d.id}): ${d.desc}\n`;
+  });
 
-Here's information about Arav:
+  ctx += "\nPROJECTS:\n";
+  const projects = NODES.filter((n) => n.type === "project");
+  projects.forEach((p) => {
+    ctx += `- ${p.label} (ID: ${p.id}): ${p.desc || ""} [Summary: ${p.summary || ""}] [Domains: ${p.domains?.join(", ") || ""}]`;
+    if (p.meta) {
+      ctx += ` [Period: ${p.meta.period || ""}] [Stack: ${p.meta.stack?.join(", ") || ""}] [Impact: ${p.meta.impact || ""}]`;
+    }
+    ctx += "\n";
+  });
 
-PERSONAL INFO:
-- Name: Arav Saxena
-- Pronouns: He/Him
-- Email: aravsaxena884@gmail.com
-- Phone: +91 9653413126
-- Location: Pune, Maharashtra, India
-- GitHub: https://github.com/arav7781
-- LinkedIn: https://www.linkedin.com/in/arav-saxena-a081a428a/
+  ctx += "\nEXPERIENCE:\n";
+  const experience = NODES.filter((n) => n.type === "experience");
+  experience.forEach((e) => {
+    ctx += `- ${e.label} (ID: ${e.id}): ${e.desc || ""} [Summary: ${e.summary || ""}] [Domains: ${e.domains?.join(", ") || ""}]`;
+    if (e.meta) {
+      ctx += ` [Period: ${e.meta.period || ""}] [Role: ${e.meta.role || ""}] [Organization: ${e.meta.org || ""}] [Impact: ${e.meta.impact || ""}]`;
+    }
+    ctx += "\n";
+  });
 
-EDUCATION:
-- B.Tech in Artificial Intelligence at Symbiosis International University, Pune (2023–2027)
-- Ryan International School (PCM, 2021–2023)
+  ctx += "\nACHIEVEMENTS:\n";
+  const achievements = NODES.filter((n) => n.type === "achievement");
+  achievements.forEach((a) => {
+    ctx += `- ${a.label} (ID: ${a.id}): ${a.desc || ""} [Summary: ${a.summary || ""}] [Domains: ${a.domains?.join(", ") || ""}]`;
+    if (a.meta) {
+      ctx += ` [Period: ${a.meta.period || ""}] [Organization: ${a.meta.org || ""}]`;
+    }
+    ctx += "\n";
+  });
 
-SUMMARY:
-Arav is an AI Researcher & Full-Stack Developer with expertise in scalable AI systems, full-stack apps, and modern frameworks. He has built 7+ AI tools, trained 11+ models, fine-tuned 4+ LLMs, and excels in NLP, computer vision, and deep learning.
+  ctx += "\nSKILLS:\n";
+  const skills = NODES.filter((n) => n.type === "skill");
+  skills.forEach((s) => {
+    ctx += `- ${s.label} [Domains: ${s.domains?.join(", ") || ""}]\n`;
+  });
 
-KEY SKILLS:
-Languages: Python, Java, C++, JS, TS, HTML/CSS, SQL  
-Frameworks: React, Next.js, Node.js, FastAPI, Flask, Django, Langgraph  
-AI/ML: Deep Learning, NLP, LLMs, Computer Vision, RL, A2A Protocol  
-Databases: MongoDB, PostgreSQL, MySQL, Convex, Redis  
-DevOps & Tools: Docker, GitHub Actions, CI/CD, Vercel, Postman, VS Code  
+  return ctx;
+}
 
-ACHIEVEMENTS:
-- 3rd Prize at Hack Your Path 6.0 (May 2025) — ₹5,000 Award  
-- Finalist in multiple national AI hackathons  
-- Grant recipient for impactful AI projects  
+// Build system prompt dynamically
+const buildSystemPrompt = () => {
+  return `You are SAITAMA, the personal AI assistant and Agent for Arav Saxena, an AI Researcher & Backend/Full-Stack Developer.
 
-PROJECTS:
-1. **ArogyaMitra** – AI health assistant with voice/multilingual support for 500+ users  
-   Tech: React, Next.js, Node.js, NLP, MongoDB, TensorFlow
+Provide short, helpful, and highly accurate responses (1–3 lines max) about Arav and his work.
+Always answer questions as SAITAMA, representing Arav's professional work, skills, education, and achievements. Ensure the tone is technical, intelligent, and direct.
 
-2. **BlueBoxAI** – BI tool for auto-generating SQL queries, 30% faster reporting  
-   Tech: Python, SQL, Next.js, React, NLP, TensorFlow
+Here is the structured KNOWLEDGE GRAPH context containing accurate details about Arav's projects, experience, achievements, and skills:
 
-3. **ClarvisIntelliTutor** – AI tutor generating 1,000+ interview questions for 200+ students  
-   Tech: Python, NLP, Streamlit, MongoDB, TensorFlow
+${getKnowledgeGraphContext()}
 
-4. **AgenticCV** – No-code computer vision builder for 50+ users  
-   Tech: Streamlit, OpenCV, TensorFlow, Python
-
-5. **BharatiQues** – AI tool creating 100+ question papers for 5+ institutions  
-   Tech: Python, NLP, TensorFlow, Streamlit
-
-6. **VitalSense** – Remote vitals monitoring with 95% accuracy  
-   Tech: Python, TensorFlow, React, Next.js, MongoDB
-
-INTERESTS:
-- making impactful AI projects in healthcare
-- District-level cricketer for Mumbai Cricket Association in year 2019-2020— disciplined and team-driven
-
-`;
-
-
+Always prioritize using the facts, stack details, and achievements described in the knowledge graph context above to give precise and truthful answers. If a user asks a question about information not present in the context, politely state that you only have access to Arav's verified portfolio data.`;
+};
 
 export async function POST(request: NextRequest) {
   try {
     const { messages } = await request.json()
 
-    // Add the system prompt
+    // Add the system prompt dynamically
     const fullMessages = [
       {
         role: "system",
-        content: SYSTEM_PROMPT,
+        content: buildSystemPrompt(),
       },
       ...messages,
     ]
