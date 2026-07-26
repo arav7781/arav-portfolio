@@ -9,7 +9,6 @@ import { HeroGraph } from "./graph/hero-graph"
 import { DomainNav } from "./graph/domain-nav"
 import SpecularButton from "./SpecularButton"
 import PixelBlast from "./PixelBlast"
-import TiltedCard from "./TiltedCard"
 
 export default function Hero() {
   const targetRef = useRef<HTMLDivElement>(null)
@@ -152,26 +151,14 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right Column: HeroGraph with 3D Tilt Card effect */}
+          {/* Right Column: HeroGraph */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-5 w-full flex justify-center items-center pointer-events-auto"
           >
-            <TiltedCard
-              containerHeight="520px"
-              containerWidth="100%"
-              imageHeight="520px"
-              imageWidth="420px"
-              rotateAmplitude={12}
-              scaleOnHover={1.03}
-              showMobileWarning={false}
-              showTooltip={true}
-              captionText="Arav's Knowledge Graph"
-            >
-              <HeroGraph />
-            </TiltedCard>
+            <HeroGraph />
           </motion.div>
         </div>
       </motion.div>

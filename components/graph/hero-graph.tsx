@@ -65,8 +65,9 @@ export function HeroGraph() {
   ]);
 
   return (
-    <div
-      className="group block h-full flex flex-col justify-between overflow-hidden rounded-[var(--radius-lg)] border border-slate-200 dark:border-slate-800/80 bg-card text-card-foreground shadow-md transition-colors hover:border-[var(--accent-line)]"
+    <Link
+      href="/graph"
+      className="group block h-[520px] w-full max-w-[420px] flex flex-col justify-between overflow-hidden rounded-[var(--radius-lg)] border border-slate-200 dark:border-slate-800/80 bg-card text-card-foreground shadow-md transition-all duration-300 hover:border-[var(--accent-line)] hover:shadow-xl hover:-translate-y-1 cursor-pointer"
     >
       <div
         className="flex items-center justify-between border-b px-3.5 py-2.5 text-[0.66rem] text-[var(--muted-foreground)]"
@@ -153,17 +154,16 @@ export function HeroGraph() {
         </svg>
       </div>
 
-      <Link
-        href="/graph"
-        className="flex items-center justify-between border-t px-3.5 py-3 text-[0.82rem] transition-colors hover:bg-[var(--accent-soft)]"
+      <div
+        className="flex items-center justify-between border-t px-3.5 py-3 text-[0.82rem] transition-colors group-hover:bg-[var(--accent-soft)]"
         style={{ borderColor: "var(--hair)" }}
       >
         <span className="font-semibold text-[var(--ink)]">explore how it all connects</span>
         <span className="inline-flex items-center gap-1.5 text-[var(--accent)] font-semibold">
           open graph
-          <IconArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+          <IconArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
         </span>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }
