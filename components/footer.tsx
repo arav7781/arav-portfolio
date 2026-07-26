@@ -50,7 +50,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link
               href="/"
-              className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500 mb-4 inline-block"
+              className="text-2xl font-bold text-white mb-4 inline-block"
             >
               Arav.dev
             </Link>

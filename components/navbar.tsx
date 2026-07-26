@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Menu, X, Download } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import GradientText from "./GradientText"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -50,9 +49,9 @@ export default function Navbar() {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link
           href="/"
-          className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-500"
+          className="text-2xl font-bold text-black dark:text-white"
         >
-          <GradientText>Arav.dev</GradientText>
+          Arav.dev
         </Link>
 
         {/* Desktop Navigation */}
