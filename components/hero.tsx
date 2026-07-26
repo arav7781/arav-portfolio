@@ -3,7 +3,6 @@ import { useRef } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { ArrowRight, Download, ChevronDown } from "lucide-react"
 import { TypeAnimation } from "react-type-animation"
-import GradientText from "./GradientText"
 import Link from "next/link"
 import { HeroGraph } from "./graph/hero-graph"
 import { DomainNav } from "./graph/domain-nav"
@@ -70,8 +69,8 @@ export default function Hero() {
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight text-slate-900 dark:text-white"
             >
               <span className="block text-slate-700 dark:text-slate-300 font-medium text-2xl sm:text-3xl mb-1">Hi, I'm</span>
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 animate-gradient">
-                <GradientText>Arav Saxena</GradientText>
+              <span className="text-black dark:text-white">
+                Arav Saxena
               </span>
             </motion.h1>
 
