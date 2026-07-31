@@ -57,26 +57,14 @@ export function buildGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
     }
   });
 
-  // Direct person ↔ experience edges — my career timeline, always one hop from "me"
-  NODES.forEach((node) => {
-    if (node.type === "experience") {
-      addEdge("arav", node.id, "person-experience");
-    }
-  });
-
-  // Explicit relations: an experience/achievement → the project it produced,
-  // reinforced with a direct person → project edge so recruiters can trace
-  // "me → role/win → what I built" (or the reverse) in one click.
+  // Direct experience/achievement → project relations only (kept off "arav" so
+  // hovering the center node still just lights up the 6 domains, like before).
   NODES.forEach((node) => {
     if (!node.relatedTo || node.relatedTo.length === 0) return;
     node.relatedTo.forEach((targetId) => {
       if (!NODE_BY_ID[targetId]) return;
       const kind = node.type === "achievement" ? "awarded-for" : "built";
       addEdge(node.id, targetId, kind);
-      addEdge("arav", targetId, "person-project");
-      if (node.type === "achievement") {
-        addEdge("arav", node.id, "person-achievement");
-      }
     });
   });
 
