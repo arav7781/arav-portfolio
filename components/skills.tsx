@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
-import { Code2, Database, Brain, Server, Layers, Cpu } from "lucide-react"
+import { Code2, Brain, Server, Layers, Cpu } from "lucide-react"
 import Image from "next/image"
 
 export default function Skills() {
@@ -11,7 +11,7 @@ export default function Skills() {
 
   const skillCategories = [
     {
-      title: "Languages",
+      title: "Languages & Databases",
       icon: <Code2 className="h-6 w-6" />,
       skills: [
         { name: "Python", level: 95, logo: "/python.png?height=60&width=60" },
@@ -21,6 +21,11 @@ export default function Skills() {
         { name: "TypeScript", level: 85, logo: "/ts.png?height=60&width=60" },
         { name: "C", level: 90, logo: "/c.png?height=60&width=60" },
         { name: "SQL", level: 85, logo: "/sql1.png?height=60&width=60" },
+        { name: "MongoDB", level: 85, logo: "/mdb.png?height=60&width=60" },
+        { name: "PostgreSQL", level: 80, logo: "/sql2.png?height=60&width=60" },
+        { name: "MySQL", level: 85, logo: "/sql1.png?height=60&width=60" },
+        { name: "Convex", level: 90, logo: "/convex.png?height=60&width=60" },
+        { name: "Redis", level: 75, logo: "/redis.png?height=60&width=60" },
       ],
       color: "from-violet-500 to-fuchsia-500",
       direction: 1, // 1 for left-to-right, -1 for right-to-left
@@ -57,19 +62,6 @@ export default function Skills() {
       ],
       color: "from-pink-500 to-rose-500",
       direction: 1,
-    },
-    {
-      title: "Databases",
-      icon: <Database className="h-6 w-6" />,
-      skills: [
-        { name: "MongoDB", level: 85, logo: "/mdb.png?height=60&width=60" },
-        { name: "PostgreSQL", level: 80, logo: "/sql2.png?height=60&width=60" },
-        { name: "MySQL", level: 85, logo: "/sql1.png?height=60&width=60" },
-        { name: "Convex", level: 90, logo: "/convex.png?height=60&width=60" },
-        { name: "Redis", level: 75, logo: "/redis.png?height=60&width=60" },
-      ],
-      color: "from-rose-500 to-orange-500",
-      direction: -1,
     },
     {
       title: "DevOps & Tools",
