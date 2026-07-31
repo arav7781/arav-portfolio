@@ -315,8 +315,8 @@ export const NODES: GraphNode[] = [
   {
     id: "patent-agcv",
     type: "achievement",
-    label: "Patent Granted: AgCV",
-    desc: "Granted Indian Patent for 'AgCV: An Agentic Framework for Automating Computer Vision Applications'.",
+    label: "Patent Published: AgCV",
+    desc: "Published Indian Patent for 'AgCV: An Agentic Framework for Automating Computer Vision Applications'.",
     summary: "AgCV agentic computer vision patent.",
     domains: ["ai"],
     meta: {

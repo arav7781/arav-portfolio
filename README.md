@@ -117,8 +117,8 @@ flowchart LR
 ## Achievements
 
 - First Author Research Paper Published in Elsevier MethodX: DOI Link
-- Granted Indian Patent: AgCV: An Agentic Framework for Automating Computer Vision Applications
-- Patent Filed: Multimodal Agentic AI-Based Context-Aware Legal Reasoning System
+- Patent Published: AgCV: An Agentic Framework for Automating Computer Vision Applications
+- Patent Published: A System and Method for Multimodal Agentic AI-Based Context-Aware Legal Reasoning and Judicial Decision Support
 - 3rd Place – AGTechathon (24 hrs)
 - Finalist – Parul University Hackathon
 - 3rd Place – Hack Your Path 6.0 (24 hrs)
