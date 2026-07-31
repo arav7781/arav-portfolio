@@ -327,14 +327,16 @@ export const NODES: GraphNode[] = [
   {
     id: "patent-legal",
     type: "achievement",
-    label: "Patent Filed: Legal Reasoning System",
-    desc: "Filed patent for 'Multimodal Agentic AI-Based Context-Aware Legal Reasoning System' optimized for courtroom document search.",
-    summary: "Legal reasoning RAG patent filed.",
-    domains: ["nlp"],
+    label: "Patent Published: Legal Reasoning & Judicial Decision Support",
+    desc: "Indian Patent officially published for 'A System and Method for Multimodal Agentic AI-Based Context-Aware Legal Reasoning and Judicial Decision Support' — an AI framework enabling cascading cross-case file analysis by integrating multimodal deep learning, hybrid retrieval, agentic AI, hierarchical temporal knowledge graphs, cascading validation agents, and explainable AI. Analyzes interconnected legal case files to identify statement inconsistencies and legal-entity drift across related cases, and produces transparent, citation-backed reasoning for judicial decision-making. Co-invented with Adesh Jain, Khushi Kashyap, and Kartik Mehta, under the mentorship of Dr. Shivali Wagle.",
+    summary: "Published patent: agentic, temporal-graph legal reasoning for judicial support.",
+    domains: ["nlp", "ai", "data"],
     meta: {
-      period: "2025",
-      org: "Patent Office",
-    }
+      period: "2025 - 2026",
+      org: "Indian Patent Office",
+      impact: "Officially published patent introducing cascading cross-case legal analysis via hierarchical temporal knowledge graphs and cascading validation agents.",
+    },
+    relatedTo: ["legalrag"]
   },
   {
     id: "patent-query",
