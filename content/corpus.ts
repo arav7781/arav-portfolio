@@ -252,6 +252,21 @@ export const NODES: GraphNode[] = [
 
   // Experience
   {
+    id: "bajaj-ai-cortex",
+    type: "experience",
+    label: "SDE Intern @ Bajaj Finserv Health",
+    desc: "Building AI Cortex, an enterprise Graph RAG platform that turns everything connected to a software project — code repositories, work items, wikis, and uploaded documents — into a single, queryable, journey-isolated knowledge graph (Neo4j + pgvector). Its differentiator is cross-repo retrieval by graph traversal: a client call in one repo is linked to the endpoint it hits in another at ingestion time via a Contract Bridge, so questions reach the calling service, endpoint, wiki page, and related work item by walking typed edges instead of hoping vector search surfaces them. The graph and hybrid retrieval pipeline (pgvector ANN + lexical + bounded Neo4j traversal, orchestrated by Temporal) form a shared substrate on which decoupled AI agents — DocQ AI (Q&A/chat/wiki generation), Refine AI (requirements refinement), Idea AI (project ideation), and Agentic RCA (autonomous root-cause analysis) — are built as thin services.",
+    summary: "Enterprise Graph RAG platform (AI Cortex) for the SDLC.",
+    domains: ["ai", "nlp", "backend", "data", "cloud", "frontend"],
+    meta: {
+      period: "Jul 2026 - Present",
+      role: "SDE Intern",
+      org: "Bajaj Finserv Health",
+      impact: "Architected a journey-isolated Graph RAG knowledge base (Neo4j + pgvector + Temporal, polyglot tree-sitter parsing across Java/Python/Go/TS/C#) powering 4 decoupled AI agents with typed-edge, cross-repository retrieval and a WebGL subgraph visualizer.",
+      stack: ["Python", "FastAPI", "Neo4j", "PostgreSQL", "pgvector", "Temporal", "tree-sitter", "Next.js", "TypeScript", "Sigma.js", "Ollama", "SCIP"],
+    }
+  },
+  {
     id: "scaai-intern",
     type: "experience",
     label: "Research Intern @ SCAAI",
@@ -259,12 +274,29 @@ export const NODES: GraphNode[] = [
     summary: "AI Researcher at Symbiosis Centre for Applied AI.",
     domains: ["cloud", "ai", "data", "nlp"],
     meta: {
-      period: "Jul 2025 - Present",
+      period: "Jul 2025 - Jul 2026",
       role: "Research Intern",
       org: "SCAAI Pune",
       impact: "Reduced false-positives by 18%, lowered search times by 35%, and cut latency by 20%.",
       stack: ["Python", "Pandas", "PySpark", "SQL", "Tableau", "LangChain", "CrewAI", "TensorFlow", "PostgreSQL", "Docker", "Kubernetes", "llama.cpp", "CodeCarbon"],
-    }
+    },
+    relatedTo: ["legalrag"]
+  },
+  {
+    id: "cdac-intern",
+    type: "experience",
+    label: "AI Intern @ CDAC",
+    desc: "Built BlueBoxAI, an enterprise data analytics assistant, at the Centre for Development of Advanced Computing (CDAC) — a premier R&D organization focused on AI and HPC solutions. Translated natural business language into optimized, executable SQL for enterprise reporting.",
+    summary: "AI internship at CDAC building enterprise analytics tooling.",
+    domains: ["ai", "data"],
+    meta: {
+      period: "2025",
+      role: "AI Intern",
+      org: "CDAC",
+      impact: "Delivered BlueBoxAI, achieving 89% translation accuracy on complex, join-heavy SQL queries.",
+      stack: ["Python", "SQL", "LLMs", "BI Analytics"],
+    },
+    relatedTo: ["bluebox"]
   },
 
   // Achievements
@@ -326,7 +358,8 @@ export const NODES: GraphNode[] = [
     meta: {
       period: "2025",
       org: "AG Patil Hackathon",
-    }
+    },
+    relatedTo: ["dashboard", "healthquery"]
   },
   {
     id: "award-path",
@@ -338,7 +371,8 @@ export const NODES: GraphNode[] = [
     meta: {
       period: "2025",
       org: "Hack Your Path 6.0",
-    }
+    },
+    relatedTo: ["arogyamitra"]
   },
   {
     id: "leetcode-solutions",

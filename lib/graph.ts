@@ -1,5 +1,5 @@
 import { GraphNode, DomainId } from "../content/types";
-import { NODES, DOMAINS } from "../content/corpus";
+import { NODES, DOMAINS, NODE_BY_ID } from "../content/corpus";
 
 export interface GraphEdge {
   source: string;
@@ -23,6 +23,13 @@ export function hubAngle(order: number): number {
 
 export function buildGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const edges: GraphEdge[] = [];
+  const seen = new Set<string>();
+  const addEdge = (source: string, target: string, kind: string) => {
+    const key = `${source}|${target}|${kind}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    edges.push({ source, target, kind });
+  };
 
   // Connect Arav to all 5 domain nodes
   DOMAINS.forEach((d) => {
@@ -48,6 +55,29 @@ export function buildGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
         });
       });
     }
+  });
+
+  // Direct person ↔ experience edges — my career timeline, always one hop from "me"
+  NODES.forEach((node) => {
+    if (node.type === "experience") {
+      addEdge("arav", node.id, "person-experience");
+    }
+  });
+
+  // Explicit relations: an experience/achievement → the project it produced,
+  // reinforced with a direct person → project edge so recruiters can trace
+  // "me → role/win → what I built" (or the reverse) in one click.
+  NODES.forEach((node) => {
+    if (!node.relatedTo || node.relatedTo.length === 0) return;
+    node.relatedTo.forEach((targetId) => {
+      if (!NODE_BY_ID[targetId]) return;
+      const kind = node.type === "achievement" ? "awarded-for" : "built";
+      addEdge(node.id, targetId, kind);
+      addEdge("arav", targetId, "person-project");
+      if (node.type === "achievement") {
+        addEdge("arav", node.id, "person-achievement");
+      }
+    });
   });
 
   return { nodes: NODES, edges };
