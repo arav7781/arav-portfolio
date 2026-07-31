@@ -8,6 +8,43 @@ export interface LaidOutNode extends GraphNode {
   r: number;
 }
 
+/**
+ * Resolves the polar placement (angle + radius) for a node within its domain group.
+ * Multi-domain ("bridge") nodes are pulled toward the average direction of all their
+ * domains — but several nodes can share the *exact same* domain set (and therefore
+ * the exact same average angle), which used to stack them on top of each other. To
+ * prevent that, every node is also nudged by its own index within the group, both in
+ * angle and in radius, so siblings always end up visibly separated.
+ */
+function resolvePlacement(
+  n: GraphNode,
+  baseAngle: number,
+  idx: number,
+  count: number,
+  spread: number,
+  baseR: number,
+  bridgeR: number,
+  getDomainOrder: (dId: DomainId) => number,
+): { angle: number; R: number } {
+  const idxOffset = count > 1 ? idx - (count - 1) / 2 : 0;
+  const isBridge = (n.domains?.length ?? 0) >= 2;
+
+  if (!isBridge || !n.domains) {
+    return { angle: baseAngle + idxOffset * spread, R: baseR };
+  }
+
+  const angles = n.domains.map((dId) => hubAngle(getDomainOrder(dId)));
+  let sumX = 0, sumY = 0;
+  angles.forEach((a) => { sumX += Math.cos(a); sumY += Math.sin(a); });
+  const avgAngle = Math.atan2(sumY, sumX);
+  const radiusStep = (baseR - bridgeR) * 0.6 || 20;
+
+  return {
+    angle: avgAngle + idxOffset * spread * 0.6,
+    R: bridgeR + ((idx % 3) - 1) * radiusStep,
+  };
+}
+
 export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidOutNode> } {
   const laidOut: LaidOutNode[] = [];
   const byId = new Map<string, LaidOutNode>();
@@ -60,17 +97,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     innerNodes.forEach((n, idx) => {
       const count = innerNodes.length;
       const spread = 0.28;
-      const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
-      const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 230 : 260;
-      
-      let finalAngle = angle;
-      if (isBridge && n.domains) {
-        const angles = n.domains.map(dId => hubAngle(getDomainOrder(dId)));
-        let sumX = 0, sumY = 0;
-        angles.forEach(a => { sumX += Math.cos(a); sumY += Math.sin(a); });
-        finalAngle = Math.atan2(sumY, sumX);
-      }
+      const { angle: finalAngle, R } = resolvePlacement(n, baseAngle, idx, count, spread, 260, 230, getDomainOrder);
 
       const laid: LaidOutNode = {
         ...n,
@@ -87,17 +114,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     projs.forEach((n, idx) => {
       const count = projs.length;
       const spread = 0.35;
-      const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
-      const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 300 : 340;
-
-      let finalAngle = angle;
-      if (isBridge && n.domains) {
-        const angles = n.domains.map(dId => hubAngle(getDomainOrder(dId)));
-        let sumX = 0, sumY = 0;
-        angles.forEach(a => { sumX += Math.cos(a); sumY += Math.sin(a); });
-        finalAngle = Math.atan2(sumY, sumX);
-      }
+      const { angle: finalAngle, R } = resolvePlacement(n, baseAngle, idx, count, spread, 340, 300, getDomainOrder);
 
       const laid: LaidOutNode = {
         ...n,
@@ -114,17 +131,7 @@ export function computeLayout(): { nodes: LaidOutNode[]; byId: Map<string, LaidO
     sks.forEach((n, idx) => {
       const count = sks.length;
       const spread = 0.38;
-      const angle = baseAngle + (count > 1 ? (idx - (count - 1) / 2) * spread : 0);
-      const isBridge = (n.domains?.length ?? 0) >= 2;
-      const R = isBridge ? 390 : 420;
-
-      let finalAngle = angle;
-      if (isBridge && n.domains) {
-        const angles = n.domains.map(dId => hubAngle(getDomainOrder(dId)));
-        let sumX = 0, sumY = 0;
-        angles.forEach(a => { sumX += Math.cos(a); sumY += Math.sin(a); });
-        finalAngle = Math.atan2(sumY, sumX);
-      }
+      const { angle: finalAngle, R } = resolvePlacement(n, baseAngle, idx, count, spread, 420, 390, getDomainOrder);
 
       const laid: LaidOutNode = {
         ...n,
