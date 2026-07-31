@@ -15,6 +15,8 @@ export interface GraphNode {
   domains?: DomainId[];
   domainId?: DomainId; // only for type === "domain"
   hasPage?: boolean;
+  /** ids of other nodes this one directly relates to (e.g. an experience/achievement → the project it produced) */
+  relatedTo?: string[];
   meta?: {
     period?: string;
     role?: string;
