@@ -1,124 +1,73 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ExternalLink, Github, ArrowRight } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { BrainCircuit, Cloud, Database, Rocket, Sparkles, Workflow } from "lucide-react"
+
+const knowledgeNodes = [
+  {
+    title: "AI Systems",
+    description: "Agentic workflows, LLM orchestration, computer vision, and product intelligence.",
+    icon: BrainCircuit,
+    x: 50,
+    y: 18,
+    accent: "from-violet-500/25 to-fuchsia-500/20",
+    delay: 0.1,
+  },
+  {
+    title: "Full-Stack Engineering",
+    description: "React, Next.js, Node.js, Spring Boot, and API-first product delivery.",
+    icon: Workflow,
+    x: 20,
+    y: 42,
+    accent: "from-cyan-500/20 to-blue-500/20",
+    delay: 0.2,
+  },
+  {
+    title: "Cloud & DevOps",
+    description: "Azure, AWS, Docker, Kubernetes, Linux, and CI/CD automation.",
+    icon: Cloud,
+    x: 82,
+    y: 40,
+    accent: "from-emerald-500/20 to-green-500/20",
+    delay: 0.3,
+  },
+  {
+    title: "Data Intelligence",
+    description: "Natural-language-to-SQL workflows, analytics dashboards, and reporting systems.",
+    icon: Database,
+    x: 26,
+    y: 72,
+    accent: "from-amber-500/20 to-orange-500/20",
+    delay: 0.4,
+  },
+  {
+    title: "Research & Patents",
+    description: "Applied AI research, publication milestones, and patent-led innovation.",
+    icon: Sparkles,
+    x: 74,
+    y: 72,
+    accent: "from-pink-500/20 to-rose-500/20",
+    delay: 0.5,
+  },
+  {
+    title: "Product Delivery",
+    description: "Shipping scalable systems across logistics, governance, education, and health-tech.",
+    icon: Rocket,
+    x: 50,
+    y: 86,
+    accent: "from-indigo-500/20 to-violet-500/20",
+    delay: 0.6,
+  },
+]
 
 export default function Projects() {
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null)
-  const [activeFilter, setActiveFilter] = useState<string>("all")
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.1 })
-
-  const projects = [
-    {
-      title: "GurukulX: platfrom to make Educators life easy.",
-      description: "A web application that uses advanced AI features for providing educators their coding agent, data visualtions agent and many more.",
-      image: "/logooo.png?height=400&width=600",
-      tags: ["ReactJS","AgenticAI", "NextJS", "NodeJS", "Coversational AI", "NLP","Reasoning LLMs","Vision Language Model","Finetuned Language Model", "MongoDB", "LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask"],
-      category: "ai",
-      featured: true,
-      demo: "https://gurukul-x.vercel.app/",
-    },
-    // {
-    //   title: "ArogyaMitra: AI-Powered Health Assistant",
-    //   description: "A web application that uses AI to provide health-related information via Indian Multilingual voice interaction.",
-    //   image: "/ss.png?height=400&width=600",
-    //   tags: ["ReactJS","AgenticAI", "NextJS", "NodeJS", "Coversational AI", "NLP","Reasoning LLMs","Vision Language Model","Finetuned Language Model", "MongoDB", "LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask"],
-    //   category: "ai",
-    //   featured: true,
-    //   github: "https://github.com/arav7781/ArogyaMitra",
-    //   demo: "https://www.youtube.com/watch?v=lIDs8FYwRVc",
-    // },
-    {
-      title: "BlueBoxAI: An Automated SQL Query Generator to make a futuristic sales dashboard and Business Intelligence Tool",
-      description: "A web application that helps users track expenses and visualize spending patterns.",
-      image: "/aa.png?height=400&width=600",
-      tags: ["Python", "AgenticAI", "NextJS","NodeJS","SQL","crewai","MCP Protocol","ReactJS","NLP","Speech to Text","dlib", "MTNN","LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask","Chart.js","D3.js"],
-      category: "data",
-      featured: false,
-      github: "https://github.com/arav7781",
-      demo: "https://www.youtube.com/watch?v=lhF5r3meSQ8",
-    },
-    {
-      title: "ClarvisIntelliTutor: AI-Powered Study Assistant",
-      description: "An AI-powered study assistant that helps students to prepare for interview via voice to voice interaction and generate practice questions.",
-      image: "/9ca31297-939c-4f51-bccd-dc1356898fec.jpeg?height=400&width=600",
-      tags: ["Python","Coversational AI","NLP", "MongoDB","LangChain","Langgraph","Streamlit","Tensorflow","WebSockets"],
-      category: "web",
-      featured: false,
-      github: "https://github.com/aryanma11ick/DataWizard",
-      demo: "https://www.youtube.com/channel/UCrhHjJ-5o4xj5lApF9SU0wg",
-    },
-    {
-      title: "AgenticCV: AI-Powered Computer Vision Application",
-      description: "A web application that uses just text to do computer vision tasks.",
-      image: "/4e32ff06-b085-4ca6-8a2c-d7633214a09b.jpg?height=400&width=600",
-      tags: ["Streamlit", "AgenticAI", "Tensorflow", "Python", "OpenCV", "Langgraph", "LangChain"],
-      category: "ai",
-      featured: false,
-      github: "https://github.com/arav7781",
-      demo: "https://www.youtube.com/watch?v=AyJIg8ckIOo",
-    },
-    {
-      title: "BharatiQues: Question Paper Generator",
-      description: "A web application that uses AI to generate question papers based on the given syllabus and lecture videos.",
-      image: "/514d4b03-a12f-481b-82b2-b1dd8f424783.jpg?height=400&width=600",
-      tags: ["Python", "AgenticAI", "Streamlit", "NLP","Speech to Text","Vision Language Model", "VectorDB","LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask"],
-      category: "ai",
-      featured: false,
-      github: "https://github.com/arav7781",
-      demo: "https://www.youtube.com/watch?v=NbSqIuee8jI",
-    },
-    {
-      title: "VitalSense: Contactless Vitals Monitoring System",
-      description: "A web application that uses custom TwoStreamNetwork Model for PPG signal preprocessing and final signal processing through neurokit2 functions to monitor vital signs of the user.",
-      image: "/4a5cbd8f-5039-4293-8a1b-20589b0db351.jpg?height=400&width=600",
-      tags: ["Python", "AgenticAI", "NextJS","NodeJS","MongoDB","ReactJS","NLP","Speech to Text","dlib", "MTNN","LangChain", "Langgraph", "ConvexDB","StackOverflow", "Tensorflow", "WebSockets","Flask"],
-      category: "mobile",
-      featured: false, 
-      github: "https://github.com/arav7781",
-      demo: "https://www.youtube.com/watch?v=r8OIVnjbDOg",
-    },
-  ]
-
-  const filteredProjects =
-    activeFilter === "all"
-      ? projects
-      : activeFilter === "featured"
-        ? projects.filter((project) => project.featured)
-        : projects.filter((project) => project.category === activeFilter)
-
-  const filters = [
-    { name: "All", value: "all" },
-    { name: "Featured", value: "featured" },
-    { name: "AI/ML", value: "ai" },
-    { name: "Web", value: "web" },
-    { name: "Mobile", value: "mobile" },
-    { name: "Data", value: "data" },
-  ]
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  }
+  const isInView = useInView(ref, { once: true, amount: 0.15 })
 
   return (
     <section id="projects" className="py-20 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-violet-950/10 to-black -z-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-violet-950/10 to-black -z-10" />
 
       <div className="container mx-auto px-4">
         <motion.div
@@ -129,125 +78,94 @@ export default function Projects() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Featured{" "}
+            Knowledge
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-500 to-fuchsia-500">
-              Projects
+              {" "}Graph
             </span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-8">
-            A selection of my recent work showcasing my skills in AI, machine learning, and full-stack development.
+          <p className="text-gray-400 max-w-3xl mx-auto mb-8">
+            A connected view of my work across AI systems, architecture, research, cloud engineering, and product execution.
           </p>
-
-          {/* Filter buttons */}
-          <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {filters.map((filter) => (
-              <Button
-                key={filter.value}
-                variant={activeFilter === filter.value ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveFilter(filter.value)}
-                className={
-                  activeFilter === filter.value
-                    ? "bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white border-0"
-                    : "border-violet-500/50 text-violet-300 hover:bg-violet-500/10"
-                }
-              >
-                {filter.name}
-              </Button>
-            ))}
-          </div>
         </motion.div>
 
-        <motion.div
+        <div
           ref={ref}
-          variants={container}
-          initial="hidden"
-          animate={isInView ? "show" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="relative mx-auto max-w-6xl min-h-[680px] overflow-hidden rounded-[32px] border border-violet-500/25 bg-[radial-gradient(circle_at_top_left,_rgba(124,58,237,0.18),_transparent_28%),linear-gradient(135deg,rgba(8,8,18,0.9),rgba(2,2,10,0.95))] shadow-[0_0_80px_rgba(124,58,237,0.12)] backdrop-blur-xl"
         >
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={index}
-              variants={item}
-              onMouseEnter={() => setHoveredProject(index)}
-              onMouseLeave={() => setHoveredProject(null)}
-              className="group"
-            >
-              <Card className="overflow-hidden border-violet-500/20 bg-black/60 backdrop-blur-sm h-full flex flex-col transition-all duration-300 hover:border-violet-500/50 hover:translate-y-[-5px]">
-                <div className="relative overflow-hidden h-48">
-                  {project.featured && (
-                    <div className="absolute top-0 right-0 z-10">
-                      <Badge className="m-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 border-0">
-                        Featured
-                      </Badge>
+          <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:22px_22px]" />
+          <div className="absolute -left-20 top-8 h-48 w-48 rounded-full bg-violet-500/20 blur-3xl" />
+          <div className="absolute -right-20 top-10 h-56 w-56 rounded-full bg-fuchsia-500/20 blur-3xl" />
+          <div className="absolute bottom-0 left-1/2 h-52 w-52 -translate-x-1/2 rounded-full bg-cyan-400/10 blur-3xl" />
+
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="graph-line" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop stopColor="#8b5cf6" offset="0%" />
+                <stop stopColor="#e879f9" offset="100%" />
+              </linearGradient>
+              <filter id="softGlow">
+                <feGaussianBlur stdDeviation="0.25" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <line x1="50" y1="50" x2="50" y2="18" stroke="url(#graph-line)" strokeWidth="1.2" strokeOpacity="0.9" strokeLinecap="round" filter="url(#softGlow)" />
+            <line x1="50" y1="50" x2="20" y2="42" stroke="url(#graph-line)" strokeWidth="1.2" strokeOpacity="0.9" strokeLinecap="round" filter="url(#softGlow)" />
+            <line x1="50" y1="50" x2="82" y2="40" stroke="url(#graph-line)" strokeWidth="1.2" strokeOpacity="0.9" strokeLinecap="round" filter="url(#softGlow)" />
+            <line x1="50" y1="50" x2="26" y2="72" stroke="url(#graph-line)" strokeWidth="1.2" strokeOpacity="0.9" strokeLinecap="round" filter="url(#softGlow)" />
+            <line x1="50" y1="50" x2="74" y2="72" stroke="url(#graph-line)" strokeWidth="1.2" strokeOpacity="0.9" strokeLinecap="round" filter="url(#softGlow)" />
+            <line x1="50" y1="50" x2="50" y2="86" stroke="url(#graph-line)" strokeWidth="1.2" strokeOpacity="0.9" strokeLinecap="round" filter="url(#softGlow)" />
+          </svg>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.6 }}
+            className="absolute left-1/2 top-1/2 z-20 w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-[28px] border border-violet-400/60 bg-black/60 p-5 text-center shadow-[0_0_50px_rgba(139,92,246,0.35)] backdrop-blur-xl"
+          >
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/40 to-fuchsia-500/40 text-violet-100 ring-4 ring-violet-400/15">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <h3 className="text-lg font-bold text-white">ARAV SAXENA</h3>
+            <p className="mt-1 text-xs text-violet-100">AI Researcher • Full-Stack Engineer</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              <span className="rounded-full border border-violet-400/35 bg-violet-500/10 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-violet-100">LLM</span>
+              <span className="rounded-full border border-violet-400/35 bg-violet-500/10 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-violet-100">Cloud</span>
+              <span className="rounded-full border border-violet-400/35 bg-violet-500/10 px-2 py-1 text-[10px] uppercase tracking-[0.2em] text-violet-100">Product</span>
+            </div>
+          </motion.div>
+
+          {knowledgeNodes.map((node, index) => {
+            const Icon = node.icon
+
+            return (
+              <motion.div
+                key={node.title}
+                initial={{ opacity: 0, y: 16 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                transition={{ duration: 0.45, delay: node.delay }}
+                style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                className="absolute z-10 w-[230px] -translate-x-1/2 -translate-y-1/2"
+              >
+                <motion.div
+                  animate={{ y: [0, -4, 0] }}
+                  transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut", delay: node.delay }}
+                  className={`rounded-2xl border border-violet-500/30 bg-gradient-to-br ${node.accent} p-4 shadow-[0_15px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl`}
+                >
+                  <div className="mb-3 flex items-center gap-3">
+                    <div className="rounded-xl bg-black/40 p-2 text-violet-100 ring-1 ring-violet-400/20">
+                      <Icon className="h-4 w-4" />
                     </div>
-                  )}
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    style={{ backgroundImage: `url(${project.image})` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70" />
-                </div>
-
-                <CardContent className="flex-grow p-6">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-400 mb-4">{project.description}</p>
-
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.tags.map((tag, tagIndex) => (
-                      <span
-                        key={tagIndex}
-                        className="px-2 py-1 bg-violet-900/30 border border-violet-500/30 rounded-full text-xs font-medium text-gray-300"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    <h3 className="text-sm font-semibold text-white">{node.title}</h3>
                   </div>
-                </CardContent>
-
-                <CardFooter className="p-6 pt-0 flex justify-between">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-violet-500/50 text-violet-300 hover:bg-violet-500/10"
-                    asChild
-                  >
-                    <a href={project.github} target="_blank" rel="noopener noreferrer">
-                      <Github className="mr-2 h-4 w-4" />
-                      Code
-                    </a>
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white border-0 group"
-                    asChild
-                  >
-                    <a href={project.demo} target="_blank" rel="noopener noreferrer">
-                      View Demo
-                      <ExternalLink className="ml-2 h-4 w-4" />
-                    </a>
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          <Button variant="link" className="text-violet-400 hover:text-violet-300 group" asChild>
-            <a href="https://github.com/arav7781" className="flex items-center">
-              View All Projects
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
-          </Button>
-        </motion.div>
+                  <p className="text-xs leading-5 text-gray-200">{node.description}</p>
+                </motion.div>
+              </motion.div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
