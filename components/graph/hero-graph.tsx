@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DOMAINS } from "@/content/corpus";
 import { hubAngle } from "@/lib/graph";
@@ -34,14 +35,23 @@ interface Sat {
 }
 
 export function HeroGraph() {
+  // Packets are SMIL animations; mount them after hydration and skip them for reduced motion.
+  const [packets, setPackets] = useState(false);
+  useEffect(() => {
+    setPackets(!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
   const hubs = DOMAINS.map((d) => {
     const a = hubAngle(d.order);
-    return { 
-      id: d.id, 
-      a, 
-      x: round(CX + R * Math.cos(a)), 
-      y: round(CY + R * Math.sin(a)), 
-      color: domainVar(d.id) 
+    return {
+      id: d.id,
+      key: d.key,
+      a,
+      x: round(CX + R * Math.cos(a)),
+      y: round(CY + R * Math.sin(a)),
+      lx: round(CX + (R + 68) * Math.cos(a)),
+      ly: round(CY + (R + 68) * Math.sin(a)),
+      color: domainVar(d.id)
     };
   });
 
@@ -86,6 +96,21 @@ export function HeroGraph() {
             className="transition-transform duration-500 ease-out group-hover:scale-[1.03]"
             style={{ transformBox: "view-box", transformOrigin: "center" }}
           >
+            {/* slowly counter-rotating orbit rings */}
+            <circle className="hg-orbit" cx={CX} cy={CY} r={R} fill="none" stroke="var(--line)" strokeWidth={0.8} strokeDasharray="1.5 7" opacity={0.7} />
+            <circle
+              className="hg-orbit"
+              style={{ animationDirection: "reverse", animationDuration: "90s" }}
+              cx={CX}
+              cy={CY}
+              r={R + 40}
+              fill="none"
+              stroke="var(--line)"
+              strokeWidth={0.8}
+              strokeDasharray="1 9"
+              opacity={0.55}
+            />
+
             {/* edges: center → hubs */}
             {hubs.map((h, i) => (
               <path
@@ -113,6 +138,20 @@ export function HeroGraph() {
               />
             ))}
 
+            {/* data packets: me → domains → the work on them */}
+            {packets &&
+              hubs.map((h, i) => (
+                <circle key={`p-${h.id}`} r={2.6} fill={h.color}>
+                  <animateMotion dur="2.4s" begin={`${1.2 + i * 0.4}s`} repeatCount="indefinite" path={curve(CX, CY, h.x, h.y)} />
+                </circle>
+              ))}
+            {packets &&
+              sats.map((s, i) => (
+                <circle key={`ps-${i}`} r={1.8} fill={s.color} opacity={0.85}>
+                  <animateMotion dur="1.6s" begin={`${2 + i * 0.27}s`} repeatCount="indefinite" path={curve(s.hub.x, s.hub.y, s.x, s.y, 0.1)} />
+                </circle>
+              ))}
+
             {/* one-time pulse ring behind person */}
             <circle className="hg-pulse" cx={CX} cy={CY} r={12} fill="none" stroke="var(--ink)" strokeWidth={1.4} />
 
@@ -132,7 +171,19 @@ export function HeroGraph() {
               />
             ))}
 
-            {/* hubs */}
+            {/* hubs, each with a breathing halo */}
+            {hubs.map((h, i) => (
+              <circle
+                key={`hb-${h.id}`}
+                className="hg-breathe"
+                style={{ animationDelay: `${1 + i * 0.45}s` }}
+                cx={h.x}
+                cy={h.y}
+                r={7.5}
+                fill={h.color}
+                opacity={0}
+              />
+            ))}
             {hubs.map((h, i) => (
               <circle
                 key={`h-${h.id}`}
@@ -143,6 +194,24 @@ export function HeroGraph() {
                 r={7.5}
                 fill={h.color}
               />
+            ))}
+
+            {/* domain labels */}
+            {hubs.map((h, i) => (
+              <text
+                key={`l-${h.id}`}
+                className="hg-label font-mono"
+                style={{ animationDelay: `${0.9 + i * 0.08}s` }}
+                x={h.lx}
+                y={h.ly}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fontSize={10}
+                fontWeight={600}
+                fill={h.color}
+              >
+                {h.key}
+              </text>
             ))}
 
             {/* person */}

@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { DOMAINS, NODE_BY_ID } from "@/content/corpus";
 import type { DomainId, GraphNode } from "@/content/types";
-import { buildGraph, buildAdjacency, primaryDomain } from "@/lib/graph";
-import { computeLayout, type LaidOutNode } from "@/lib/layout";
+import { buildGraph, buildAdjacency, isDetail, primaryDomain } from "@/lib/graph";
+import { computeLayout, RINGS, type LaidOutNode } from "@/lib/layout";
 import { useApp } from "@/components/providers";
 import { domainVar } from "@/lib/ui";
 import { DetailPanel } from "@/components/graph/detail-panel";
@@ -19,7 +19,9 @@ interface Camera {
   smooth: boolean;
 }
 
-const REST_EDGE_KINDS = new Set(["person-domain", "domain"]);
+/** At rest, labels longer than this are clipped; the full label shows once a node is in focus. */
+const REST_LABEL_MAX = 24;
+const clip = (s: string) => (s.length > REST_LABEL_MAX ? `${s.slice(0, REST_LABEL_MAX - 1).trimEnd()}…` : s);
 
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
@@ -40,6 +42,12 @@ export default function GraphView() {
   // user-dragged node position overrides (id → world x/y)
   const [dragPos, setDragPos] = useState<Record<string, { x: number; y: number }>>({});
   const userMoved = useRef(false);
+  // staggered entrance only on first paint; later mounts (skills, revealed edges) pop in immediately
+  const [intro, setIntro] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setIntro(false), 2200);
+    return () => clearTimeout(t);
+  }, []);
 
   const posOf = useCallback(
     (id: string): { x: number; y: number } => {
@@ -100,7 +108,7 @@ export default function GraphView() {
     if (!size.w || !size.h) return;
     let R = 440;
     for (const n of layout.nodes) {
-      if (n.type === "skill") continue;
+      if (isDetail(n)) continue;
       R = Math.max(R, Math.hypot(n.x, n.y) + n.r + 24);
     }
     const pad = 40;
@@ -181,7 +189,7 @@ export default function GraphView() {
     if (!q) return new Set<string>();
     const ids = new Set<string>();
     for (const n of layout.nodes) {
-      const hay = `${n.label} ${n.summary ?? ""} ${(n.tags ?? []).join(" ")} ${(n.domains ?? []).join(" ")}`.toLowerCase();
+      const hay = `${n.label} ${n.summary ?? ""} ${(n.meta?.stack ?? []).join(" ")} ${(n.domains ?? []).join(" ")}`.toLowerCase();
       if (hay.includes(q)) ids.add(n.id);
     }
     return ids;
@@ -205,7 +213,7 @@ export default function GraphView() {
     if (anchor) {
       const a = NODE_BY_ID[anchor];
       if (a?.type === "domain" && a.domainId) return a.domainId;
-      if (a?.type === "skill") return primaryDomain(a) ?? null;
+      if (a && isDetail(a)) return primaryDomain(a) ?? null;
     }
     return null;
   }, [focus, anchor]);
@@ -228,31 +236,33 @@ export default function GraphView() {
     return null;
   }, [searching, searchMatches, selectedId, hoveredId, focus, adj, layout.nodes]);
 
-  const skillVisible = useCallback(
+  const detailVisible = useCallback(
     (n: GraphNode) =>
-      n.type === "skill" &&
+      isDetail(n) &&
       ((skillDomain && n.domains?.includes(skillDomain)) || (searching && searchMatches.has(n.id))),
     [skillDomain, searching, searchMatches],
   );
 
   const nodeOpacity = useCallback(
     (n: LaidOutNode) => {
-      if (n.type === "skill" && !skillVisible(n) && !litSet?.has(n.id)) return 0;
-      if (litSet) return litSet.has(n.id) ? 1 : 0.1;
+      if (isDetail(n) && !detailVisible(n) && !litSet?.has(n.id)) return 0;
+      if (litSet) return litSet.has(n.id) ? 1 : 0.08;
       return 1;
     },
-    [litSet, skillVisible],
+    [litSet, detailVisible],
   );
 
+  // At rest only the structure is labelled (me, domains, projects, roles); recognitions,
+  // skills and certifications get labels once something brings them into focus.
   const showLabel = useCallback(
     (n: LaidOutNode, op: number) => {
-      if (n.type === "person" || n.type === "domain" || n.type === "project") return true;
+      if (n.type === "person" || n.type === "domain") return true;
       if (op < 0.9) return false;
-      if (n.type === "experience" || n.type === "achievement") return true;
-      if (n.type === "skill") return n.id === anchor;
-      return !litSet && !hoveredId ? false : true;
+      if (isDetail(n)) return n.id === anchor || (searching && searchMatches.has(n.id));
+      if (n.type === "project" || n.type === "experience") return true;
+      return !!litSet;
     },
-    [litSet, hoveredId, anchor],
+    [litSet, anchor, searching, searchMatches],
   );
 
   // ── camera interaction: wheel zoom + drag pan ─────────────────────────────
@@ -412,6 +422,28 @@ export default function GraphView() {
             transition: cam.smooth && !reduceMotion ? "transform var(--dur-slow) var(--ease-inout)" : "none",
           }}
         >
+          {/* orbit rings at the layout radii: domains, roles & recognitions, projects */}
+          <g aria-hidden pointerEvents="none">
+            {[RINGS.domain, RINGS.inner, RINGS.project].map((r, i) => (
+              <circle
+                key={r}
+                r={r}
+                fill="none"
+                stroke="var(--line)"
+                strokeWidth={1}
+                vectorEffect="non-scaling-stroke"
+                strokeDasharray={i === 0 ? "2 8" : "1 10"}
+                opacity={litSet ? 0.15 : 0.45}
+                className={reduceMotion ? undefined : "gv-orbit"}
+                style={{
+                  animationDuration: `${140 + i * 50}s`,
+                  animationDirection: i % 2 ? "reverse" : "normal",
+                  transition: "opacity var(--dur-base) var(--ease-out)",
+                }}
+              />
+            ))}
+          </g>
+
           {/* edges */}
           <g>
             {edges.map((e, i) => {
@@ -421,14 +453,16 @@ export default function GraphView() {
               const so = nodeOpacity(sNode);
               const to = nodeOpacity(tNode);
               if (so === 0 || to === 0) return null;
-              const restSkeleton = REST_EDGE_KINDS.has(e.kind ?? "domain");
+              // At rest the graph is a clean tree: me → domains → the work placed in each sector.
+              // Cross-domain edges only appear when a node is hovered, selected or searched.
+              const restSkeleton = e.kind === "person-domain" || (e.kind === "domain" && tNode.home === e.domain);
               const lit = litSet ? litSet.has(e.source) && litSet.has(e.target) : false;
               if (!litSet && !restSkeleton) return null;
               if (litSet && !lit && !restSkeleton) return null;
               const s = posOf(e.source);
               const t = posOf(e.target);
-              const stroke = lit && e.domain ? domainVar(e.domain) : "var(--muted-foreground)";
-              const opacity = litSet ? (lit ? 0.9 : 0.05) : e.kind === "person-domain" ? 0.28 : 0.16;
+              const stroke = lit ? (e.domain ? domainVar(e.domain) : "var(--accent)") : "hsl(var(--muted-foreground))";
+              const opacity = litSet ? (lit ? 0.9 : 0.04) : e.kind === "person-domain" ? 0.32 : 0.2;
               const mx = (s.x + t.x) / 2;
               const my = (s.y + t.y) / 2;
               const dx = t.x - s.x;
@@ -439,17 +473,57 @@ export default function GraphView() {
               const bow = 0.12;
               const cxp = mx + (nx / len) * len * bow * 0.16;
               const cyp = my + (ny / len) * len * bow * 0.16;
+              const d = `M${s.x},${s.y} Q${cxp},${cyp} ${t.x},${t.y}`;
+
+              // Packets: outward from the hovered/selected node when something is lit,
+              // otherwise a quiet ambient flow from me → domains → projects & roles.
+              let packet: { color: string; dur: number; begin: number; rev: boolean; r: number } | null = null;
+              if (!reduceMotion) {
+                if (litSet && lit) {
+                  packet = {
+                    color: e.domain ? domainVar(e.domain) : "var(--accent)",
+                    dur: 1.5,
+                    begin: (i % 5) * 0.3,
+                    rev: !!anchor && e.target === anchor,
+                    r: 3,
+                  };
+                } else if (!litSet && e.kind === "person-domain") {
+                  packet = { color: domainVar(e.domain!), dur: 2.6, begin: (i % 6) * 0.43, rev: false, r: 3 };
+                } else if (!litSet && restSkeleton && e.kind === "domain" && (tNode.type === "project" || tNode.type === "experience")) {
+                  packet = { color: domainVar(e.domain!), dur: 4.5 + (i % 4) * 0.6, begin: (i * 0.77) % 5, rev: false, r: 2.2 };
+                }
+              }
+              const introDelay = intro ? 0.15 + (Math.hypot(t.x, t.y) / 440) * 0.85 : 0;
+
               return (
-                <path
-                  key={i}
-                  d={`M${s.x},${s.y} Q${cxp},${cyp} ${t.x},${t.y}`}
-                  fill="none"
-                  stroke={stroke}
-                  strokeWidth={lit ? 1.6 : 1.1}
-                  vectorEffect="non-scaling-stroke"
-                  opacity={opacity}
-                  style={{ transition: reduceMotion ? "none" : "opacity var(--dur-base) var(--ease-out)" }}
-                />
+                <g key={i}>
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke={stroke}
+                    strokeWidth={lit ? 1.6 : 1.1}
+                    vectorEffect="non-scaling-stroke"
+                    opacity={opacity}
+                    className={reduceMotion ? undefined : "gv-fade"}
+                    style={{
+                      animationDelay: `${introDelay}s`,
+                      transition: reduceMotion ? "none" : "opacity var(--dur-base) var(--ease-out)",
+                    }}
+                  />
+                  {packet && (
+                    <circle r={packet.r / cam.k} fill={packet.color} opacity={lit ? 0.95 : 0.7} pointerEvents="none">
+                      <animateMotion
+                        dur={`${packet.dur}s`}
+                        begin={`${1.4 + packet.begin}s`}
+                        repeatCount="indefinite"
+                        path={d}
+                        keyPoints={packet.rev ? "1;0" : "0;1"}
+                        keyTimes="0;1"
+                        calcMode="linear"
+                      />
+                    </circle>
+                  )}
+                </g>
               );
             })}
           </g>
@@ -459,24 +533,35 @@ export default function GraphView() {
             {layout.nodes.map((n) => {
               const op = nodeOpacity(n);
               if (op === 0) return null;
-              const pd = primaryDomain(n);
+              const pd = n.type === "domain" ? n.domainId : n.home ?? primaryDomain(n);
               const bridge = (n.domains?.length ?? 0) >= 2;
               const isSelected = n.id === selectedId;
               const isHovered = n.id === hoveredId;
               const scale = reduceMotion ? 1 : isHovered ? 1.09 : isSelected ? 1.05 : 1;
 
               let fill = "var(--surface)";
-              let stroke = pd ? domainVar(pd) : "var(--muted-foreground)";
+              let stroke = pd ? domainVar(pd) : "hsl(var(--muted-foreground))";
               let strokeW = 0;
               if (n.type === "person") { fill = "var(--ink)"; }
               else if (n.type === "domain") { fill = domainVar(n.domainId!); }
               else if (n.type === "achievement") { fill = "var(--c-ach)"; stroke = "var(--c-ach)"; }
-              else if (n.type === "project" && !bridge) { fill = pd ? domainVar(pd) : "var(--muted-foreground)"; }
+              else if (n.type === "project" && !bridge) { fill = pd ? domainVar(pd) : "hsl(var(--muted-foreground))"; }
               else { fill = "var(--surface)"; strokeW = 2; }
 
               const labelVisible = showLabel(n, op);
-              const labelBelow = n.type === "person" || n.type === "domain";
               const p = posOf(n.id);
+              // Labels sit radially outward: right of nodes on the right half, left of nodes on
+              // the left, above/below near the top and bottom. Centre and hubs label underneath.
+              const ang = Math.atan2(p.y, p.x);
+              const cosA = Math.cos(ang);
+              const hub = n.type === "person" || n.type === "domain";
+              // the two lower-side domain hubs label sideways so they clear the roles beneath them
+              const side = hub
+                ? n.type === "domain" && Math.sin(ang) > 0.2 && Math.abs(cosA) > 0.5 ? Math.sign(cosA) : 0
+                : cosA > 0.34 ? 1 : cosA < -0.34 ? -1 : 0;
+              const labelX = side * (n.r + 6);
+              const labelY = side ? 3.5 : hub || Math.sin(ang) >= 0 ? n.r + 13 : -(n.r + 7);
+              const labelText = litSet || hub ? n.label : n.short ?? clip(n.label);
 
               return (
                 <g
@@ -491,14 +576,40 @@ export default function GraphView() {
                   onPointerDown={(e) => onNodePointerDown(e, n.id)}
                   onPointerEnter={() => setHoveredId(n.id)}
                   onPointerLeave={() => setHoveredId((h) => (h === n.id ? null : h))}
-                  tabIndex={op >= 0.9 && n.type !== "skill" ? 0 : -1}
+                  tabIndex={op >= 0.9 && !isDetail(n) ? 0 : -1}
                   role="button"
                   aria-label={`${n.type}: ${n.label}`}
                   onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(n.id); } }}
                 >
+                  <g
+                    className={reduceMotion ? undefined : "gv-pop"}
+                    style={{ animationDelay: `${intro ? 0.05 + (Math.hypot(p.x, p.y) / 440) * 0.85 : 0}s` }}
+                  >
                   <g style={{ transform: `scale(${scale})`, transition: reduceMotion ? "none" : "transform var(--dur-fast) var(--ease-out)" }}>
+                    {!reduceMotion && (n.type === "person" || n.type === "domain") && (
+                      <circle
+                        r={n.r}
+                        fill={n.type === "person" ? "var(--accent)" : domainVar(n.domainId!)}
+                        className="gv-ping"
+                        style={{ animationDelay: `${n.type === "person" ? 0 : 0.4 + (DOMAINS.find((d) => d.id === n.domainId)?.order ?? 0) * 0.37}s` }}
+                        pointerEvents="none"
+                      />
+                    )}
                     {isSelected && (
-                      <circle r={n.r + 6} fill="none" stroke="var(--accent)" strokeWidth={1.5} opacity={0.6} />
+                      <>
+                        <circle
+                          r={n.r + 7}
+                          fill="none"
+                          stroke="var(--accent)"
+                          strokeWidth={1.6}
+                          strokeDasharray="5 4"
+                          vectorEffect="non-scaling-stroke"
+                          className={reduceMotion ? undefined : "gv-spin"}
+                        />
+                        {!reduceMotion && (
+                          <circle r={n.r + 3} fill="none" stroke="var(--accent)" strokeWidth={1.4} className="gv-ping" pointerEvents="none" />
+                        )}
+                      </>
                     )}
                     <circle
                       r={n.r}
@@ -507,10 +618,30 @@ export default function GraphView() {
                       strokeWidth={strokeW}
                       strokeDasharray={bridge && n.type !== "domain" ? "3 3" : undefined}
                     />
+                    {n.type === "person" && (
+                      // the centre of the graph is me: the avatar's face, cropped to the node
+                      <>
+                        <clipPath id="gv-me">
+                          <circle r={n.r - 1.5} />
+                        </clipPath>
+                        <image
+                          href="/avatar.png"
+                          x={-90}
+                          y={-50}
+                          width={133}
+                          height={154}
+                          clipPath="url(#gv-me)"
+                          preserveAspectRatio="xMidYMid slice"
+                          pointerEvents="none"
+                        />
+                        <circle r={n.r} fill="none" stroke="#5ef0f0" strokeOpacity={0.6} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />
+                      </>
+                    )}
                     {labelVisible && (
                       <text
-                        y={labelBelow ? n.r + 13 : -(n.r + 8)}
-                        textAnchor="middle"
+                        x={labelX}
+                        y={labelY}
+                        textAnchor={side === 1 ? "start" : side === -1 ? "end" : "middle"}
                         className="font-mono select-none pointer-events-none"
                         style={{
                           fontSize: n.type === "person" ? 14 : n.type === "domain" ? 12 : n.type === "project" ? 10.5 : 9.5,
@@ -521,9 +652,10 @@ export default function GraphView() {
                           fontWeight: n.type === "domain" || n.type === "person" ? 600 : n.type === "project" ? 500 : 400,
                         }}
                       >
-                        {n.label}
+                        {labelText}
                       </text>
                     )}
+                  </g>
                   </g>
                 </g>
               );

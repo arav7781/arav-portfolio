@@ -51,35 +51,36 @@
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* The site's theme is the avatar's room: navy, with cyan and purple light. */
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 5.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 263.4 70% 50.4%;
-  --primary-foreground: 210 20% 98%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
+  --background: 225 47% 5%;
+  --foreground: 220 33% 93%;
+  --card: 224 40% 8%;
+  --card-foreground: 220 33% 93%;
+  --popover: 224 40% 8%;
+  --popover-foreground: 220 33% 93%;
+  --primary: 262 83% 66%;
+  --primary-foreground: 225 47% 6%;
+  --secondary: 224 30% 14%;
+  --secondary-foreground: 220 33% 93%;
+  --muted: 224 30% 14%;
+  --muted-foreground: 220 16% 64%;
+  --accent: 224 30% 14%;
+  --accent-foreground: 220 33% 93%;
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 263.4 70% 50.4%;
+  --border: 224 30% 16%;
+  --input: 224 30% 16%;
+  --ring: 262 83% 66%;
 
   /* Custom graph variables (Dark Mode Override) */
-  --bg: #09090b;
-  --surface: #18181b;
-  --ink: #f4f4f5;
-  --muted-custom: #27272a;
-  --muted-foreground-custom: #a1a1aa;
-  --hair: #3f3f46;
-  --line: #52525b;
+  --bg: #070b14;
+  --surface: #0d1424;
+  --ink: #e8edf7;
+  --muted-custom: #141c30;
+  --muted-foreground-custom: #94a0b8;
+  --hair: #1c2640;
+  --line: #2b3757;
   --accent-custom: #a78bfa;
   --accent-soft: #2e1065;
   --accent-line: #c084fc;
@@ -97,6 +98,13 @@ html {
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Custom scrollbar */
@@ -105,7 +113,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #070b14;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -412,12 +420,533 @@ body {
 }
 
 .dark {
-  --bg: #09090b;
-  --surface: #18181b;
-  --ink: #f4f4f5;
-  --hair: #3f3f46;
-  --line: #52525b;
+  --bg: #070b14;
+  --surface: #0d1424;
+  --ink: #e8edf7;
+  --hair: #1c2640;
+  --line: #2b3757;
   --accent: #a78bfa;
-  --accent-soft: #2e1065;
-  --accent-line: #c084fc;
+  --accent-soft: #1b1538;
+  --accent-line: #8b5cf6;
+}
+
+/* ── Kafka flow section ─────────────────────────────────────────────────── */
+.kf-cell-in {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: kf-cell-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes kf-cell-in {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* a short light travelling along a connector (lines use pathLength=100) */
+.kf-pulse {
+  stroke-dasharray: 7 93;
+  animation: kf-pulse 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes kf-pulse {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.kf-paused .kf-pulse {
+  animation-play-state: paused;
+}
+
+
+/* ── HeroGraph preview motion ───────────────────────────────────────────── */
+.hg-orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hg-spin 60s linear infinite;
+}
+
+@keyframes hg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hg-breathe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hg-breathe 2.8s ease-out infinite;
+}
+
+@keyframes hg-breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.hg-label {
+  opacity: 0;
+  animation: hg-fade 0.6s ease-out forwards;
+}
+
+@keyframes hg-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Knowledge graph motion ─────────────────────────────────────────────── */
+.gv-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gv-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+@keyframes gv-pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+.gv-fade {
+  animation: gv-fade 0.6s ease-out backwards;
+}
+
+@keyframes gv-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.gv-orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hg-spin 140s linear infinite;
+}
+
+.gv-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hg-spin 6s linear infinite;
+}
+
+.gv-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hg-breathe 2.2s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kf-cell-in,
+  .kf-pulse,
+  .hg-orbit,
+  .hg-breathe,
+  .gv-pop,
+  .gv-fade,
+  .gv-orbit,
+  .gv-spin,
+  .gv-ping {
+    animation: none !important;
+  }
+  .hg-label {
+    opacity: 1;
+  }
+}
+
+/* ── Gym hero: TitanOCR's cinematic hero, set on a lifting platform ────────── */
+/* The hero is the gym floor in both themes, so its colours are fixed here. */
+.gym-hero {
+  --gym-lo: #060a14;
+  --gym-mid: #0c1426;
+  --gym-hi: #1a2440;
+  --hero-ink: #eef2fb;
+  --hero-ink-2: #c7d0e2;
+  --hero-ink-3: #8f9bb5;
+  --hero-accent: #c4b5fd;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--hero-ink);
+  background: var(--gym-lo);
+}
+
+.gym-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(45% 55% at 72% 60%, rgb(255 236 210 / 0.14) 0%, rgb(255 236 210 / 0.04) 40%, transparent 70%),
+    radial-gradient(80% 90% at 70% 45%, var(--gym-hi) 0%, var(--gym-mid) 45%, var(--gym-lo) 100%);
+}
+
+.gym-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-out);
+}
+
+.gym-canvas.is-on {
+  opacity: 1;
+}
+
+.gym-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgb(6 10 20 / 0.9) 0%, rgb(6 10 20 / 0.66) 32%, rgb(6 10 20 / 0.14) 52%, rgb(6 10 20 / 0) 62%),
+    linear-gradient(0deg, rgb(7 11 20 / 1) 0%, rgb(7 11 20 / 0) 22%),
+    linear-gradient(180deg, rgb(6 10 20 / 0.55) 0, rgb(6 10 20 / 0) 150px);
+}
+
+.gym-tags {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.gym-tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #7c3aed;
+  color: #f7f4ff;
+  white-space: nowrap;
+  font: 500 0.64rem/1 var(--font-gauge);
+  font-stretch: 87.5%;
+  box-shadow: 0 8px 20px -8px rgb(20 10 50 / 0.7);
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out);
+  will-change: transform;
+}
+
+.gym-tag i {
+  font-style: normal;
+  opacity: 0.72;
+}
+
+.gym-inner {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: clamp(32px, 5vw, 88px);
+  align-items: center;
+  width: min(1240px, 100%);
+  min-height: max(680px, 100svh);
+  margin-inline: auto;
+  padding: 112px clamp(16px, 4vw, 40px) 48px;
+}
+
+.gym-copy {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  min-width: 0;
+}
+
+.gym-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(20px, 3vw, 34px);
+  font: 500 0.74rem/1 var(--font-gauge);
+  font-stretch: 87.5%;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--hero-ink-3);
+}
+
+.gym-eyebrow::before {
+  content: "";
+  width: 32px;
+  height: 1.5px;
+  background: linear-gradient(90deg, #5ef0f0, var(--hero-accent));
+}
+
+.gym-title {
+  margin: 0 0 clamp(22px, 2.6vw, 34px);
+  font-size: clamp(3.3rem, 7.4vw, 7.4rem);
+  font-weight: 820;
+  font-stretch: 100%;
+  line-height: 0.9;
+  letter-spacing: -0.048em;
+  color: var(--hero-ink);
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.35);
+}
+
+.gym-lede {
+  max-width: 33ch;
+  margin-bottom: clamp(26px, 3vw, 38px);
+  font-size: clamp(1.08rem, 1.3vw, 1.28rem);
+  line-height: 1.55;
+  color: var(--hero-ink-2);
+}
+
+.gym-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.gym-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 54px;
+  padding: 0 26px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: 600 1rem/1 var(--font-body);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.5s var(--ease-out),
+    background-color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.gym-btn:active {
+  transform: scale(0.98);
+}
+
+.gym-btn .arr {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-right: -14px;
+  border-radius: 50%;
+  background: color-mix(in oklab, currentColor 14%, transparent);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.gym-btn:hover .arr {
+  transform: translate(2px, -1px);
+}
+
+.gym-btn-solid {
+  background: #7c3aed;
+  color: #fbfaff;
+}
+
+.gym-btn-solid:hover {
+  background: #8b5cf6;
+}
+
+.gym-btn-line {
+  border-color: rgb(255 245 235 / 0.34);
+  background: rgb(10 10 12 / 0.3);
+  color: var(--hero-ink);
+}
+
+.gym-btn-line:hover {
+  border-color: rgb(255 245 235 / 0.7);
+}
+
+.gym-hero :focus-visible {
+  outline: 2px solid var(--hero-accent);
+  outline-offset: 3px;
+}
+
+.gym-lens {
+  display: grid;
+  gap: 12px;
+  margin-top: clamp(30px, 4vw, 52px);
+}
+
+.gym-lens > span {
+  font: 500 0.7rem/1 var(--font-gauge);
+  font-stretch: 87.5%;
+  letter-spacing: 0.04em;
+  color: var(--hero-ink-3);
+}
+
+/* Where the bar is held: the scene places the barbell from this box. */
+.gym-slot {
+  position: relative;
+  height: min(calc(100svh - 160px), 760px);
+  min-height: 500px;
+  pointer-events: none;
+}
+
+.gym-steps {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  border-radius: 999px;
+  background: rgb(10 10 12 / 0.66);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.08) inset,
+    0 12px 30px -12px rgb(0 0 0 / 0.6);
+  transform: translateX(-50%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+}
+
+.gym-steps button {
+  appearance: none;
+  padding: 8px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: 500 0.68rem/1 var(--font-gauge);
+  font-stretch: 87.5%;
+  color: rgb(244 241 236 / 0.62);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.35s var(--ease-out),
+    color 0.35s var(--ease-out);
+}
+
+.gym-steps button:hover:not(:disabled) {
+  color: var(--hero-ink);
+}
+
+.gym-steps button.is-on {
+  background: var(--hero-ink);
+  color: #121216;
+}
+
+.gym-steps button:disabled {
+  cursor: default;
+}
+
+.gym-chip {
+  position: absolute;
+  display: grid;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: var(--hero-ink);
+  color: #0b1122;
+  box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.65);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.gym-chip.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.gym-chip b {
+  font: 650 1.6rem/1.05 var(--font-body);
+  letter-spacing: -0.015em;
+  font-variant-numeric: tabular-nums;
+}
+
+.gym-chip > span {
+  font: 500 0.68rem/1.35 var(--font-gauge);
+  font-stretch: 87.5%;
+  color: #5a5f6a;
+}
+
+.gym-chip-r {
+  top: 13%;
+  right: -8px;
+}
+
+.gym-chip-l {
+  bottom: 12%;
+  left: -8px;
+}
+
+@media (max-width: 960px) {
+  .gym-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    min-height: 0;
+    padding-block: 104px 28px;
+  }
+  .gym-title {
+    font-size: clamp(3rem, 15vw, 5.4rem);
+  }
+  /* stacked layout: the copy gets its own backdrop, so the monitor wall never shows through it */
+  .gym-copy {
+    position: relative;
+    isolation: isolate;
+  }
+  .gym-copy::before {
+    content: "";
+    position: absolute;
+    inset: -140px -40px -28px;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(6 10 20 / 0.94) 0%, rgb(6 10 20 / 0.94) 86%, rgb(6 10 20 / 0) 100%);
+    pointer-events: none;
+  }
+  .gym-shade {
+    background:
+      linear-gradient(180deg, rgb(6 10 20 / 0.92) 0%, rgb(6 10 20 / 0.86) 50%, rgb(6 10 20 / 0) 64%),
+      linear-gradient(0deg, rgb(7 11 20 / 1) 0%, rgb(7 11 20 / 0) 14%);
+  }
+  .gym-slot {
+    height: clamp(420px, 110vw, 600px);
+    min-height: 0;
+  }
+  .gym-chip {
+    padding: 8px 12px;
+  }
+  .gym-chip b {
+    font-size: 1.05rem;
+  }
+  .gym-chip > span {
+    font-size: 0.6rem;
+  }
+  .gym-chip-l {
+    bottom: 4px;
+    left: 2px;
+  }
+  .gym-chip-r {
+    top: auto;
+    right: 2px;
+    bottom: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gym-canvas,
+  .gym-chip,
+  .gym-tag,
+  .gym-btn,
+  .gym-steps button {
+    transition: none;
+  }
 }

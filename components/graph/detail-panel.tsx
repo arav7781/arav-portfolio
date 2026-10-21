@@ -98,7 +98,7 @@ export function DetailPanel({
 
             {neighbors.length > 0 && (
               <div className="mt-5">
-                <h3 className="mono-label mb-2 text-xs text-[var(--muted-foreground)]">// connections — click to traverse</h3>
+                <h3 className="mono-label mb-2 text-xs text-[var(--muted-foreground)]">// connections: click to traverse</h3>
                 <div className="flex flex-col">
                   {neighbors.map((n) => {
                     const np = primaryDomain(n);
@@ -111,7 +111,7 @@ export function DetailPanel({
                         <span className="flex items-center gap-2.5 truncate">
                           <span
                             className="h-2 w-2 shrink-0 rounded-full"
-                            style={{ background: np ? domainVar(np) : "var(--muted)" }}
+                            style={{ background: np ? domainVar(np) : "hsl(var(--muted-foreground))" }}
                             aria-hidden
                           />
                           <span className="truncate text-[0.85rem] text-[var(--ink)]">{n.label}</span>

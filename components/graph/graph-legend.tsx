@@ -15,7 +15,7 @@ const ROWS: { swatch: React.ReactNode; label: string; desc: string }[] = [
   {
     swatch: <circle cx="8" cy="8" r="7" fill="var(--ink)" />,
     label: "me",
-    desc: "the center — click for my intro",
+    desc: "the center, click for my intro",
   },
   {
     swatch: <circle cx="8" cy="8" r="6.5" fill="var(--c-ai)" />,
@@ -23,7 +23,7 @@ const ROWS: { swatch: React.ReactNode; label: string; desc: string }[] = [
     desc: "a field I work in (6 total)",
   },
   {
-    swatch: <circle cx="8" cy="8" r="5" fill="var(--c-web)" />,
+    swatch: <circle cx="8" cy="8" r="5" fill="var(--c-backend)" />,
     label: "project",
     desc: "something I built → its domain(s)",
   },
@@ -38,13 +38,13 @@ const ROWS: { swatch: React.ReactNode; label: string; desc: string }[] = [
     desc: "a win or recognition",
   },
   {
-    swatch: <circle cx="8" cy="8" r="5.5" fill="var(--surface)" stroke="var(--c-web)" strokeWidth="1.6" strokeDasharray="2.4 2.2" />,
+    swatch: <circle cx="8" cy="8" r="5.5" fill="var(--surface)" stroke="var(--c-backend)" strokeWidth="1.6" strokeDasharray="2.4 2.2" />,
     label: "cross-domain",
     desc: "work bridging two domains",
   },
   {
-    swatch: <circle cx="8" cy="8" r="3.5" fill="var(--surface)" stroke="var(--muted)" strokeWidth="1.5" />,
-    label: "skill",
+    swatch: <circle cx="8" cy="8" r="3.5" fill="var(--surface)" stroke="hsl(var(--muted-foreground))" strokeWidth="1.5" />,
+    label: "skill / cert",
     desc: "appears when you focus a domain",
   },
 ];
@@ -88,8 +88,9 @@ export function GraphLegend() {
         className="border-t px-3 py-2 text-[0.62rem] leading-snug text-[var(--muted-foreground)]"
         style={{ borderColor: "var(--hair)" }}
       >
-        at rest: <span className="text-[var(--ink)]">me → domains → the work</span> on them.
-        hover or click a node to reveal its other connections · drag anything.
+        at rest: <span className="text-[var(--ink)]">me → domains → the work</span> in each.
+        hover or click a node to reveal its cross-domain links, and drag anything.
+        moving dots trace the flow outward from whatever you focus.
       </div>
     </div>
   );

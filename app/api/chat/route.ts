@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Groq from "groq-sdk"
-import { DOMAINS, NODES } from "@/content/corpus"
+import { DOMAINS, KAFKA_PROFILE, NODES } from "@/content/corpus"
 
 // Initialize Groq client
 const groq = new Groq({
@@ -49,8 +49,27 @@ function getKnowledgeGraphContext(): string {
   ctx += "\nSKILLS:\n";
   const skills = NODES.filter((n) => n.type === "skill");
   skills.forEach((s) => {
-    ctx += `- ${s.label} [Domains: ${s.domains?.join(", ") || ""}]\n`;
+    ctx += `- ${s.label}${s.desc ? `: ${s.desc}` : ""} [Domains: ${s.domains?.join(", ") || ""}]\n`;
   });
+
+  ctx += "\nKAFKA & EVENT STREAMING (use this for any question about Kafka, event-driven systems, Avro, DLQs, idempotency, CQRS or SAGA):\n";
+  ctx += `Summary: ${KAFKA_PROFILE.summary}\n`;
+  ctx += "Projects that show this work (Bajaj Finserv Health details are under EXPERIENCE):\n";
+  KAFKA_PROFILE.projects.forEach((p) => {
+    ctx += `- ${p.name} (${p.period}), ${p.role}:\n`;
+    p.metrics.forEach((m) => {
+      ctx += `  * ${m.value} ${m.label}\n`;
+    });
+    p.points.forEach((pt) => {
+      ctx += `  * ${pt}\n`;
+    });
+  });
+  ctx += "Patterns he applies:\n";
+  KAFKA_PROFILE.patterns.forEach((p) => {
+    ctx += `- ${p.title}: ${p.detail}\n`;
+  });
+  ctx += `Tooling: ${KAFKA_PROFILE.tooling.join(", ")}\n`;
+  ctx += `Portfolio demo: ${KAFKA_PROFILE.example}\n`;
 
   return ctx;
 }

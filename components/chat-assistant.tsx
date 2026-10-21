@@ -14,6 +14,7 @@ import {
   Award,
   Briefcase,
   Loader2,
+  Waypoints,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -39,10 +40,10 @@ export default function ChatAssistant() {
 
   // Suggested questions
   const suggestedQuestions = [
+    "How has Arav used Kafka?",
     "What are Arav's skills?",
     "Tell me about Arav's projects",
     "What awards has Arav won?",
-    "What is Arav's education?",
     "What is Arav's experience with AI?",
   ]
 
@@ -62,12 +63,15 @@ export default function ChatAssistant() {
     }
   }, [isProcessing])
 
-  const handleTextSubmit = async (e: React.FormEvent) => {
+  const handleTextSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    sendMessage(textInput)
+  }
 
-    if (!textInput.trim()) return
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isProcessing) return
 
-    const userMessage = { role: "user" as const, content: textInput }
+    const userMessage = { role: "user" as const, content: text }
     setMessages((prev) => [...prev, userMessage])
     setTextInput("")
     setIsProcessing(true)
@@ -112,14 +116,11 @@ export default function ChatAssistant() {
   }
 
   const handleSuggestedQuestion = (question: string) => {
-    setTextInput(question)
-    setTimeout(() => {
-      const event = { preventDefault: () => {} } as React.FormEvent
-      handleTextSubmit(event)
-    }, 100)
+    sendMessage(question)
   }
 
   const getIconForQuestion = (question: string) => {
+    if (question.toLowerCase().includes("kafka")) return <Waypoints className="h-4 w-4" />
     if (question.toLowerCase().includes("skill")) return <Code className="h-4 w-4" />
     if (question.toLowerCase().includes("project")) return <Briefcase className="h-4 w-4" />
     if (question.toLowerCase().includes("award")) return <Award className="h-4 w-4" />
