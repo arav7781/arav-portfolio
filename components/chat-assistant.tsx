@@ -88,7 +88,7 @@ export default function ChatAssistant() {
       })
 
       if (!chatResponse.ok) {
-        throw new Error("Failed to get response from Groq Llama model")
+        throw new Error(`Chat API failed with ${chatResponse.status}`)
       }
 
       const chatData = await chatResponse.json()
