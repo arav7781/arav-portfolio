@@ -7,7 +7,7 @@ export default function GraphPage() {
   return (
     <main className="h-screen w-screen bg-background text-foreground flex flex-col overflow-hidden">
       <Navbar />
-      <div className="absolute inset-0 pt-16 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pt-[76px]">
         <GraphMount />
       </div>
     </main>

@@ -2,14 +2,37 @@
 
 import { useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
-import { Code2, Brain, Server, Layers, Cpu } from "lucide-react"
+import type { ReactNode } from "react"
+import { Code2, Brain, Server, Layers, Waypoints, FileJson, Leaf, Split, ShieldCheck, Inbox, Activity } from "lucide-react"
 import Image from "next/image"
 
 export default function Skills() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
-  const skillCategories = [
+  const skillCategories: {
+    title: string
+    icon: ReactNode
+    skills: { name: string; level: number; logo?: string; glyph?: ReactNode }[]
+    color: string
+    direction: number
+  }[] = [
+    {
+      title: "Event Streaming & Distributed Systems",
+      icon: <Waypoints className="h-6 w-6" />,
+      skills: [
+        { name: "Apache Kafka", level: 90, glyph: <Waypoints className="h-9 w-9" /> },
+        { name: "Avro & Schema Registry", level: 85, glyph: <FileJson className="h-9 w-9" /> },
+        { name: "Spring Boot", level: 85, glyph: <Leaf className="h-9 w-9" /> },
+        { name: "CQRS & SAGA", level: 85, glyph: <Split className="h-9 w-9" /> },
+        { name: "Idempotent Consumers", level: 85, glyph: <ShieldCheck className="h-9 w-9" /> },
+        { name: "Dead-Letter Queues", level: 80, glyph: <Inbox className="h-9 w-9" /> },
+        { name: "AKHQ · Grafana · Splunk", level: 80, glyph: <Activity className="h-9 w-9" /> },
+        { name: "Redis", level: 75, logo: "/redis.png?height=60&width=60" },
+      ],
+      color: "from-indigo-500 to-violet-500",
+      direction: -1,
+    },
     {
       title: "Languages & Databases",
       icon: <Code2 className="h-6 w-6" />,
@@ -167,13 +190,21 @@ export default function Skills() {
                       <div key={`first-${skillIndex}`} className="flex-none mx-4">
                         <div className="skill-card bg-background">
                           <div className="relative w-16 h-16 mb-3">
-                            <Image
-                              src={skill.logo || "/placeholder.svg"}
-                              alt={skill.name}
-                              width={60}
-                              height={60}
-                              className="object-contain"
-                            />
+                            {skill.glyph ? (
+                              <div className="flex h-full w-full items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/15 to-violet-500/15 text-violet-600 dark:text-violet-400" aria-hidden>
+                                {skill.glyph}
+                              </div>
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#e8edf7] p-1.5">
+                                <Image
+                                  src={skill.logo || "/placeholder.svg"}
+                                  alt={skill.name}
+                                  width={60}
+                                  height={60}
+                                  className="h-full w-full object-contain"
+                                />
+                              </div>
+                            )}
                           </div>
                           <h4 className="text-sm font-medium text-slate-800 dark:text-gray-200 text-center mb-2">{skill.name}</h4>
                           <span
@@ -192,13 +223,21 @@ export default function Skills() {
                       <div key={`second-${skillIndex}`} className="flex-none mx-4">
                         <div className="skill-card bg-background">
                           <div className="relative w-16 h-16 mb-3">
-                            <Image
-                              src={skill.logo || "/placeholder.svg"}
-                              alt={skill.name}
-                              width={60}
-                              height={60}
-                              className="object-contain"
-                            />
+                            {skill.glyph ? (
+                              <div className="flex h-full w-full items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500/15 to-violet-500/15 text-violet-600 dark:text-violet-400" aria-hidden>
+                                {skill.glyph}
+                              </div>
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center rounded-xl bg-[#e8edf7] p-1.5">
+                                <Image
+                                  src={skill.logo || "/placeholder.svg"}
+                                  alt={skill.name}
+                                  width={60}
+                                  height={60}
+                                  className="h-full w-full object-contain"
+                                />
+                              </div>
+                            )}
                           </div>
                           <h4 className="text-sm font-medium text-slate-800 dark:text-gray-200 text-center mb-2">{skill.name}</h4>
                           <span

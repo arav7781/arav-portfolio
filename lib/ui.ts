@@ -15,6 +15,6 @@ export function domainVar(domain: DomainId): string {
     case "data":
       return "var(--c-data)";
     default:
-      return "var(--muted)";
+      return "hsl(var(--muted-foreground))";
   }
 }

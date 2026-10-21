@@ -17,6 +17,11 @@ export function isBridge(node: GraphNode): boolean {
   return (node.domains?.length ?? 0) >= 2;
 }
 
+/** Skills and certifications: hidden at rest, revealed when their domain is focused or searched. */
+export function isDetail(node: GraphNode): boolean {
+  return node.type === "skill" || node.id.startsWith("cert-");
+}
+
 export function hubAngle(order: number): number {
   return (order * 2 * Math.PI) / DOMAINS.length - Math.PI / 2;
 }
@@ -57,13 +62,13 @@ export function buildGraph(): { nodes: GraphNode[]; edges: GraphEdge[] } {
     }
   });
 
-  // Direct experience/achievement → project relations only (kept off "arav" so
+  // Direct experience/achievement/skill → work relations only (kept off "arav" so
   // hovering the center node still just lights up the 6 domains, like before).
   NODES.forEach((node) => {
     if (!node.relatedTo || node.relatedTo.length === 0) return;
     node.relatedTo.forEach((targetId) => {
       if (!NODE_BY_ID[targetId]) return;
-      const kind = node.type === "achievement" ? "awarded-for" : "built";
+      const kind = node.type === "achievement" ? "awarded-for" : node.type === "skill" ? "used-in" : "built";
       addEdge(node.id, targetId, kind);
     });
   });

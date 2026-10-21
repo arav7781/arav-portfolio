@@ -25,3 +25,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# reference clone of the TitanOCR repo (design reference only, not part of this site)
+/titanOCR/

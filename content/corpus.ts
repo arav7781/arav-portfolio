@@ -70,16 +70,30 @@ export const NODES: GraphNode[] = [
   {
     id: "freight",
     type: "project",
-    label: "Freight Bidding Platform",
-    desc: "Engineered an event-driven logistics bidding platform using microservices, Kafka, Axon Framework, and Redis ZSET delayed event queues. Implemented CQRS and Event Sourcing to store workflow state, automatically recovering from failures with Saga compensations.",
-    summary: "Event-driven logistics bidding microservices & delayed queue.",
+    label: "Global Freight Platform",
+    desc: "Full-stack shipment tracking, bidding and logistics platform built as distributed Java/Spring Boot microservices with a React frontend. 50,000+ shipment events flow between services through Kafka, with Avro schema contracts defined across the service topology. CQRS and Event Sourcing (Axon Framework) keep workflow state auditable, Redis ZSET delayed-event queues handle scheduled events, and SAGA orchestration with compensating transactions keeps data consistent when a step fails part-way. Endpoints are JWT-secured, with JUnit-tested services built under Maven.",
+    summary: "Kafka-driven shipment tracking & bidding microservices (50k+ events).",
     domains: ["backend", "cloud", "data"],
     meta: {
       period: "2024 - 2025",
-      impact: "Asynchronous distributed logistics bidding with solid auditability.",
-      stack: ["Java", "SpringBoot", "Kafka", "Axon Framework", "Redis ZSET", "MongoDB", "Kubernetes", "AWS"],
+      impact: "Processed 50,000+ shipment events through Kafka; caching and event-driven workflows cut API response latency by 40%.",
+      stack: ["Java", "Spring Boot", "Spring MVC", "Kafka", "Avro", "Axon Framework", "Redis ZSET", "MongoDB", "React", "JWT", "JUnit", "Maven", "Docker", "Kubernetes", "AWS"],
     },
     links: [{ label: "GitHub", href: "https://github.com/arav7781/bharatHireSecure" }]
+  },
+  {
+    id: "delaylens",
+    type: "project",
+    label: "DelayLens",
+    desc: "End-to-end big-data ETL pipeline and agentic analytics app for supply-chain delivery delays on the DataCo dataset (180,519 order lines consolidated into 65,752 orders). Raw CSVs are profiled and cleaned in Python, landed in an HDFS raw zone, and transformed by 33 Hadoop MapReduce jobs on YARN into order-level delivery KPIs. Outputs are reconciled across engines (Hadoop vs MongoDB, Java vs Python Streaming) to an exact match and benchmarked against pandas from 0.25x to 16x data volume. A LangGraph agent with 9 tools answers questions over the results (8/8 on its evaluation set) and streams answers into an 8-page Next.js dashboard over Server-Sent Events.",
+    summary: "Supply-chain delay analytics: Hadoop ETL + LangGraph copilot.",
+    domains: ["data", "ai", "backend", "frontend"],
+    meta: {
+      period: "2026",
+      impact: "Found the root cause of a 54.8% late-delivery rate (First Class shipments 95.3% late) and showed revised delivery promises cut lateness to 18.9%.",
+      stack: ["Python", "SQL", "Hadoop (HDFS, YARN, MapReduce)", "Java", "MongoDB", "FastAPI", "LangGraph", "Next.js", "TypeScript"],
+    },
+    links: [{ label: "GitHub", href: "https://github.com/arav7781/delaylens" }]
   },
   {
     id: "sql-assistant",
@@ -254,8 +268,9 @@ export const NODES: GraphNode[] = [
   {
     id: "bajaj-ai-cortex",
     type: "experience",
-    label: "SDE Intern @ Bajaj Finserv Health",
-    desc: "Building AI Cortex, an enterprise Graph RAG platform that turns everything connected to a software project — code repositories, work items, wikis, and uploaded documents — into a single, queryable, journey-isolated knowledge graph (Neo4j + pgvector). Its differentiator is cross-repo retrieval by graph traversal: a client call in one repo is linked to the endpoint it hits in another at ingestion time via a Contract Bridge, so questions reach the calling service, endpoint, wiki page, and related work item by walking typed edges instead of hoping vector search surfaces them. The graph and hybrid retrieval pipeline (pgvector ANN + lexical + bounded Neo4j traversal, orchestrated by Temporal) form a shared substrate on which decoupled AI agents — DocQ AI (Q&A/chat/wiki generation), Refine AI (requirements refinement), Idea AI (project ideation), and Agentic RCA (autonomous root-cause analysis) — are built as thin services.",
+    label: "SDE Intern @ Bajaj · AI Cortex",
+    short: "Bajaj · AI Cortex",
+    desc: "Building AI Cortex, an enterprise Graph RAG platform that turns everything connected to a software project (code repositories, work items, wikis, and uploaded documents) into a single, queryable, journey-isolated knowledge graph (Neo4j + pgvector). Its differentiator is cross-repo retrieval by graph traversal: a client call in one repo is linked to the endpoint it hits in another at ingestion time via a Contract Bridge, so questions reach the calling service, endpoint, wiki page, and related work item by walking typed edges instead of hoping vector search surfaces them. The graph and hybrid retrieval pipeline (pgvector ANN + lexical + bounded Neo4j traversal, orchestrated by Temporal) form a shared substrate on which decoupled AI agents are built as thin services: DocQ AI (Q&A/chat/wiki generation), Refine AI (requirements refinement), Idea AI (project ideation), and Agentic RCA (autonomous root-cause analysis).",
     summary: "Enterprise Graph RAG platform (AI Cortex) for the SDLC.",
     domains: ["ai", "nlp", "backend", "data", "cloud", "frontend"],
     meta: {
@@ -264,6 +279,22 @@ export const NODES: GraphNode[] = [
       org: "Bajaj Finserv Health",
       impact: "Architected a journey-isolated Graph RAG knowledge base (Neo4j + pgvector + Temporal, polyglot tree-sitter parsing across Java/Python/Go/TS/C#) powering 4 decoupled AI agents with typed-edge, cross-repository retrieval and a WebGL subgraph visualizer.",
       stack: ["Python", "FastAPI", "Neo4j", "PostgreSQL", "pgvector", "Temporal", "tree-sitter", "Next.js", "TypeScript", "Sigma.js", "Ollama", "SCIP"],
+    }
+  },
+  {
+    id: "bajaj-payments-kafka",
+    type: "experience",
+    label: "SDE Intern @ Bajaj · Payments & Kafka",
+    short: "Bajaj · Payments & Kafka",
+    desc: "Engineer on the payments and order-management platform (OMS + PayRx Core, NestJS/TypeScript microservices on Azure Kubernetes Service behind an APIM gateway) handling payins, transfers, refunds, recurring payments and QR settlement. Built Kafka payment-event pipelines with Avro schema contracts registered through a schema registry, using idempotent consumers that commit offsets only after successful processing (so a retried event never double-processes a payment), and DLQ topics that isolate poison messages across the shared order and transfer lifecycle topics. Contributed to a unified PostgreSQL entity-lifecycle table (replacing per-entity tables) with a source-system discriminator, giving a cross-system audit trail over every order, payment, refund and transfer state transition. Separately designed the Kafka topic topology and Avro contracts for claims-processing pipelines in Java that parse and validate inbound XML partner feeds into typed, versioned events for downstream microservices, and monitored pipeline health and production data-integrity issues with AKHQ, Grafana and Splunk. Also works on Azure DevOps CI/CD and Unix shell scripts for VM deployments.",
+    summary: "Kafka/Avro event pipelines for payments, orders and insurance claims.",
+    domains: ["backend", "data", "cloud"],
+    meta: {
+      period: "Jul 2026 - Present",
+      role: "SDE Intern",
+      org: "Bajaj Finserv Health",
+      impact: "Payment and claims event pipelines with schema-registered Avro contracts, commit-after-processing idempotent consumers (no double-processed payments) and DLQ isolation for poison messages.",
+      stack: ["Kafka", "Avro", "Schema Registry", "Java", "NestJS", "TypeScript", "PostgreSQL", "Azure Kubernetes Service", "AKHQ", "Grafana", "Splunk", "Azure DevOps"],
     }
   },
   {
@@ -286,7 +317,7 @@ export const NODES: GraphNode[] = [
     id: "cdac-intern",
     type: "experience",
     label: "AI Intern @ CDAC",
-    desc: "Built BlueBoxAI, an enterprise data analytics assistant, at the Centre for Development of Advanced Computing (CDAC) — a premier R&D organization focused on AI and HPC solutions. Translated natural business language into optimized, executable SQL for enterprise reporting.",
+    desc: "Built BlueBoxAI, an enterprise data analytics assistant, at the Centre for Development of Advanced Computing (CDAC), a premier R&D organization focused on AI and HPC solutions. Translated natural business language into optimized, executable SQL for enterprise reporting.",
     summary: "AI internship at CDAC building enterprise analytics tooling.",
     domains: ["ai", "data"],
     meta: {
@@ -328,7 +359,7 @@ export const NODES: GraphNode[] = [
     id: "patent-legal",
     type: "achievement",
     label: "Patent Published: Legal Reasoning & Judicial Decision Support",
-    desc: "Indian Patent officially published for 'A System and Method for Multimodal Agentic AI-Based Context-Aware Legal Reasoning and Judicial Decision Support' — an AI framework enabling cascading cross-case file analysis by integrating multimodal deep learning, hybrid retrieval, agentic AI, hierarchical temporal knowledge graphs, cascading validation agents, and explainable AI. Analyzes interconnected legal case files to identify statement inconsistencies and legal-entity drift across related cases, and produces transparent, citation-backed reasoning for judicial decision-making. Co-invented with Adesh Jain, Khushi Kashyap, and Kartik Mehta, under the mentorship of Dr. Shivali Wagle.",
+    desc: "Indian Patent officially published for 'A System and Method for Multimodal Agentic AI-Based Context-Aware Legal Reasoning and Judicial Decision Support': an AI framework enabling cascading cross-case file analysis by integrating multimodal deep learning, hybrid retrieval, agentic AI, hierarchical temporal knowledge graphs, cascading validation agents, and explainable AI. Analyzes interconnected legal case files to identify statement inconsistencies and legal-entity drift across related cases, and produces transparent, citation-backed reasoning for judicial decision-making. Co-invented with Adesh Jain, Khushi Kashyap, and Kartik Mehta, under the mentorship of Dr. Shivali Wagle.",
     summary: "Published patent: agentic, temporal-graph legal reasoning for judicial support.",
     domains: ["nlp", "ai", "data"],
     meta: {
@@ -523,7 +554,39 @@ export const NODES: GraphNode[] = [
   { id: "skill-postgres", type: "skill", label: "PostgreSQL", domains: ["data"] },
   { id: "skill-redis", type: "skill", label: "Redis", domains: ["data"] },
   { id: "skill-eventstore", type: "skill", label: "EventStoreDB", domains: ["data"] },
-  { id: "skill-kafka", type: "skill", label: "Kafka", domains: ["cloud", "data", "backend"] },
+  {
+    id: "skill-kafka",
+    type: "skill",
+    label: "Apache Kafka",
+    desc: "Production Kafka at Bajaj Finserv Health (payment, order and claims event pipelines) and in the Global Freight platform (50,000+ shipment events): topic topology, keyed partitioning, Avro contracts with a schema registry, idempotent commit-after-processing consumers, dead-letter queues, CQRS and SAGA compensation, monitored with AKHQ, Grafana and Splunk.",
+    domains: ["backend", "data", "cloud"],
+    relatedTo: ["freight", "bajaj-payments-kafka"],
+  },
+  {
+    id: "skill-avro",
+    type: "skill",
+    label: "Avro & Schema Registry",
+    desc: "Typed, versioned event contracts registered in a schema registry, so producers can't publish a breaking change to downstream consumers.",
+    domains: ["backend", "data"],
+    relatedTo: ["freight", "bajaj-payments-kafka"],
+  },
+  {
+    id: "skill-kafka-reliability",
+    type: "skill",
+    label: "Idempotent Consumers & DLQs",
+    desc: "Consumers commit offsets only after successful processing and de-duplicate redelivered events; poison messages are isolated on dead-letter topics.",
+    domains: ["backend", "data"],
+    relatedTo: ["bajaj-payments-kafka"],
+  },
+  {
+    id: "skill-observability",
+    type: "skill",
+    label: "AKHQ · Grafana · Splunk",
+    desc: "Topic, consumer-lag and message inspection in AKHQ, pipeline dashboards in Grafana and log investigation in Splunk.",
+    domains: ["cloud", "data"],
+    relatedTo: ["bajaj-payments-kafka"],
+  },
+  { id: "skill-hadoop", type: "skill", label: "Hadoop (HDFS · YARN · MapReduce)", domains: ["data"], relatedTo: ["delaylens"] },
   { id: "skill-docker", type: "skill", label: "Docker", domains: ["cloud"] },
   { id: "skill-k8s", type: "skill", label: "Kubernetes", domains: ["cloud"] },
   { id: "skill-aws", type: "skill", label: "AWS", domains: ["cloud"] },
@@ -531,8 +594,8 @@ export const NODES: GraphNode[] = [
   { id: "skill-git", type: "skill", label: "Git", domains: ["cloud"] },
   { id: "skill-langchain", type: "skill", label: "LangChain", domains: ["nlp", "ai"] },
   { id: "skill-langgraph", type: "skill", label: "LangGraph", domains: ["nlp", "ai"] },
-  { id: "skill-saga", type: "skill", label: "Saga Orchestration", domains: ["backend"] },
-  { id: "skill-cqrs-sync", type: "skill", label: "CQRS Projection Sync", domains: ["backend", "data"] },
+  { id: "skill-saga", type: "skill", label: "Saga Orchestration", domains: ["backend"], relatedTo: ["freight"] },
+  { id: "skill-cqrs-sync", type: "skill", label: "CQRS Projection Sync", domains: ["backend", "data"], relatedTo: ["freight"] },
   { id: "skill-terraform", type: "skill", label: "Terraform", domains: ["cloud"] },
   { id: "skill-argocd", type: "skill", label: "ArgoCD", domains: ["cloud"] },
   { id: "skill-mcp", type: "skill", label: "Model Context Protocol (MCP)", domains: ["nlp", "ai"] },
@@ -550,3 +613,100 @@ export const NODE_BY_ID: Record<string, GraphNode> = NODES.reduce((acc, n) => {
   acc[n.id] = n;
   return acc;
 }, {} as Record<string, GraphNode>);
+
+export type KafkaPatternId = "avro" | "keying" | "groups" | "commit" | "idempotent" | "dlq" | "saga";
+
+/**
+ * Arav's Kafka / event-streaming experience in one place. The home-page Kafka section
+ * and the SAITAMA chat context both read from this, so they can't drift apart.
+ */
+export const KAFKA_PROFILE = {
+  summary:
+    "Arav designs and runs Kafka event pipelines in production: payment, order and insurance-claims pipelines at Bajaj Finserv Health, and 50,000+ shipment events in the Global Freight platform. His focus is on pipelines that don't lose or double-process data: keyed partitions, Avro contracts in a schema registry, idempotent commit-after-processing consumers, dead-letter queues, and CQRS/SAGA for consistency across services.",
+  patterns: [
+    {
+      id: "avro" as KafkaPatternId,
+      title: "Avro contracts + schema registry",
+      detail: "Every event is a typed, versioned Avro record checked against a schema registry, so a breaking change never reaches consumers.",
+    },
+    {
+      id: "keying" as KafkaPatternId,
+      title: "Keyed partitioning",
+      detail: "Events are keyed by entity id (orderId, paymentId), so one entity's whole lifecycle lands on one partition, in order.",
+    },
+    {
+      id: "groups" as KafkaPatternId,
+      title: "Consumer groups",
+      detail: "Each partition is owned by one instance in a group; add instances to scale out, while other groups read the same log at their own offsets.",
+    },
+    {
+      id: "commit" as KafkaPatternId,
+      title: "Commit after processing",
+      detail: "Offsets are committed only after the side effect succeeds, so a crash means redelivery rather than a silently skipped event.",
+    },
+    {
+      id: "idempotent" as KafkaPatternId,
+      title: "Idempotent consumers",
+      detail: "Redelivered events are de-duplicated by event id, so a retry never double-processes a payment or a shipment.",
+    },
+    {
+      id: "dlq" as KafkaPatternId,
+      title: "Dead-letter queues",
+      detail: "Poison messages that fail validation are parked on a DLQ topic so the partition keeps flowing; they can be inspected and replayed.",
+    },
+    {
+      id: "saga" as KafkaPatternId,
+      title: "SAGA compensation",
+      detail: "Multi-step workflows roll back with compensating events (e.g. release reserved stock) instead of distributed transactions.",
+    },
+  ],
+  /** Personal projects shown on the home page. Global Freight is the Kafka build; the others share its event-driven and supply-chain story. */
+  projects: [
+    {
+      id: "freight",
+      name: "Global Freight & Shipment Platform",
+      period: "2024 - 2025",
+      role: "The Kafka build this demo is modelled on",
+      metrics: [
+        { value: "50k+", label: "shipment events through Kafka" },
+        { value: "40%", label: "lower API response latency" },
+      ],
+      points: [
+        "Spring Boot microservices for shipment tracking, bidding and logistics, talking to each other through Kafka.",
+        "Avro schema contracts across the service topology, with CQRS and Event Sourcing for auditable workflow state.",
+        "SAGA orchestration with compensating transactions keeps data consistent when a step fails part-way.",
+      ],
+      stack: ["Java", "Spring Boot", "Kafka", "Avro", "Axon", "MongoDB", "Redis", "Docker"],
+    },
+    {
+      id: "delaylens",
+      name: "DelayLens",
+      period: "2026",
+      role: "The supply-chain data behind the demo",
+      metrics: [
+        { value: "54.8%", label: "late-delivery rate, root-caused" },
+        { value: "18.9%", label: "late after revised delivery promises" },
+      ],
+      points: [
+        "Hadoop ETL over 180,519 DataCo order lines, transformed by 33 MapReduce jobs into order-level delivery KPIs.",
+        "First Class shipments ran 95.3% late, which is why the simulation's First Class orders run late most often.",
+      ],
+      stack: ["Python", "Hadoop", "MongoDB", "LangGraph", "Next.js"],
+    },
+    {
+      id: "marketplace",
+      name: "Asset Marketplace",
+      period: "2021 - Present",
+      role: "Event sourcing and CQRS",
+      metrics: [],
+      points: [
+        "Domain-driven design with CQRS and Event Sourcing on EventStoreDB, inside an NX monorepo.",
+        "GraphQL APIs and subscriptions with payment workflows (Stripe, Coinbase, BitPay).",
+      ],
+      stack: ["TypeScript", "NestJS", "EventStoreDB", "GraphQL", "MongoDB"],
+    },
+  ],
+  tooling: ["Apache Kafka", "Avro", "Schema Registry", "Spring Boot", "NestJS", "Axon Framework", "AKHQ", "Grafana", "Splunk", "Azure Kubernetes Service"],
+  example:
+    "The home page has an interactive supply-chain simulation of these patterns, modelled on the Global Freight platform: order, warehouse, carrier-bidding and partner GPS-feed producers publish shipment lifecycle events keyed by orderId into a 3-partition topic, a fulfillment consumer group commits after processing, malformed partner-feed events go to a DLQ, a consumer crash shows idempotent redelivery, and a carrier cancellation triggers SAGA compensation.",
+};

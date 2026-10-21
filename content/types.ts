@@ -10,6 +10,8 @@ export interface GraphNode {
   id: string;
   type: NodeType;
   label: string;
+  /** compact label for the uncluttered resting graph; the full label shows once focused */
+  short?: string;
   desc?: string;
   summary?: string;
   domains?: DomainId[];
